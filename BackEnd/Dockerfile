@@ -15,6 +15,8 @@ WORKDIR /app
 
 # 빌더 이미지에서 jar 파일만 복사
 COPY --from=builder /build/build/libs/PhocaForme-0.0.1-SNAPSHOT.jar .
+# .env 파일 복사
+COPY .env /app/.env
 
 EXPOSE 8080
 

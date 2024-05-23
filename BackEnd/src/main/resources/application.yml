@@ -1,0 +1,14 @@
+server:
+  port: ${PORT}
+
+spring:
+  config:
+    import:
+      - optional:file:.env[.properties]
+      - classpath:/application-develop.yml
+      - classpath:/application-oauth.yml
+      - classpath:/application-aws.yml
+      - classpath:/application-rabbit.yml
+      - classpath:/application-elastic.yml
+  profiles:
+    active: develop, oauth, aws, rabbit, elastic

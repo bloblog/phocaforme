@@ -11,17 +11,57 @@ services:
 
   mariadb:
     image: mariadb:10.11.6
-    container_name: PhocaFormetMariaDB
+    container_name: PhocaFormeMariaDB
     ports:
       - "3306:3306"
     volumes:
       - mariadb-data:/lib/var/mysql
     environment:
       MARIADB_DATABASE: ${DB_NAME}
-      MARIADB_USER: ${USER_NAME}
-      MARIADB_PASSWORD: ${USER_PASSWORD}
+      MARIADB_USER: ${DB_USER_NAME}
+      MARIADB_PASSWORD: ${DB_USER_PASSWORD}
       MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      TZ: Asia/Seoul
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: PhocaFormeRabbitMQ
+    ports:
+      - "5672:5672"  # RabbitMQ server
+      - "15672:15672"  # Management interface
+    restart: unless-stopped
+
+  elasticsearch:
+    image: elasticsearch:8.12.0
+    container_name: PhocaFormeElasticsearch
+    environment:
+      - node.name=es-node-1
+      - cluster.name=es-cluster
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+        memlock:
+          soft: -1
+          hard: -1
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+  kibana:
+    image: kibana:8.12.0
+    container_name: PhocaFormeKibana
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    environment:
+      ELASTICSEARCH_URL: http://localhost:9200
+      ELASTICSEARCH_HOSTS: http://localhost:9200
+
 volumes:
   redis-data:
   mariadb-data:
-
+  esdata1:
+    driver: local

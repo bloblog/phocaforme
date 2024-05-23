@@ -1,0 +1,42 @@
+spring:
+  config:
+    activate:
+      on-profile: develop
+  jpa:
+    hibernate:
+#      ddl-auto: update #create update none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+  # DB 연결
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    # 설치된 H2 DB와 연결 URL
+    url: ${DB_URL}
+    # 접속을 위한 드라이버
+    # springboot 2.4 부터는 username이 꼭 있어야합니다. 없으면 에러가 발생.
+    username: ${DB_USER_NAME}
+    password: ${DB_USER_PASSWORD}
+  data:
+    redis:
+      host: ${HOST} # Redis 서버 호스트 주소
+      port: 6379      # Redis 서버 포트
+      database: 0
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+#jwt:
+#  secret: 'jxgEQeXHuPq8VdbyYFNkANdudQ53YUn4'
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+project:
+  url: ${URL}
+  API-URL: ${API_URL}
+  client-id: ${CLIENT_ID}
+  front-url: ${FRONT_URL}
+

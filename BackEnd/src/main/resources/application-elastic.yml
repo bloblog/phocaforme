@@ -1,0 +1,6 @@
+elasticsearch:
+  username: ${ES_USER_NAME}
+  password: ${ES_USER_PASSWORD}
+  hostname: ${HOST}
+  port: 9200
+  post-url: ${ES_POST_URL}

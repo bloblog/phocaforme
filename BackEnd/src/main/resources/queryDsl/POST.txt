@@ -1,0 +1,5 @@
+POST barter_post/_bulk
+{ "index": { "_index": "barter_post", "_id": "1" } }
+{ "article_id": 123, "writer_id": "abc101", "writer_nickname": "NCTFan", "title": "NCT DREAM ISTJ 트레카 A버전 제노 재민으로 구해요", "card_type": "기타", "image_url": "http://example.com/nct001.jpg", "content": "Looking for Jaemin and Mark Istj unpublic cards! Have Jeno and Haechan.", "own_member": [{"member_id":3,"member_name":"마크"}, {"member_id":4,"member_name":"해찬"}], "target_member": [{"member_id":1,"member_name":"재민"}, {"member_id":2,"member_name":"제노"}], "is_bartered": false, "created_at": "2024-02-01T10:00:00" }
+{ "index": { "_index": "barter_post", "_id": "2" } }
+{ "article_id": 124, "writer_id": "def101", "writer_nickname": "NCTFan", "title": "NCT DREAM ISTJ 마크 에버라인 2차 영통팬싸 해찬이로 구해요", "card_type": "미공포", "image_url": "http://example.com/nct001.jpg", "content": "Looking for Jaemin and Mark Istj unpublic cards! Have Jeno and Haechan.", "own_member": [{"member_id":3,"member_name":"마크"}], "target_member": [{"member_id":4,"member_name":"해찬"}], "is_bartered": false, "created_at": "2024-02-01T10:00:00" }

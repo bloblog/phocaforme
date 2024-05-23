@@ -3,7 +3,7 @@
 *.class
 BackEnd/.env
 .idea
-
+.env
 # Log file
 *.log
 

@@ -1,0 +1,93 @@
+PUT barter_post
+{
+  "settings": {
+    "index": {
+      "analysis": {
+        "tokenizer": {
+          "my_nori_tokenizer": {
+            "type": "nori_tokenizer",
+            "decompound_mode": "mixed",
+            "discard_punctuation": "false"
+          },
+          "my_ngram_tokenizer": {
+            "type": "ngram",
+            "min_gram": 2,
+            "max_gram": 3
+          }
+        },
+        "filter": {
+          "stopwords": {
+            "type": "stop",
+            "stopwords": " " // ""
+          }
+        },
+        "analyzer": {
+          "my_nori_analyzer": {
+            "type": "custom",
+            "tokenizer": "my_nori_tokenizer",
+            "filter": ["lowercase", "stop", "trim", "stopwords", "nori_part_of_speech"]
+          },
+          "my_ngram_analyzer": {
+            "type": "custom",
+            "tokenizer": "my_ngram_tokenizer",
+            "filter": ["lowercase", "stop", "trim", "stopwords",  "nori_part_of_speech"],
+            "char_filter": ["html_strip"]
+          }
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "article_id": {
+          "type": "long"
+        },
+        "card_type": {
+          "type": "keyword"
+        },
+        "content": {
+          "type": "text"
+        },
+        "created_at": {
+          "type": "date"
+        },
+        "image_url": {
+          "type": "keyword"
+        },
+        "is_bartered": {
+          "type": "boolean"
+        },
+        "own_member": {
+          "properties": {
+            "member_id":{
+              "type":"keyword"
+            },
+            "member_name":{
+              "type":"keyword"
+            }
+          }
+        },
+        "target_member": {
+          "properties": {
+            "member_id":{
+              "type":"keyword"
+            },
+            "member_name":{
+              "type":"keyword"
+            }
+          }
+        },
+        "title": {
+          "type": "text",
+          "analyzer": "my_nori_analyzer",
+          "search_analyzer": "my_nori_analyzer"
+        },
+        "writer_id": {
+          "type": "keyword"
+        },
+        "writer_nickname": {
+          "type": "keyword"
+        }
+    }
+  }
+}
