@@ -1,9 +1,11 @@
-// 게시글 수정 페이지
+import { Container } from "@mui/material";
+import PostModify from '../components/PostModify/PostModify'
+
 const postModify = () => {
 	return (
-		<>
-		</>
-		// 여기다가 수정할 게시글을 불러와야함 
+		<Container>
+			<PostModify/>
+		</Container>
 	)
 }
 

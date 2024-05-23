@@ -21,18 +21,43 @@ const theme = createTheme({
   },
 
   components: {
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          maxWidth: '100%',
+        }
+      }
+    },
+    MuiFab: {
+      styleOverrides: {
+        root:{
+          width: '8vh',
+          height: '8vh'
+        }
+      }
+    },
+    MuiAutocomplete: {
+      styleOverrides: {
+        inputRoot: {
+          borderRadius: "10px",
+        }
+      }
+    },
+    
+    
     MuiMenu: {
       styleOverrides: {
         paper: {
           backgroundColor: '#FD9DD1', 
+          padding: '0.5rem',
+          width: '10rem'
         },
       },
     },
-    MuiListItemText: {
+    MuiListItem: {
       styleOverrides: {
-        secondary: {
-          fontSize: '14px',
-          fontFamily: 'Pretendard'
+        root: {
+          padding: '0.5rem 1rem',
         }
 
       }
@@ -47,7 +72,7 @@ const theme = createTheme({
     MuiTypography: {
       styleOverrides: {
         root: {
-          fontFamily: 'Pretendard'
+          fontFamily: 'Pretendard',
         }
       }
     }, 
@@ -62,19 +87,58 @@ const theme = createTheme({
     MuiCardHeader: {
       styleOverrides: {
         title: {
-          fontSize: '18px'
+          fontSize: '18px',
+          fontWeight: 'bold'
+        },
+        root: {
+          padding:'0.5rem 0'
         }
+      }
+    },
+    MuiCardMedia: {
+      styleOverrides: {
+        root: {
+          objectFit: 'cover',
+          borderRadius: "10px",
+          height: "8rem",
+          width: "7rem",
+          
+        }
+      }
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          padding: '0.2rem 0 0 0',
+          cursor: "pointer",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: 'center',
+          borderRadius: '10px',
+        },
+      
       }
     },
     MuiButton: {
       styleOverrides: {
         root: {
-          fontFamily: 'PyeongChangPeace',
-          fontWeight: "bold",
+          fontFamily: 'Cafe24SSurround',
         }
-        
       }
-    }
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& input': {
+            fontFamily: 'Pretendard',
+            fontSize: '15px',
+          },
+          
+        },
+      }
+    },
+    
   
   }
 });

@@ -1,14 +1,15 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
+
 import PropTypes from "prop-types";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
+
+import axios from "axios";
+
+import { Container, Tabs, Tab, Typography, Box } from "@mui/material";
+
 import ChartBoy from "./ChartBoy";
 import ChartGirl from "./ChartGirl";
-import { Container } from "@mui/material";
 
-function CustomTabPanel(props) {
+const CustomTabPanel = (props) => {
   const { children, value, index, ...other } = props;
 
   const now = new Date();
@@ -19,7 +20,7 @@ function CustomTabPanel(props) {
     .padStart(2, "0")}-${now.getDate().toString().padStart(2, "0")}`;
 
   return (
-    <>
+    <div>
       <div
         role="tabpanel"
         hidden={value !== index}
@@ -33,9 +34,9 @@ function CustomTabPanel(props) {
           </Box>
         )}
       </div>
-    </>
+    </div>
   );
-}
+};
 
 CustomTabPanel.propTypes = {
   children: PropTypes.node,
@@ -43,22 +44,81 @@ CustomTabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-function a11yProps(index) {
+const a11yProps = (index) => {
   return {
     id: `simple-tab-${index}`,
     "aria-controls": `simple-tabpanel-${index}`,
   };
-}
+};
 
-export default function ChartTab() {
+const ChartTab = () => {
   const [value, setValue] = React.useState(0);
+
+  const [isNull, setIsNull] = useState(false);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const rankBoy = ["NCT 제노1", "NCT 제노2", "NCT 제노3"];
-  const rankGirl = ["아이브 원영1", "아이브 원영2", "아이브 원영3"];
+  const [rankBoy, setRankBoy] = useState([]);
+  const [rankGirl, setRankGirl] = useState([]);
+
+  const getIdol = async (idolMemberId) => {
+    try {
+      const response = await axios.get(
+        process.env.REACT_APP_API_URL + `idol/${idolMemberId}`,
+        {
+          withCredentials: true,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      
+      console.error("Error get idol:", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          process.env.REACT_APP_API_URL + `idol/rank`,
+          {
+            withCredentials: true,
+          }
+        );
+
+        const order = ["first", "second", "third"];
+        const newRankGirl = [];
+        const newRankBoy = [];
+
+        for (const key in response.data) {
+          for (const prefix of order) {
+            if (key.includes(`${prefix}FemaleIdolId`)) {
+              const idolData = await getIdol(response.data[key]);
+              newRankGirl.push(idolData);
+            } else if (key.includes(`${prefix}MaleIdolId`)) {
+              const idolData = await getIdol(response.data[key]);
+              newRankBoy.push(idolData);
+            }
+          }
+        }
+
+        if (newRankGirl.length > 0) {
+          setRankGirl(newRankGirl);
+        }
+        if (newRankBoy.length > 0) {
+          setRankBoy(newRankBoy);
+        }
+      } catch (error) {
+        // 데이터 없을 때 그냥 에러 떠버림
+        setIsNull(true);
+
+        // console.error("Error get rank:", error);
+      }
+    };
+    fetchData();
+  }, [value]);
 
   return (
     <Container sx={{ width: "100%" }}>
@@ -78,11 +138,12 @@ export default function ChartTab() {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        <ChartBoy data={rankBoy} />
+        <ChartBoy isNull={isNull} rankBoy={rankBoy} />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <ChartGirl data={rankGirl} />
+        <ChartGirl isNull={isNull} rankGirl={rankGirl} />
       </CustomTabPanel>
     </Container>
   );
-}
+};
+export default ChartTab;

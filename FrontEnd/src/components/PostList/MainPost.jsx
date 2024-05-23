@@ -1,22 +1,33 @@
-import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import { Container } from "@mui/material";
-import Card from "../../components/UI/Card";
-import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-/////
-import { fetchTitle, fetchUserTitle } from '../../http.js';
+import React, { useState, useEffect, useRef, useCallback } from "react";
 
-////
-function CustomTabPanel(props) {
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate, useLocation } from "react-router-dom";
+import PropTypes from "prop-types";
+
+import axios from "axios";
+
+import Search from "../Search/Search.jsx";
+
+import {
+  Container,
+  Box,
+  Typography,
+  Tabs,
+  Tab,
+  CircularProgress,
+} from "@mui/material";
+import Card from "../../components/UI/Card";
+import usePostSearch from "../../utils/infiScroll.js";
+import PostCaution from "./PostCaution.jsx";
+
+const CustomTabPanel = (props) => {
   const { children, value, index, ...other } = props;
 
+  const [posts, setPosts] = useState([]);
+  const user = useSelector((state) => (state.user ? state.user.user : null));
+
   return (
-    <>
+    <div>
       <div
         role="tabpanel"
         hidden={value !== index}
@@ -29,9 +40,9 @@ function CustomTabPanel(props) {
           </Box>
         )}
       </div>
-    </>
+    </div>
   );
-}
+};
 
 CustomTabPanel.propTypes = {
   children: PropTypes.node,
@@ -39,80 +50,53 @@ CustomTabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-function a11yProps(index) {
+const a11yProps = (index) => {
   return {
     id: `simple-tab-${index}`,
     "aria-controls": `simple-tabpanel-${index}`,
   };
-}
+};
 
-const PAGE_SIZE = 5; // 페이지당 표시할 카드 수
+const BasicTabs = ({ isPreview }) => {
+  const location = useLocation();
 
-export default function BasicTabs({ isPreview }) {
   const [value, setValue] = useState(0);
-  const [visibleCards, setVisibleCards] = useState(PAGE_SIZE);
-  ////
-  const [title, setTitle] = useState('');
-  const [userTitle, setUserTitle] = useState('');
-  ///
-  const posts = useSelector((state) => (state.post ? state.post.posts : []));
-  const searchs = useSelector((state) =>
-    state.search ? state.search.searchs : []
-  );
+  const [pageNumber, setPageNumber] = useState(2);
 
   const dispatch = useDispatch();
+
+  // search 부분 삭제
+
+  const { boards, hasMore, loading, error } = usePostSearch(pageNumber);
+
+  const observer = useRef();
+  const lastBookElementRef = useCallback(
+    (node) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          // 스크롤이 끝에 닿았고 추가 데이터가 있을 때만 페이지 번호를 증가시킴
+          setPageNumber((prevPageNumber) => prevPageNumber + 1);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore]
+  );
+
   const navigate = useNavigate();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-  const handleScroll = () => {
-    const { scrollTop, scrollHeight, clientHeight } =
-      window.document.documentElement;
-
-    if (scrollTop + clientHeight >= scrollHeight - 20) {
-      const nextPageCards = posts.slice(visibleCards, visibleCards + PAGE_SIZE);
-
-      setVisibleCards((prev) => prev + PAGE_SIZE);
-
-      dispatch({ type: "ADD_CARDS", payload: nextPageCards });
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [handleScroll]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const titleData = await fetchTitle();
-        setTitle(titleData);
-        const userTitleData = await fetchUserTitle();
-        setUserTitle(userTitleData);
-      } catch (error) {
-        console.error("Failed to fetch data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  // Infinity scroll을 적용할 때 추가된 부분
-  const visiblePosts = isPreview
-    ? posts.slice(0, PAGE_SIZE)
-    : posts.slice(0, visibleCards);
+  const [selectedPostId, setSelectedPostId] = useState(null);
 
   return (
-    <div sx={{ width: "100%" }}>
-      <p>값 전달 확인용 : {searchs.length > 0 && (
-        <>
-          {searchs[searchs.length - 1].ownMembers} {searchs[searchs.length - 1].targetMembers} {searchs[searchs.length - 1].cardType}
-        </>
-      )}</p>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+    <Container id="mainpost-container">
+      {location.state ? <Search /> : null}
+
+      <Box sx={{ width: "100%", borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={value} onChange={handleChange}>
           <Tab
             label="교환"
@@ -126,57 +110,71 @@ export default function BasicTabs({ isPreview }) {
           />
         </Tabs>
       </Box>
+
       <CustomTabPanel value={value} index={0}>
-        <div
-          style={{ display: "flex", flexWrap: "wrap", flexDirection: "row" }}
-        >
-          {visiblePosts
-            .filter((post) => post.type === "교환")
-            .map((post, index) => (
-              <Card
-                key={post.id}
-                style={{
-                  width: "calc(50% - 8px)",
-                  marginRight: "16px",
-                  marginBottom: "16px",
-                  cursor: "pointer",
-                }}
-                id={post.id}
-                title={post.title}
-                images={post.images}
-                ownMembers={post.ownMembers}
-                targetMembers={post.targetMembers}
-                content={post.content}
-                type={post.type}
-              ></Card>
+        {boards.length === 0 ? (
+          <PostCaution message={"게시글이 없습니다."} />
+        ) : (
+          <div
+            style={{ display: "flex", flexWrap: "wrap", flexDirection: "row" }}
+          >
+            {boards.map((post, index) => (
+              <div key={index}>
+                {post.distance !== -1 ? `${post.distance}km ` : ""}
+                <Card
+                  className={post.bartered ? "done-post" : ""}
+                  id={post.id}
+                  title={post.title}
+                  images={
+                    "https://photocardforme.s3.ap-northeast-2.amazonaws.com/" +
+                    post.imageUrl
+                  }
+                  ownMembers={post.ownMember}
+                  targetMembers={post.targetMember}
+                  isBartered={post.bartered}
+                  onClick={() => {
+                    setSelectedPostId(post.id);
+                    navigate(`/barter/${post.id}`); // 디테일 페이지로 이동
+                  }} // 클릭 이벤트 추가
+                />
+                {/* 마지막 요소일 때만 ref를 전달합니다 */}
+                {index === boards.length - 1 ? (
+                  <div ref={lastBookElementRef} />
+                ) : null}
+              </div>
             ))}
-        </div>
+          </div>
+        )}
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <div
-          style={{ display: "flex", flexWrap: "wrap", flexDirection: "row" }}
-        >
-          {visiblePosts
-            .filter((post) => post.type === "판매")
-            .map((post, index) => (
-              <Card
-                key={post.id}
-                style={{
-                  width: "calc(50% - 8px)",
-                  marginRight: "16px",
-                  marginBottom: "16px",
-                  cursor: "pointer",
-                }}
-                id={post.id}
-                title={post.title}
-                images={post.images}
-                content={post.content}
-                ownMembers={post.ownMembers}
-                type={post.type}
-              ></Card>
-            ))}
-        </div>
+        {boards.filter((post) => post.type === "판매").length === 0 ? (
+          <div className="no-content">게시글이 없습니다.</div>
+        ) : (
+          <div
+            style={{ display: "flex", flexWrap: "wrap", flexDirection: "row" }}
+          >
+            {boards
+              .filter((post) => post.type === "판매")
+              .map((post, index) => (
+                <Card
+                  key={post.id}
+                  id={post.id}
+                  title={post.title}
+                  images={post.images}
+                  content={post.content}
+                  ownMembers={post.ownMembers}
+                  type={post.type}
+                  isSold={post.isSold}
+                ></Card>
+              ))}
+            <div>{loading && <CircularProgress />}</div>
+            <div>{error && "Error"}</div>
+          </div>
+        )}
       </CustomTabPanel>
-    </div>
+      <div id="post-blank" />
+    </Container>
   );
-}
+};
+
+export default BasicTabs;

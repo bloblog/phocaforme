@@ -1,62 +1,61 @@
-import logo from "../../assets/images/logo.PNG";
-import ProfileImage from "./ProfileImage";
-import Bell from "./Bell";
-
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
+import { logoutUser } from "../../store2/loginUser.js";
+
+import Bell from "./Bell";
+import ProfileImage from "./ProfileImage";
+
+import logo from "../../assets/images/logo.PNG";
+import NonLoginImage from "./NonLoginImage.jsx";
 
 const NavBar = ({ children }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    console.log(user);
+    navigate("/main");
+  };
+
+  const test = () => {
+    console.log(user);
+  };
 
   return (
-    <header id="nav-bar">
+    <div id="nav-bar">
+      
       <img
         id="logo"
         onClick={() => {
           navigate("/main");
         }}
         src={logo}
-      ></img>
-
-
-      {/* 임시 */}
-      <div
-        onClick={() => {
-          navigate('/write')
-        }}
-        >
-        글쓰기
-      </div>
-
-      <div
-        onClick={() => {
-          navigate('/login')
-        }}  
-      >
-        로그인
-      </div>
-
-        {/* 임시 */}
-
-      <div
-        onClick={() => {
-          navigate("/post");
-        }}
-      >
-        게시판으로 가기
-      </div>
-      <div id="nav-menus">
-        <div
-          id="bell"
-          onClick={() => {
-            navigate("/alarm");
-          }}
-        >
-          <Bell />
+      />
+      {user.userId ? (
+        <div id="nav-menus">
+          <ProfileImage />
+          {/* <button onClick={handleLogout}>로그아웃</button> */}
+          
+          <div
+            id="bell"
+            onClick={() => {
+              navigate("/alarm");
+            }}
+            // onClick={test}
+          >
+            <Bell />
+          </div>
         </div>
-        <ProfileImage />
-      </div>
-    </header>
+      ) : (
+        // 여기가 로그아웃상태에서 보이는 거
+        <div>
+          <NonLoginImage />
+        </div>
+      )}
+    </div>
   );
 };
-
 export default NavBar;

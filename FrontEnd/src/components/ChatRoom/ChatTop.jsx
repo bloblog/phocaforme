@@ -1,66 +1,99 @@
-import { Divider } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import MenuIcon from "@mui/icons-material/Menu";
-import Typography from "@mui/material/Typography";
-
-import { useNavigate } from "react-router-dom";
-
-import * as React from "react";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import IconButton from "@mui/material/IconButton";
 import PaymentIcon from "@mui/icons-material/Payment";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import Logout from "@mui/icons-material/Logout";
 
-const ChatMenu = () => {
-  const chatRoomInfo = {
-    owner: "제노예요",
-    title: "ISTJ A버전 구해요",
-    visiterTime: ["16:58"],
-    ownerTime: ["16:59"],
-    visiterMessage: ["안녕하세요! 거래 희망합니다"],
-    ownerMessage: ["네 결제요청 보낼게요~"],
-  };
+import { useTheme } from "@mui/material/styles";
 
+import {
+  Divider,
+  Typography,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+} from "@mui/material";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+
+import PayModal from "../UI/Modal/PayRequestModal";
+import axios from 'axios';
+
+const ChatMenu = ({ otherNickname, updateMessages, postId }) => {
   const theme = useTheme();
+  const navigate = useNavigate();
+  const location = useLocation();
 
+  const loginUser = useSelector((state) =>
+    state.user ? state.user.user.name : ""
+  );
+
+  const { roomId } = useParams();
+
+  const chatroomInfo = location.state;
+
+  // 메뉴 관련
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const navigate = useNavigate();
 
-  const quitChatroom = () => {
+  // 모달 관련
+  const [modalOpen, setModalOpen] = React.useState(false);
+  const handleModalOpen = () => setModalOpen(true);
+  const handleModalClose = () => setModalOpen(false);
+
+  const handlePay = () => {
+    // 결제 기능
+    handleModalOpen();
+    setAnchorEl(null);
+  };
+
+  const handleQuitChatroom = () => {
     setAnchorEl(null);
     navigate("/chat");
   };
 
-  const done = () => {
-    setAnchorEl(null);
-    navigate("/chat");
+  const handleDone = () => {
+    
+    axios.put(process.env.REACT_APP_API_URL + `chats/done/${roomId}`)
+      .then(response => {
+        console.log('완료');
+        setAnchorEl(null);
+        navigate("/chat"); 
+      })
+      .catch(error => {
+        setAnchorEl(null);
+        console.error('실패', error);
+      });
   };
 
   return (
     <div>
+      <PayModal
+        open={modalOpen}
+        handleClose={handleModalClose}
+        updateMessages={updateMessages}
+      />
       <div id="chat-top">
         <div id="chat-top-left">
-          <Typography variant="h5" component="div">
-            {chatRoomInfo.owner}
+          <Typography variant="h6" component="div" id="chatroom-title">
+            {chatroomInfo.boardTitle}
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            {chatRoomInfo.title}
+            {otherNickname}
           </Typography>
         </div>
         <div id="chat-top-right">
-          <MenuIcon id="hamburger-icon" />
+          {/* <MenuIcon id="hamburger-icon" /> */}
           <IconButton
             onClick={handleClick}
             aria-controls={open ? "account-menu" : undefined}
@@ -101,30 +134,55 @@ const ChatMenu = () => {
             transformOrigin={{ horizontal: "right", vertical: "top" }}
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
-            <MenuItem onClick={handleClose}>
-              <ListItemIcon>
-                <PaymentIcon />
-              </ListItemIcon>
-              결제요청
-            </MenuItem>
-            <MenuItem onClick={done}>
-              <ListItemIcon>
-                <CheckCircleOutlineIcon />
-              </ListItemIcon>
-              판매완료
-            </MenuItem>
-            <MenuItem onClick={quitChatroom}>
-              <ListItemIcon>
-                <Logout />
-              </ListItemIcon>
-              채팅창 나가기
-            </MenuItem>
+            {chatroomInfo && (
+              <div>
+                {chatroomInfo.writerNickname === loginUser && (
+                  <MenuItem onClick={handleDone}>
+                    <ListItemIcon>
+                      <CheckCircleOutlineIcon />
+                    </ListItemIcon>
+                    교환완료
+                  </MenuItem>
+                )}
+                <MenuItem onClick={handleQuitChatroom}>
+                  <ListItemIcon>
+                    <Logout />
+                  </ListItemIcon>
+                  나가기
+                </MenuItem>
+              </div>
+            )}
+            {/* {chatRoomInfo.type === "판매" && (
+              <div>
+                {chatRoomInfo.writerNickname === loginUser && (
+                  <div>
+                    <MenuItem onClick={handlePay}>
+                      <ListItemIcon>
+                        <PaymentIcon />
+                      </ListItemIcon>
+                      결제요청
+                    </MenuItem>
+                    <MenuItem onClick={handleDone}>
+                      <ListItemIcon>
+                        <CheckCircleOutlineIcon />
+                      </ListItemIcon>
+                      판매완료
+                    </MenuItem>
+                  </div>
+                )}
+
+                <MenuItem onClick={handleQuitChatroom}>
+                  <ListItemIcon>
+                    <Logout />
+                  </ListItemIcon>
+                  나가기
+                </MenuItem>
+              </div>
+            )} */}
           </Menu>
         </div>
       </div>
-      <Divider
-        sx={{ height: 2, backgroundColor: theme.palette.primary.main }}
-      />
+      <Divider />
     </div>
   );
 };

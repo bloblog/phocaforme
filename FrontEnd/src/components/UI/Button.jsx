@@ -1,18 +1,18 @@
-// 확인, 취소, 이런 버튼들
-// 문구 다른 건 못쓰는 건가?? 문구 같은데 랜딩 다른 경우만 재사용??
 import * as React from "react";
-import { Button as BaseButton, buttonClasses } from "@mui/base/Button";
+
 import { styled } from "@mui/system";
+
+import { Button as BaseButton, buttonClasses } from "@mui/base/Button";
 import Stack from "@mui/material/Stack";
 
-export default function UnstyledButtonsIntroduction() {
+const UnstyledButtonsIntroduction = () => {
   return (
     <Stack spacing={2} direction="row">
       <Button>Button</Button>
       <Button disabled>Disabled</Button>
     </Stack>
   );
-}
+};
 
 const blue = {
   200: "#99CCFF",
@@ -87,3 +87,4 @@ const Button = styled(BaseButton)(
 );
 
 export { Button };
+export default UnstyledButtonsIntroduction;

@@ -1,22 +1,30 @@
-import profile from "../../assets/images/NCT_도영.PNG";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-import * as React from "react";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import ChatOutlinedIcon from "@mui/icons-material/ChatOutlined";
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import Divider from "@mui/material/Divider";
+import axios from "axios";
+
+import getCookie from "../../utils/getCookie";
 
 import { useTheme } from "@mui/material/styles";
 
-import GPS from "./GPS";
+import {
+  MenuItem,
+  Menu,
+  Typography,
+  Box,
+  Button,
+  IconButton,
+  Divider,
+  Paper,
+  Avatar,
+} from "@mui/material";
 
-import { useNavigate } from "react-router-dom";
-import { Paper } from "@mui/material";
+import ChatOutlinedIcon from "@mui/icons-material/ChatOutlined";
+import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
+
+import GPS from "./GPS";
+import noBiasImg from "../../assets/images/no_bias.jpg";
 
 const ProfileImage = () => {
   const theme = useTheme();
@@ -37,6 +45,33 @@ const ProfileImage = () => {
     setAnchorElUser(null);
   };
 
+  const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.user.user);
+
+  const handleLogout = () => {
+    // dispatch(logoutUser());
+    window.location.href = process.env.REACT_APP_LOGIN_API_URL + "auth/logout";
+  };
+
+  const [biasImg, setBiasImg] = useState(null);
+
+  // 렌더링 시 최애 정보 가져오기
+  useEffect(() => {
+    if (getCookie('profile')) {
+      axios
+        .get(process.env.REACT_APP_API_URL + `user/bias`, {
+          withCredentials: true,
+        })
+        .then((response) => {
+          setBiasImg(response.data.idolImage);
+        })
+        .catch((error) => {
+          console.error("Error get bias:", error);
+        });
+    }
+  }, [user]);
+
   return (
     <div className="profile-image-container">
       <Box id="menu-container">
@@ -44,13 +79,13 @@ const ProfileImage = () => {
           <img
             id="profile-image"
             className="profile-image gradient-border background-image"
-            src={profile}
+            src={biasImg ? biasImg : noBiasImg}
           ></img>
         </IconButton>
         <Paper sx={{ backgroundColor: theme.palette.primary.main }}>
           <Menu
             className="profile-container"
-            sx={{ mt: "4rem" }}
+            sx={{ mt: "6vh" }}
             id="menu-appbar"
             anchorEl={anchorElUser}
             anchorOrigin={{
@@ -84,7 +119,12 @@ const ProfileImage = () => {
               <PersonOutlinedIcon className="dropdown-icon" />
               <Typography textAlign="center">마이페이지</Typography>
             </MenuItem>
-            <Button variant="contained" color="primary" disableElevation>
+            <Button
+              variant="contained"
+              color="primary"
+              disableElevation
+              onClick={handleLogout}
+            >
               로그아웃
             </Button>
           </Menu>

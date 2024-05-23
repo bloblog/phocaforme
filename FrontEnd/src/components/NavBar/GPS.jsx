@@ -1,81 +1,127 @@
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
-
-import ReplayCircleFilledOutlinedIcon from '@mui/icons-material/ReplayCircleFilledOutlined';
-import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
-
-const IOSSwitch = styled((props) => (
-  <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
-))(({ theme }) => ({
-  width: 42,
-  height: 26,
-  padding: 0,
-  '& .MuiSwitch-switchBase': {
-    padding: 0,
-    margin: 2,
-    transitionDuration: '300ms',
-    '&.Mui-checked': {
-      transform: 'translateX(16px)',
-      color: '#fff',
-      '& + .MuiSwitch-track': {
-        backgroundColor: theme.palette.mode === 'dark' ? 'rgba(105, 112, 119, 1)' : 'primary',
-        opacity: 1,
-        border: 0,
-      },
-      '&.Mui-disabled + .MuiSwitch-track': {
-        opacity: 0.5,
-      },
-    },
-    '&.Mui-focusVisible .MuiSwitch-thumb': {
-      color: '#33cf4d',
-      border: '6px solid #fff',
-    },
-    '&.Mui-disabled .MuiSwitch-thumb': {
-      color:
-        theme.palette.mode === 'light'
-          ? theme.palette.grey[100]
-          : theme.palette.grey[600],
-    },
-    '&.Mui-disabled + .MuiSwitch-track': {
-      opacity: theme.palette.mode === 'light' ? 0.7 : 0.3,
-    },
-  },
-  '& .MuiSwitch-thumb': {
-    boxSizing: 'border-box',
-    width: 22,
-    height: 22,
-  },
-  '& .MuiSwitch-track': {
-    borderRadius: 26 / 2,
-    backgroundColor: theme.palette.mode === 'light' ? 'rgba(105, 112, 119, 1)' : 'primary',
-    opacity: 1,
-    transition: theme.transitions.create(['background-color'], {
-      duration: 500,
-    }),
-  },
-}));
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import Cookies from "js-cookie";
+import axios from "axios";
+import IOSSwitch from "../../styles/IOSSwitch.js";
+import { FormControlLabel, Switch, CircularProgress } from "@mui/material";
+import {
+  ReplayCircleFilledOutlined,
+  LocationOnOutlined,
+} from "@mui/icons-material";
+import { setLocation, setLocationLongLat } from "../../store2/loginUser.js";
 
 export default function GPS() {
-  return (
-    <>
-    <div id='gps-top'>
-        <FormControlLabel
-            labelPlacement="start"
-            label="GPS"
-            control={<IOSSwitch sx={{ m: 1 }} />}
-        />
-        <div id='refresh-container'>
-            <ReplayCircleFilledOutlinedIcon/>
-        </div>
-    </div>
-    <div id='gps-bottom'>
-        <LocationOnOutlinedIcon/>
-        <span>강남구 역삼동</span>
-    </div>
-    </>
-    
+  const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.user.user);
 
+  const initialSwitchValue = Cookies.get("address") ? true : false;
+  const [isSwitchOn, setIsSwitchOn] = useState(initialSwitchValue);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSwitchChange = () => {
+    setIsSwitchOn((prev) => !prev);
+    if (isSwitchOn) {
+      turnOffGps();
+    }
+  };
+
+  useEffect(() => {
+    if (isSwitchOn) {
+      setIsLoading(true);
+      navigator.geolocation.getCurrentPosition((position) => {
+        getAddress(position.coords.longitude, position.coords.latitude);
+        dispatch(
+          setLocationLongLat([
+            position.coords.longitude,
+            position.coords.latitude,
+          ])
+        );
+        setIsLoading(false);
+      });
+    }
+  }, [isSwitchOn, dispatch]);
+
+  const getAddress = (long, lat) => {
+    axios
+      .put(
+        process.env.REACT_APP_API_URL + `gps`,
+        {
+          longitude: long,
+          latitude: lat,
+        },
+        {
+          withCredentials: true,
+        }
+      )
+      .then((response) => {
+        const [, ...restArray] = response.data.split(" ");
+        const formattedLocation = restArray.join(" ");
+        dispatch(setLocation(formattedLocation));
+      })
+      .catch((error) => {
+        console.error("주소변환 실패:", error);
+      });
+  };
+
+  const turnOffGps = () => {
+    axios
+      .get(process.env.REACT_APP_API_URL + `gps`, {
+        withCredentials: true,
+      })
+      .then((response) => {
+        dispatch(setLocation(null));
+        dispatch(setLocationLongLat([]));
+      })
+      .catch((error) => {
+        console.error("gps off error:", error);
+      });
+  };
+
+  const handleRefresh = () => {
+    if (isSwitchOn) {
+      setIsLoading(true);
+      navigator.geolocation.getCurrentPosition((position) => {
+        dispatch(
+          setLocation(
+            getAddress(position.coords.longitude, position.coords.latitude)
+          )
+        );
+        dispatch(
+          setLocationLongLat([
+            position.coords.longitude,
+            position.coords.latitude,
+          ])
+        );
+        setIsLoading(false);
+      });
+    }
+  };
+
+  return (
+    <div id="gps-container">
+      <div id="gps-top">
+        <FormControlLabel
+          labelPlacement="start"
+          label="GPS"
+          control={
+            <IOSSwitch
+              checked={isSwitchOn}
+              onChange={handleSwitchChange}
+              sx={{ m: 1 }}
+            />
+          }
+        />
+        <div id="refresh-container">
+          <ReplayCircleFilledOutlined onClick={handleRefresh} />
+        </div>
+      </div>
+      {isLoading && <CircularProgress id="loading-text" />}
+      {isSwitchOn && !isLoading && (
+        <div id="gps-bottom">
+          <LocationOnOutlined id="location-icon" />
+          <div>{currentUser.location}</div>
+        </div>
+      )}
+    </div>
   );
 }

@@ -1,18 +1,18 @@
 import * as React from "react";
+import { useSelector } from "react-redux";
+import { useNavigate, useLocation } from "react-router-dom";
 
-import Box from "@mui/material/Box";
-import Fab from "@mui/material/Fab";
-import Popover from "@mui/material/Popover";
+import { Box, Fab, Popover } from "@mui/material";
 
 import AddIcon from "@mui/icons-material/Add";
 import CreateIcon from "@mui/icons-material/Create";
 
-import { useNavigate } from "react-router-dom";
-
-export default function FloatingActionButtons() {
+const FloatingActionButtons = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const user = useSelector((state) => state.user.user);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -25,13 +25,22 @@ export default function FloatingActionButtons() {
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
+  if (
+    !user.userId ||
+    location.pathname.includes("chatroom") ||
+    location.pathname.includes("write")
+  ) {
+    return null;
+  }
+
   return (
     <Box
       sx={{
         position: "fixed",
-        bottom: "5%",
-        right: "5%",
+        bottom: "2vh",
+        right: "3vw",
         "& > :not(style)": { m: 1 },
+        zIndex: 2000,
       }}
     >
       <Fab color="warning" aria-label="add">
@@ -43,7 +52,7 @@ export default function FloatingActionButtons() {
           onClose={handleClose}
           disableScrollLock
           anchorOrigin={{
-            horizontal: -90,
+            horizontal: -100,
             vertical: -90,
           }}
         >
@@ -61,4 +70,5 @@ export default function FloatingActionButtons() {
       </Fab>
     </Box>
   );
-}
+};
+export default FloatingActionButtons;

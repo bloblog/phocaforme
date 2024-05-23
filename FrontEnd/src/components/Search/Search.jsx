@@ -1,31 +1,45 @@
-import { useState } from "react";
-import { Button } from "../UI/Button.jsx";
-// import styled from 'styled-components';
-import { addSearchData } from "../../store2/search.js";
-import { useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import RadioButton2 from "../UI/RadioButton.jsx";
-import BarterWrite2 from "../../components/PostWrite/BarterWrite2.jsx";
-import SellWrite2 from "../../components/PostWrite/SellWrite2.jsx";
-import TypeDropdown2 from "../UI/Dropdown/TypeDropdown2.jsx";
-import SearchIcon from '@mui/icons-material/Search';
+import { useDispatch } from "react-redux";
+
+import { addSearchData, clearSearchData } from "../../store2/search.js";
+
 import { FaSearch } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
 
+import { useTheme } from "@mui/material/styles";
 
-const Search = function () {
+import { Button } from "@mui/material";
+import BarterWrite2 from "../../components/PostWrite/BarterWrite2.jsx";
+import SellWrite2 from "../../components/PostWrite/SellWrite2.jsx";
+import TypeDropdown2 from "../UI/Dropdown/TypeDropdown2.jsx";
+
+const Search = () => {
   const [userInput, setUserInput] = useState("");
   const [isClicked, setIsClicked] = useState(false);
-  const [isExchange, setIsExchange] = useState(true);
+  const [selectedGroup, setSelectedGroup] = useState(null);
   const [targetMembers, setTargetMembers] = useState([]);
   const [ownMembers, setOwnMembers] = useState([]);
-  const [targetMembersInput, setTargetMembersInput] = useState(null);
-  const [ownMembersInput, setOwnMembersInput] = useState(null);
   const [cardType, setCardType] = useState(null);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const theme = useTheme();
+
+  // 최근 검색 기록 가져와
+  useEffect(() => {
+    const searchHistory = JSON.parse(localStorage.getItem("searchCondition"));
+
+    if (searchHistory) {
+      setSelectedGroup(searchHistory.group);
+      setUserInput(searchHistory.query);
+      setOwnMembers(searchHistory.ownMembers);
+      setTargetMembers(searchHistory.targetMembers);
+      setCardType(searchHistory.cardType);
+    }
+  }, [isClicked]);
 
   const handleTypeChange = (cardType) => {
     if (cardType == null) {
@@ -38,8 +52,8 @@ const Search = function () {
   };
 
   const handleUserInputChange = (event) => {
-    setUserInput(event.target.value)
-  }
+    setUserInput(event.target.value);
+  };
 
   function onClick() {
     setIsClicked((prevIsClicked) => !prevIsClicked);
@@ -47,114 +61,121 @@ const Search = function () {
 
   const handleOwnMemberSelection = (members) => {
     setOwnMembers(members);
+    console.log(members);
   };
 
   const handleTargetMemberSelection = (members) => {
     setTargetMembers(members);
   };
 
-  function onExchangeChange(value) {
-    setIsExchange(value === "option1");
-  }
+  const handleGroupSelection = (group) => {
+    setSelectedGroup(group);
+  };
 
-  function handleSearchClick () {
-    let userInputCondition = {};
-
-    // 사용자가 입력한 값이 있으면 검색 조건에 추가
-    if (userInput) {
-      userInputCondition = { userInput: userInput };
-    }
-
+  function handleSearchClick() {
     const searchData = {
-      ownMembers: ownMembers.length > 0 ? ownMembers[0].value : ownMembersInput,
-      targetMembers: targetMembers.length > 0 ? targetMembers[0].value : targetMembersInput,
-      cardType: cardType ? cardType.value : null,
-      ...userInputCondition 
+      group: selectedGroup ? selectedGroup : null,
+      query: userInput ? userInput : null,
+      ownMembers: ownMembers ? ownMembers : [],
+      targetMembers: targetMembers ? targetMembers : [],
+      cardType: cardType ? cardType : null,
     };
 
-    console.log(searchData)
     dispatch(addSearchData(searchData));
+
+    // 최근 검색 기록 저장
+    localStorage.setItem("searchCondition", JSON.stringify(searchData));
+
+    // 초기화
+    setUserInput(null);
+    setSelectedGroup(null);
+    setOwnMembers([]);
+    setTargetMembers([]);
+    setCardType(null);
+
     navigate("/post");
+    onClick(); // 검색창 닫기
   }
 
-  const handleUserInputClick = (event) => {
-    event.stopPropagation(); // 클릭 이벤트 버블링 중단
-  }
-  
+  // 엔터 키를 눌렀을 때도 send
+  const handleEnter = (e) => {
+    if (e.key === "Enter") {
+      handleSearchClick();
+    }
+  };
+
   return (
-    // <section id="user-input">
-    <div id="search-container"> 
+    <div id="search-container">
       <h3>어떤 포카를 찾으시나요?</h3>
-      
-      {!isClicked ? (
-        <div style={{ position: 'relative' }}>
-          <input
-            id="title-input"
-            value={userInput}
-            
-            onChange={handleUserInputChange}
-            variant="outlined"
-            placeholder='앨범, 버전명 등을 입력해주세요'
-            style={{ paddingLeft: '2rem' }} // 아이콘의 공간 확보를 위해 입력 상자의 왼쪽 패딩을 추가
-          />
-          <FaSearch style={{ position: 'absolute', top: '50%', left: '0.5rem', transform: 'translateY(-50%)', color:'gray' }} />
-          <IoIosArrowDown onClick={onClick} style={{ position: 'absolute', top: '50%', right: '0.5rem', transform: 'translateY(-50%)' }} />
-        </div>
-      ) : (
-      <div>
 
-        <div style={{ display: 'flex', justifyContent: 'center'}}>
-          <RadioButton2 onChange={onExchangeChange} />
-        </div>
+      <div id="search-option-container">
+        {!isClicked ? (
+          <div style={{ position: "relative" }}>
+            <input
+              onClick={onClick}
+              onKeyDown={handleEnter}
+              id="search-title-input"
+              value={userInput}
+              onChange={handleUserInputChange}
+              variant="outlined"
+              placeholder="앨범, 버전명 등을 입력해주세요"
+            />
+            <FaSearch className="search-icon-start" onClick={onClick} />
+            <IoIosArrowDown className="search-icon-end" onClick={onClick} />
+          </div>
+        ) : (
+          <div id="search-container">
+            <div style={{ position: "relative" }}>
+              <input
+                id="search-title-input"
+                value={userInput}
+                onKeyDown={handleEnter}
+                onChange={handleUserInputChange}
+                variant="outlined"
+                placeholder="앨범, 버전명 등을 입력해주세요"
+              />
+              <FaSearch className="search-icon-start" onClick={onClick} />
+              <IoIosArrowDown className="search-icon-end" onClick={onClick} />
+            </div>
 
-        <div style={{ position: 'relative' }}>
-          <input
-            id="title-input"
-            value={userInput}
-            onChange={handleUserInputChange}
-            variant="outlined"
-            placeholder='앨범, 버전명 등을 입력해주세요'
-            style={{ paddingLeft: '2rem' }} // 아이콘의 공간 확보를 위해 입력 상자의 왼쪽 패딩을 추가
-          />
-          <FaSearch style={{ position: 'absolute', top: '50%', left: '0.5rem', transform: 'translateY(-50%)', color:'gray' }} />
-          <IoIosArrowUp onClick={onClick} style={{ position: 'absolute', top: '50%', right: '0.5rem', transform: 'translateY(-50%)' }} />
-        </div>
-
-        <div>
-          {isExchange ? (
-            <BarterWrite2
-              onChange={(ownMembers, targetMembers) => {
-                handleOwnMemberSelection(ownMembers);
-                handleTargetMemberSelection(targetMembers);
+            <div>
+              {/* {isExchange ? ( */}
+                <BarterWrite2
+                  defaultGroup={selectedGroup}
+                  defaultOwnMembers={ownMembers}
+                  defaultTargetMembers={targetMembers}
+                  onChange={(group, ownMembers, targetMembers) => {
+                    handleGroupSelection(group);
+                    handleOwnMemberSelection(ownMembers);
+                    handleTargetMemberSelection(targetMembers);
+                  }}
+                />
+              {/* ) : (
+                <SellWrite2 />
+              )} */}
+            </div>
+            <div>
+            <div className="searchbar-title">포토카드 종류</div>
+            <TypeDropdown2
+              defaultCardType={cardType}
+              onChange={(type) => {
+                handleTypeChange(type);
               }}
             />
-          ) : (
-            <SellWrite2 />
-          )}
-        </div>
-        <div>
-          <h3>포토카드 종류</h3>
-          <TypeDropdown2
-            onChange={(type) => {
-              handleTypeChange(type);
-            }}
-          />
-        </div>
-        <Button 
-          onClick={handleSearchClick}
-          sx={{
-             mt: 2,
-             ml: 18,
-             width: "120px",
-             height: "50px"
-            }}
-        >
-            검색
-        </Button>
+
+            </div>
+            <div id="search-buttons">
+              <Button id="search-button" onClick={handleSearchClick}>
+                검색
+              </Button>
+              <Button id="search-close-button" onClick={onClick}>
+                닫기
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
-      )}
     </div>
-    // </section>
   );
 };
 

@@ -2,13 +2,14 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
 import GroupDropdown2 from "../UI/Dropdown/GroupDropdown2.jsx";
 import MemberDropdown2 from "../UI/Dropdown/MemberDropdown2.jsx";
 
 const BarterWrite = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // 상태로 값 관리
+
   const [isExchange, setIsExchange] = useState(true);
 
   const [selectedGroup, setSelectedGroup] = useState({

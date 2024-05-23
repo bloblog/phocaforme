@@ -1,6 +1,5 @@
-import React from 'react';
-import PostWrite from "../components/PostWrite/PostWrite";
 import { Container } from '@mui/material';
+import PostWrite from "../components/PostWrite/PostWrite";
 
 const postWrite = () => {
 	return (

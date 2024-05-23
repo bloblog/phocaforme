@@ -1,40 +1,53 @@
-// 게시글(판매) 생성 페이지
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import SearchContainer from "../../components/Search/SearchBar.jsx";
 
-import GroupDropdown2 from "../UI/Dropdown/GroupDropdown2.jsx";
-import MemberDropdown2 from "../UI/Dropdown/MemberDropdown2.jsx";
+import GroupDropdown2 from "../UI/Dropdown/GroupDropdown.jsx";
+import MemberDropdown2 from "../UI/Dropdown/MemberDropdown.jsx";
 
 import Chip from "@mui/material/Chip";
 
-const BarterWrite2 = ({ onChange }) => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+const BarterWrite2 = ({
+  defaultGroup,
+  defaultOwnMembers,
+  defaultTargetMembers,
+  onChange,
+}) => {
 
-  const [selectedGroup, setSelectedGroup] = useState({
-    value: "",
-    label: "",
-    avatarSrc: "",
-  });
+  const [selectedGroup, setSelectedGroup] = useState(defaultGroup);
+
+  const loginUser = useSelector((state) => state.user.user);
 
   const handleGroupChange = (group) => {
-    setSelectedGroup(group || { value: "", label: "", avatarSrc: "" });
+    if (group) {
+      setSelectedGroup(group);
+      onChange(selectedGroup, ownMembers, targetMembers);
+    } else {
+      setSelectedGroup(null);
+    }
+    // 그룹이 변경되었을 때 멤버와 입력값 초기화
+    setOwnMembers([]);
+    setTargetMembers([]);
+    setOwnMembersInput("");
+    setTargetMembersInput("");
   };
 
-  const [ownMembers, setOwnMembers] = useState([]);
-  const [targetMembers, setTargetMembers] = useState([]);
+  const [ownMembers, setOwnMembers] = useState(
+    defaultOwnMembers ? defaultOwnMembers : []
+  );
+  const [targetMembers, setTargetMembers] = useState(
+    defaultTargetMembers ? defaultTargetMembers : []
+  );
 
-  const [ownMembersInput, setOwnMembersInput] = useState('');
-  const [targetMembersInput, setTargetMembersInput] = useState('');
+  const [ownMembersInput, setOwnMembersInput] = useState("");
+  const [targetMembersInput, setTargetMembersInput] = useState("");
 
   /// 수정해야함
   const handleOwnMemberChange = (member) => {
     if (member) {
       setOwnMembers((prevOwnMembers) => [...prevOwnMembers, member]);
-      onChange([...ownMembers, member], targetMembers);
-      setOwnMembersInput(member.value);
+      onChange(selectedGroup, [...ownMembers, member], targetMembers);
+      setOwnMembersInput(member);
     } else {
       setOwnMembersInput(ownMembersInput);
     }
@@ -43,41 +56,60 @@ const BarterWrite2 = ({ onChange }) => {
   const handleTargetMemberChange = (member) => {
     if (member) {
       setTargetMembers((prevTargetMembers) => [...prevTargetMembers, member]);
-      onChange(ownMembers, [...targetMembers, member]);
-      setTargetMembersInput(member.value);
+      onChange(selectedGroup, ownMembers, [...targetMembers, member]);
+      setTargetMembersInput(member);
     } else {
       setTargetMembersInput(targetMembersInput);
     }
-    
   };
 
   // 멤버 삭제 관련
   const handleOwnMemberDelete = (deletedMember) => {
-    setOwnMembers(ownMembers.filter((member) => member !== deletedMember));
+    setOwnMembers((prevOwnMembers) =>
+      prevOwnMembers.filter(
+        (member) => member.idolMemberId !== deletedMember.idolMemberId
+      )
+    );
+    onChange(
+      selectedGroup,
+      (prevOwnMembers) =>
+        prevOwnMembers.filter(
+          (member) => member.idolMemberId !== deletedMember.idolMemberId
+        ),
+      targetMembers
+    );
   };
 
   const handleTargetMemberDelete = (deletedMember) => {
-    setTargetMembers(
-      targetMembers.filter((member) => member !== deletedMember)
+    setTargetMembers((prevTargetMembers) =>
+      prevTargetMembers.filter(
+        (member) => member.idolMemberId !== deletedMember.idolMemberId
+      )
+    );
+    onChange(selectedGroup, ownMembers, (prevTargetMembers) =>
+      prevTargetMembers.filter(
+        (member) => member.idolMemberId !== deletedMember.idolMemberId
+      )
     );
   };
 
   return (
-    <div>
+    <div id="group-member-input">
       <div id="group-input" className="search-box-group">
-        <h3>그룹명</h3>
+        <div className="searchbar-title">그룹명</div>
         <GroupDropdown2
+          defaultGroup={defaultGroup}
           onChange={(group) => {
             handleGroupChange(group);
           }}
-          stlye={{ width: "24rem" }}
         />
       </div>
       <div id="member-input">
         <div id="own-member-dropdown">
-          <h3>보유한 멤버</h3>
+          <div className="searchbar-title">보유한 멤버</div>
+
           <MemberDropdown2
-            selectedGroup={selectedGroup.value}
+            selectedGroup={selectedGroup}
             onChange={(member) => {
               handleOwnMemberChange(member);
             }}
@@ -87,24 +119,23 @@ const BarterWrite2 = ({ onChange }) => {
               ownMembers.map((tag, index) => (
                 <Chip
                   key={index}
-                  label={tag?.label}
+                  label={tag?.idolName}
                   variant="outlined"
                   onClick={() => handleOwnMemberDelete(tag)}
                   onDelete={() => handleOwnMemberDelete(tag)}
                   style={{
                     margin: "4px",
                     border: 0,
-                    // backgroundColor: tag.color,
-                    // color: "white",
                   }}
                 />
               ))}
           </div>
         </div>
         <div>
-          <h3>찾는 멤버</h3>
+          <div className="searchbar-title">찾는 멤버</div>
+
           <MemberDropdown2
-            selectedGroup={selectedGroup.value}
+            selectedGroup={selectedGroup}
             onChange={(member) => {
               handleTargetMemberChange(member);
             }}
@@ -114,15 +145,13 @@ const BarterWrite2 = ({ onChange }) => {
               targetMembers.map((tag, index) => (
                 <Chip
                   key={index}
-                  label={tag?.label}
+                  label={tag?.idolName}
                   variant="outlined"
                   onClick={() => handleTargetMemberDelete(tag)}
                   onDelete={() => handleTargetMemberDelete(tag)}
                   style={{
                     margin: "4px",
                     border: 0,
-                    // backgroundColor: tag.color,
-                    // color: "white",
                   }}
                 />
               ))}

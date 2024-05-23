@@ -1,18 +1,25 @@
-// 게시글(판매) 생성 페이지
+// 게시글 생성 페이지
 import React, { useState, useRef } from "react";
-
-import { Container } from "@mui/material";
-import { TextField, Button, TextareaAutosize } from "@mui/material";
-import RadioButton2 from "../../components/UI/RadioButton2.jsx";
-import AddIcon from "@mui/icons-material/Add";
-
 import { useSelector, useDispatch } from "react-redux";
-import { addPost } from "../../store2/post.js";
 import { useNavigate } from "react-router-dom";
 
+import { addPost } from "../../store2/post.js";
+
+import {
+  Container,
+  TextField,
+  Button,
+  TextareaAutosize,
+  CircularProgress,
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+
+import RadioButton2 from "../../components/UI/RadioButton2.jsx";
 import BarterWrite from "./BarterWrite.jsx";
 import SellWrite from "./SellWrite.jsx";
 import TypeDropdown from "../UI/Dropdown/TypeDropdown.jsx";
+import axios from "axios";
 
 const PostWrite = () => {
   const dispatch = useDispatch();
@@ -23,36 +30,47 @@ const PostWrite = () => {
   const [content, setContent] = useState("");
   const [imagePreviews, setImagePreviews] = useState([]);
   const [isExchange, setIsExchange] = useState(true);
-  const [ownMembers, setOwnMembers] = useState([]);
-  const [targetMembers, setTargetMembers] = useState([]);
-
-  const posts = useSelector((state) => (state.post ? state.post.posts : []));
-
-  // 교환인지 판매인지
-  function onExchangeChange(value) {
-    setIsExchange(value === "option1");
-  }
-
-  const handleOwnMemberSelection = (members) => {
-    setOwnMembers(members);
-  };
-
-  const handleTargetMemberSelection = (members) => {
-    setTargetMembers(members);
-  };
+  const [ownIdolMembers, setownIdolMembers] = useState([]);
+  const [findIdolMembers, setfindIdolMembers] = useState([]);
+  const [selectedGroup, setSelectedGroup] = useState(0);
 
   // 카드 타입 핸들러
   const [cardType, setCardType] = useState(null);
 
+  const posts = useSelector((state) => (state.post ? state.post.posts : []));
+  const user = useSelector((state) => (state.user ? state.user.user : []));
+
+  // 교환인지 판매인지
+  function onExchangeChange(value) {
+    setIsExchange(value === "교환");
+  }
+
+  const handleOwnMemberSelection = (members) => {
+    setownIdolMembers(members);
+  };
+
+  const handleTargetMemberSelection = (members) => {
+    setfindIdolMembers(members);
+  };
+  ////// 0214 그냥 타입 넘겨줄 때 객체형식 말고 문자로 넘겨줌
   const handleTypeChange = (cardType) => {
-    if (cardType == null) {
-      cardType = {
-        value: "",
-        label: "",
-      };
-    }
     setCardType(cardType);
   };
+
+  const handleSelectedGroupChange = (group) => {
+    console.log(group);
+    setSelectedGroup(group);
+  };
+
+  // const handleTypeChange = (cardType) => {
+  //   if (cardType == null) {
+  //     cardType = {
+  //       value: "",
+  //       label: "",
+  //     };
+  //   }
+  //   setCardType(cardType);
+  // };
 
   // 제목 변경 핸들러
   const handleTitleChange = (event) => {
@@ -107,31 +125,65 @@ const PostWrite = () => {
     setContent(event.target.value);
   };
 
+  const [loading, setLoading] = useState(false);
   // 게시물 생성 버튼 클릭 핸들러
   const handlePostClick = () => {
+    setLoading(true);
     // 새로운 게시물 객체 생성
-    const newPost = isExchange
-      ? {
-          id: posts.length + 1,
-          title,
-          images,
-          content,
-          ownMembers,
-          targetMembers,
-          type: "교환",
-        }
-      : {
-          id: posts.length + 1,
-          title,
-          images,
-          content,
-          ownMembers,
-          type: "판매",
-        };
+    const newPost = new FormData();
+    newPost.append("title", title);
+    // newPost.append("content", content);
 
-    // Redux를 통해 게시물 추가
-    dispatch(addPost(newPost));
-    navigate("/post");
+    const encodedContent = encodeURIComponent(content);
+    newPost.append("content", encodedContent);
+    ownIdolMembers.forEach((member) => {
+      newPost.append("ownIdolMembers", member.idolMemberId);
+    });
+
+    findIdolMembers.forEach((member) => {
+      newPost.append("findIdolMembers", member.idolMemberId);
+    });
+    newPost.append("cardType", cardType.value);
+
+    images.forEach((image) => {
+      newPost.append(`photos`, image);
+    });
+
+    newPost.append("groupId", selectedGroup.idolGroupId);
+
+    // formdata값확인용 코드 //////
+    const formDataToJson = (formData) => {
+      const jsonObject = {};
+      for (const [key, value] of formData.entries()) {
+        jsonObject[key] = value;
+      }
+      return JSON.stringify(jsonObject);
+    };
+
+    const test = formDataToJson(newPost);
+    console.log(test);
+    // navigate("/post", {state: });
+
+    axios
+      .post(process.env.REACT_APP_API_URL + "barter", newPost, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        // navigate("/post");
+        setTimeout(() => {
+          setLoading(false);
+          navigate("/post");
+        }, 3000);
+      })
+      .catch((error) => {
+        setTimeout(() => {
+          setLoading(false);
+          console.error("Error creating post:", error);
+        }, 3000);
+      });
   };
 
   const handleCancelButton = () => {
@@ -144,51 +196,7 @@ const PostWrite = () => {
       <h2 className="write-title">게시글 작성하기</h2>
 
       <div id="write-container">
-        <div id="write-radio-container">
-          <RadioButton2 onChange={onExchangeChange} />
-        </div>
-        <div id="title-container">
-          <h3>제목</h3>
-          <input
-            id="title-input"
-            value={title}
-            onChange={handleTitleChange}
-            variant="outlined"
-            placeholder="앨범명, 버전명을 입력하세요"
-          />
-        </div>
-
-        <div id="group-member-input">
-          {isExchange ? (
-            <BarterWrite
-              onChange={(ownMembers, targetMembers) => {
-                handleOwnMemberSelection(ownMembers);
-                handleTargetMemberSelection(targetMembers);
-              }}
-            />
-          ) : (
-            <SellWrite
-              onChange={(ownMembers) => {
-                handleOwnMemberSelection(ownMembers);
-              }}
-            />
-          )}
-        </div>
-        <div id="card-input">
-          <h3>포토카드 종류</h3>
-          <TypeDropdown
-            onChange={(type) => {
-              handleTypeChange(type);
-            }}
-          />
-        </div>
         <div id="image-input">
-          <div>
-            <h3>사진 (클릭시 삭제됩니다.)</h3>
-            <p className="info-msg">
-              * 사진 사이즈는 포토카드 사이즈가 좋아요!
-            </p>
-          </div>
           <div id="image-list">
             <input
               type="file"
@@ -199,7 +207,7 @@ const PostWrite = () => {
               multiple
             />
             <div id="image-add-button" onClick={handleImageAdd}>
-              <AddIcon id="image-add-icon" />
+              <PhotoCameraIcon id="image-add-icon" />
             </div>
             {imagePreviews &&
               imagePreviews.map((preview, index) => (
@@ -216,15 +224,57 @@ const PostWrite = () => {
                 </div>
               ))}
           </div>
+          <p className="info-msg">* 사진 클릭 시 삭제됩니다.</p>
         </div>
+        <div id="title-container">
+          <h3 style={{ margin: "0" }}>제목</h3>
+          <input
+            id="title-input"
+            value={title}
+            onChange={handleTitleChange}
+            variant="outlined"
+            placeholder="앨범명, 버전명을 입력하세요"
+          />
+        </div>
+
+        <div id="group-member-input">
+          {isExchange ? (
+            <BarterWrite
+              onChange={(ownIdolMembers, findIdolMembers, selectedGroup) => {
+                handleOwnMemberSelection(ownIdolMembers);
+                handleTargetMemberSelection(findIdolMembers);
+                handleSelectedGroupChange(selectedGroup);
+              }}
+            />
+          ) : (
+            <SellWrite
+              onChange={(ownIdolMembers) => {
+                handleOwnMemberSelection(ownIdolMembers);
+              }}
+            />
+          )}
+        </div>
+        <div id="card-input">
+          <h3>포토카드 종류</h3>
+          <TypeDropdown
+            onChange={(type) => {
+              handleTypeChange(type);
+            }}
+          />
+        </div>
+
         <div id="content-input-container">
           <h3>상세 내용</h3>
-          <input
-            id="content-input"
+          <textarea
+            className="content-input"
             value={content}
             onChange={handleContentChange}
             placeholder="포토카드 상태에 대한 세부 내용을 적어주세요."
+            style={{ whiteSpace: "pre-line" }}
           />
+        </div>
+        <div style={{ textAlign: "center" }}>
+          {loading && <CircularProgress />}
         </div>
         <div id="button-container">
           <Button
@@ -233,7 +283,7 @@ const PostWrite = () => {
             onClick={handlePostClick}
             style={{ marginRight: "10px" }}
           >
-            등록
+            게시글 등록
           </Button>
           <Button
             variant="contained"
