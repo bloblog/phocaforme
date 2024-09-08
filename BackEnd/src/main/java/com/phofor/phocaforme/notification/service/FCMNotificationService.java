@@ -7,13 +7,14 @@ import com.phofor.phocaforme.notification.dto.message.RequestDTO;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public interface FCMNotificationService {
     public void sendMessageTo(RequestDTO requestDTO) throws IOException;
 
-    public Boolean sendChatMessage(ChatRoom chatRoom, String userId);
-    public Boolean sendChatMessage(NotificationDto notificationDto);
-    public Boolean sendBiasMessage(List<String> ids, Long articleId);
+    public CompletableFuture<Boolean> sendChatMessage(ChatRoom chatRoom, String userId);
+    public CompletableFuture<Boolean> sendChatMessage(NotificationDto notificationDto);
+    public CompletableFuture<Boolean> sendBiasMessage(List<String> ids, Long articleId);
 
     public List<NotificationMessageDto> getMessageList(String userId);
 

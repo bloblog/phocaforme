@@ -29,11 +29,14 @@ import okhttp3.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -104,8 +107,11 @@ public class FCMNotificationServiceImpl implements FCMNotificationService {
     }
 
     // 채팅알림 보내기 포스트 맨 테스트 용
+    @Async("asyncTaskExecutor")
+    @Transactional
     @Override
-    public Boolean sendChatMessage(NotificationDto notificationDto) {
+    public CompletableFuture<Boolean> sendChatMessage(NotificationDto notificationDto) {
+        log.info("sendChatMessage - Current Thread: " + Thread.currentThread().getName());
         Optional<UserEntity> senderUserOptional, receiverUserOptional;
         if(notificationDto.getUserId().equals(notificationDto.getOwnerId())){
             senderUserOptional = userRepository.findByUserId(notificationDto.getOwnerId());
@@ -143,7 +149,7 @@ public class FCMNotificationServiceImpl implements FCMNotificationService {
             fcmNotificationRepository.save(notificationEntity);
         } else {
             log.info("User with id not found");
-            return false;
+            return CompletableFuture.completedFuture(false);
         }
 
         // 유저의 디바이스 정보 가져오기
@@ -158,22 +164,25 @@ public class FCMNotificationServiceImpl implements FCMNotificationService {
                         notificationDto.getContent(), notificationDto.getLink()
                 );
                 sendMessage(message);
-                return true;
+                return CompletableFuture.completedFuture(true);
             } catch (Exception e){
-                log.info("request error");
-                return false;
+//                log.info("request error");
+                log.info(e.getMessage());
+                return CompletableFuture.completedFuture(false);
             }
         }
         else {
             log.info("UserDevice with id {} not found", notificationDto.getReceiverId());
-            return false;
+            return CompletableFuture.completedFuture(false);
         }
     }
 
 
     // 채팅 메세지 등록 후 알림 등록
+    @Async("asyncTaskExecutor")
+    @Transactional
     @Override
-    public Boolean sendChatMessage(ChatRoom chatRoom, String userId) {
+    public CompletableFuture<Boolean> sendChatMessage(ChatRoom chatRoom, String userId) {
         String senderNickname, receiverNickname;
         String title, content, link; // 채팅함으로 이동
 
@@ -214,7 +223,7 @@ public class FCMNotificationServiceImpl implements FCMNotificationService {
             fcmNotificationRepository.save(notificationEntity);
         } else {
             log.info("User with id not found");
-            return false;
+            return CompletableFuture.completedFuture(false);
         }
 
         // 유저의 디바이스 정보 가져오기
@@ -228,21 +237,23 @@ public class FCMNotificationServiceImpl implements FCMNotificationService {
                         userDeviceEntity.getDeviceToken(), title, content, link
                 );
                 sendMessage(message);
-                return true;
+                return CompletableFuture.completedFuture(true);
             } catch (Exception e){
                 log.info("request error");
-                return false;
+                return CompletableFuture.completedFuture(false);
             }
         }
         else {
             log.info("UserDevice with id {} not found", receiverUserOptional.get().getUserId());
-            return false;
+            return CompletableFuture.completedFuture(false);
         }
     }
 
     // 갈망포카 메세지 전송
     @Override
-    public Boolean sendBiasMessage(List<String> ids, Long articleId) {
+    @Async("asyncTaskExecutor")
+    @Transactional
+    public CompletableFuture<Boolean> sendBiasMessage(List<String> ids, Long articleId) {
 
         String title = "갈망포카 출현!";
         String content = "새로운 갈망포카가 올라 왔어요!! 확인해보세요!!";
@@ -353,9 +364,9 @@ public class FCMNotificationServiceImpl implements FCMNotificationService {
                     }
                 }
             }
-            return true;
+            return CompletableFuture.completedFuture(true);
         }
-        return false;
+        return CompletableFuture.completedFuture(false);
     }
 
 //    public List<String> findDeviceTokensByIds(List<String> ids) {
@@ -407,7 +418,9 @@ public class FCMNotificationServiceImpl implements FCMNotificationService {
     }
 
     // 알림 메세지 보내기
-    private void sendMessage(String message) throws Exception{
+    @Async("asyncTaskExecutor")
+    void sendMessage(String message) throws Exception{
+        log.info("sendChatMessage - Current Thread: " + Thread.currentThread().getName());
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = RequestBody.create(message,
                 MediaType.get("application/json; charset=utf-8"));
@@ -418,10 +431,25 @@ public class FCMNotificationServiceImpl implements FCMNotificationService {
                 .addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + getAccessToken())
                 .addHeader(HttpHeaders.CONTENT_TYPE, "application/json; UTF-8")
                 .build();
-        Response response = client.newCall(request).execute();
-        System.out.println(response.body().string());
+        // 비동기 요청
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                log.info(e.getMessage());
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response);
+                }
+                // 응답 본문 출력
+                System.out.println(response.body().string());
+            }
+        });
     }
-    
+
     // 토큰 받아오기
     private String getAccessToken() throws IOException {
         String firebaseConfigPath = "firebase/firebase_service_key.json";

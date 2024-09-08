@@ -147,7 +147,8 @@ public class ChatMessageServiceImpl implements ChatMessageService{
         chatRoom.setChatLatest(chatMessage);
 
         // 채팅 알림 보내기
-        if(fcmNotificationService.sendChatMessage(chatRoom, userId)){
+        Boolean result = fcmNotificationService.sendChatMessage(chatRoom, userId).join();
+        if(result){
             log.info("알림 성공");
         }
         else{
@@ -200,18 +201,3 @@ public class ChatMessageServiceImpl implements ChatMessageService{
 //    @Override
 //    public ChatMessageResponseDto chatMessageResponseDto
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

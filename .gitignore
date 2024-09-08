@@ -2,6 +2,8 @@
 # Compiled class file
 *.class
 BackEnd/.env
+FrontEnd/node_modules
+**/BackEnd/src/main/resources/firebase/firebase_service_key.json
 .idea
 .env
 # Log file
