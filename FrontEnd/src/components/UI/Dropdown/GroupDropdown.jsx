@@ -11,7 +11,7 @@ const GroupDropdown = ({ isProfile, defaultGroup, onChange }) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          process.env.REACT_APP_API_URL + "idol/group",
+          import.meta.env.REACT_APP_API_URL + "idol/group",
           {
             withCredentials: true,
           }
@@ -56,7 +56,6 @@ const GroupDropdown = ({ isProfile, defaultGroup, onChange }) => {
             sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
             {...props}
           >
-            
             {`${option.idolGroupNameKr} (${option.idolGroupNameEng})`}
           </Box>
         )}

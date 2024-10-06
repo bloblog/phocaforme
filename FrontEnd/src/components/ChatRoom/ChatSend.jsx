@@ -4,14 +4,10 @@ import { useDispatch } from "react-redux";
 import { Stomp } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 
-import { useTheme } from "@mui/material/styles";
-import { sendChat } from "../../store2/chat.js";
-
 import { TextField, InputAdornment, Popover, Button } from "@mui/material";
 import { Add, Image } from "@mui/icons-material";
 
 const ChatSend = ({ roomId, loginUser, updateMessages }) => {
-
   // 메시지 전송
   const [value, setValue] = useState("");
   const [image, setImage] = useState("");
@@ -21,7 +17,7 @@ const ChatSend = ({ roomId, loginUser, updateMessages }) => {
 
   useEffect(() => {
     // WebSocket 연결 설정
-    const sock = new SockJS(process.env.REACT_APP_API_URL + "ws-stomp");
+    const sock = new SockJS(import.meta.env.REACT_APP_API_URL + "ws-stomp");
     const ws = Stomp.over(sock);
 
     ws.connect(

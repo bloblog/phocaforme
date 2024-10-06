@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
-import { addSearchData, clearSearchData } from "../../store2/search.js";
+import { addSearchData, clearSearchData } from "../../store2/search";
 
 import { FaSearch } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
@@ -140,29 +140,28 @@ const Search = () => {
 
             <div>
               {/* {isExchange ? ( */}
-                <BarterWrite2
-                  defaultGroup={selectedGroup}
-                  defaultOwnMembers={ownMembers}
-                  defaultTargetMembers={targetMembers}
-                  onChange={(group, ownMembers, targetMembers) => {
-                    handleGroupSelection(group);
-                    handleOwnMemberSelection(ownMembers);
-                    handleTargetMemberSelection(targetMembers);
-                  }}
-                />
+              <BarterWrite2
+                defaultGroup={selectedGroup}
+                defaultOwnMembers={ownMembers}
+                defaultTargetMembers={targetMembers}
+                onChange={(group, ownMembers, targetMembers) => {
+                  handleGroupSelection(group);
+                  handleOwnMemberSelection(ownMembers);
+                  handleTargetMemberSelection(targetMembers);
+                }}
+              />
               {/* ) : (
                 <SellWrite2 />
               )} */}
             </div>
             <div>
-            <div className="searchbar-title">포토카드 종류</div>
-            <TypeDropdown2
-              defaultCardType={cardType}
-              onChange={(type) => {
-                handleTypeChange(type);
-              }}
-            />
-
+              <div className="searchbar-title">포토카드 종류</div>
+              <TypeDropdown2
+                defaultCardType={cardType}
+                onChange={(type) => {
+                  handleTypeChange(type);
+                }}
+              />
             </div>
             <div id="search-buttons">
               <Button id="search-button" onClick={handleSearchClick}>

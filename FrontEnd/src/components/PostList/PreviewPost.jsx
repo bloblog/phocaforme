@@ -9,7 +9,7 @@ import axios from "axios";
 const PreviewPost = () => {
   const navigate = useNavigate();
   const handleButtonClick = () => {
-    navigate("/mainpost", {state: true});
+    navigate("/mainpost", { state: true });
   };
   // 이전이랑 다르게 store에 전부다 저장해놓지 않으니까
   // db에 있는 첫번째 애들 ( 여기에 적은 url )을 불러옴
@@ -17,23 +17,23 @@ const PreviewPost = () => {
 
   useEffect(() => {
     // 데이터를 불러오는 비동기 함수를 정의합니다.
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          process.env.REACT_APP_API_URL + "barter/search",
-          {
-            withCredentials: true,
-          }
-        );
-        // 받아온 데이터를 상태 변수에 저장합니다.
-        setPostData(response.data);
-      } catch (error) {
-        console.error("Error fetching preview data:", error);
-      }
-    };
+    // const fetchData = async () => {
+    //   try {
+    //     const response = await axios.get(
+    //       import.meta.env.REACT_APP_API_URL + "barter/search",
+    //       {
+    //         withCredentials: true,
+    //       }
+    //     );
+    //     // 받아온 데이터를 상태 변수에 저장합니다.
+    //     setPostData(response.data);
+    //   } catch (error) {
+    //     console.error("Error fetching preview data:", error);
+    //   }
+    // };
 
-    // 데이터를 불러오는 함수를 호출합니다.
-    fetchData();
+    // // 데이터를 불러오는 함수를 호출합니다.
+    // fetchData();
 
     // cleanup 함수를 반환하여 컴포넌트가 언마운트될 때 비동기 요청이 취소되도록 합니다.
     return () => {
@@ -46,10 +46,15 @@ const PreviewPost = () => {
 
   return (
     <Container>
-      <div id='preview-container'>
-        <h2 className="main-title" id='preview-title'>둘러보기 🔍</h2>
+      <div id="preview-container">
+        <h2 className="main-title" id="preview-title">
+          둘러보기 🔍
+        </h2>
         {/* <MainPost isPreview={true} /> */}
-        <div className="preview-card" id={previewPost.length % 2 == 1 ? 'preview-odd' : ""}>
+        <div
+          className="preview-card"
+          id={previewPost.length % 2 == 1 ? "preview-odd" : ""}
+        >
           {previewPost.map((post, index) => (
             <div key={index}>
               <Card
@@ -71,17 +76,16 @@ const PreviewPost = () => {
           ))}
         </div>
       </div>
-      <div id='expand-button-container'>
-
-      <Button
-        id="expand-button"
-        variant="contained"
-        size="large"
-        color="primary"
-        onClick={handleButtonClick}
-      >
-        + 더보기
-      </Button>
+      <div id="expand-button-container">
+        <Button
+          id="expand-button"
+          variant="contained"
+          size="large"
+          color="primary"
+          onClick={handleButtonClick}
+        >
+          + 더보기
+        </Button>
       </div>
       <div id="preview-margin" />
     </Container>

@@ -27,7 +27,7 @@ const DetailPost = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        process.env.REACT_APP_API_URL + `barter/${id}`,
+        import.meta.env.REACT_APP_API_URL + `barter/${id}`,
         { withCredentials: true }
       );
       const detailData = response.data;
@@ -88,7 +88,7 @@ const DetailPost = () => {
   const handleChatClick = () => {
     // 채팅방 생성
     axios
-      .post(process.env.REACT_APP_API_URL + `chatRoom/${id}`, null, {
+      .post(import.meta.env.REACT_APP_API_URL + `chatRoom/${id}`, null, {
         headers: {
           Authorization: `${
             document.cookie.match("(^|;) ?" + "token" + "=([^;]*)(;|$)")[2]
@@ -117,7 +117,7 @@ const DetailPost = () => {
   const handlePullupClick = async () => {
     try {
       const response = await axios.post(
-        process.env.REACT_APP_API_URL + `barter/regen/${post.id}`,
+        import.meta.env.REACT_APP_API_URL + `barter/regen/${post.id}`,
         null,
         {
           withCredentials: true,
@@ -126,7 +126,7 @@ const DetailPost = () => {
 
       // 성공적으로 업데이트되었을 때의 처리
       console.log("게시글이 성공적으로 끌어올려졌습니다.");
-      navigate('/mainpost')
+      navigate("/mainpost");
     } catch (error) {
       // 오류 처리
       console.error("게시글 끌어올리기에 실패했습니다:", error);
@@ -138,7 +138,7 @@ const DetailPost = () => {
     const postId = post.id;
 
     axios
-      .delete(process.env.REACT_APP_API_URL + `barter/${postId}`, {
+      .delete(import.meta.env.REACT_APP_API_URL + `barter/${postId}`, {
         withCredentials: true,
       })
       .then((response) => {
@@ -156,9 +156,8 @@ const DetailPost = () => {
     navigate(-1);
   };
 
-
   if (post === null) {
-    return <PostCaution message={'이미 삭제된 게시글입니다.'} />; // 데이터가 로드되기 전에는 로딩 중을 표시
+    return <PostCaution message={"이미 삭제된 게시글입니다."} />; // 데이터가 로드되기 전에는 로딩 중을 표시
   }
 
   const ownMembers = post?.ownIdolMembers || []; // post가 정의되지 않았거나 ownMembers가 없을 때 빈 배열로 설정
@@ -198,11 +197,11 @@ const DetailPost = () => {
                   src={`https://photocardforme.s3.ap-northeast-2.amazonaws.com/${photo}`}
                   loading="lazy"
                   style={{
-                    width: '15vh',
-                    height: '23.7vh',
+                    width: "15vh",
+                    height: "23.7vh",
                     objectFit: "contain",
-                    borderRadius: '10px',
-                    backgroundColor: 'lightgray'
+                    borderRadius: "10px",
+                    backgroundColor: "lightgray",
                   }}
                 />
               </ImageListItem>
@@ -250,35 +249,34 @@ const DetailPost = () => {
           </div>
         </div>
         <hr style={{ margin: "1rem 0" }} />
-        <div id="post-content-container" style={{  }}>
+        <div id="post-content-container" style={{}}>
           <div>{post.content}</div>
         </div>
       </div>
 
-      <div id='post-bottom'>
+      <div id="post-bottom">
         {isCurrentUserWriter ? (
           <div id="post-button-container">
-            
-            <div id='modify-delete'>
-            <Button
-              id="modify-button"
-              variant="contained"
-              size="large"
-              onClick={() => handleModifyClick(post.id)}
-            >
-              수정
-            </Button>
-            
-            <Button
-              id="delete-button"
-              variant="contained"
-              size="large"
-              onClick={handleDeleteClick}
-            >
-              삭제
-            </Button>
-              </div>
+            <div id="modify-delete">
               <Button
+                id="modify-button"
+                variant="contained"
+                size="large"
+                onClick={() => handleModifyClick(post.id)}
+              >
+                수정
+              </Button>
+
+              <Button
+                id="delete-button"
+                variant="contained"
+                size="large"
+                onClick={handleDeleteClick}
+              >
+                삭제
+              </Button>
+            </div>
+            <Button
               id="pullup-button"
               variant="text"
               size="large"
@@ -289,15 +287,14 @@ const DetailPost = () => {
           </div>
         ) : (
           <div id="post-button-container">
-
-          <Button
-            id="chat-button"
-            variant="contained"
-            size="large"
-            onClick={handleChatClick}
-          >
-            1:1 채팅하기
-          </Button>
+            <Button
+              id="chat-button"
+              variant="contained"
+              size="large"
+              onClick={handleChatClick}
+            >
+              1:1 채팅하기
+            </Button>
           </div>
         )}
       </div>

@@ -5,11 +5,6 @@ import PropTypes from "prop-types";
 
 import axios from "axios";
 
-import { addSearchData, clearSearchData } from "../../store2/search.js";
-import { fetchTitle, fetchUserTitle } from "../../http.js";
-import { loginUser, logoutUser, getLocation } from "../../store2/loginUser.js";
-import { searchPosts } from "../../store2/post.js";
-
 import {
   CircularProgress,
   Container,
@@ -19,7 +14,7 @@ import {
   Tab,
 } from "@mui/material";
 import Card from "../UI/Card.jsx";
-import usePostSearch from "../../utils/infiScroll.js";
+import usePostSearch from "../../utils/infiScroll";
 import PostCaution from "./PostCaution.jsx";
 
 const CustomTabPanel = (props) => {
@@ -128,7 +123,7 @@ const BasicTabs = ({ isPreview }) => {
           }
 
           const response = await axios.get(
-            process.env.REACT_APP_API_URL + "barter/search",
+            import.meta.env.REACT_APP_API_URL + "barter/search",
             { params },
             {
               headers: {

@@ -60,7 +60,7 @@ const WishCard = () => {
 
     // db 에 반영하기
     axios
-      .put(process.env.REACT_APP_API_URL + `user/wishCard`, data, {
+      .put(import.meta.env.REACT_APP_API_URL + `user/wishCard`, data, {
         withCredentials: true,
         headers: {
           "Content-Type": "application/json",
@@ -112,7 +112,7 @@ const WishCard = () => {
   // 이미 갈망포카가 있다면 가져와라
   useEffect(() => {
     axios
-      .get(process.env.REACT_APP_API_URL + `user/wishCard`, {
+      .get(import.meta.env.REACT_APP_API_URL + `user/wishCard`, {
         withCredentials: true,
       })
       .then((response) => {
@@ -126,7 +126,7 @@ const WishCard = () => {
   // 갈망포카 삭제
   const handleDelete = () => {
     axios
-      .delete(process.env.REACT_APP_API_URL + `user/wishCard`, {
+      .delete(import.meta.env.REACT_APP_API_URL + `user/wishCard`, {
         withCredentials: true,
       })
       .then((response) => {

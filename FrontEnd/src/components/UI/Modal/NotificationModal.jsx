@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import './NotificationModal.css';
-import { initializeApp } from 'firebase/app';
-import { getMessaging, getToken } from 'firebase/messaging';
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import "./NotificationModal.css";
+import { initializeApp } from "firebase/app";
+import { getMessaging, getToken } from "firebase/messaging";
 
 const NotificationModal = ({ isOpen, onClose, onNotificationSelect }) => {
-  const user = useSelector(state => state.user.user);
+  const user = useSelector((state) => state.user.user);
   const [notificationPermission, setNotificationPermission] = useState(null);
   // Notification 지원 여부를 추적하는 상태를 추가합니다.
   const [notificationSupported, setNotificationSupported] = useState(false);
@@ -17,27 +17,31 @@ const NotificationModal = ({ isOpen, onClose, onNotificationSelect }) => {
 
   useEffect(() => {
     // 사용자가 로그인 상태가 바뀔 때마다 모달을 열거나 푸시 토큰을 서버로 보냅니다.
-    if (user.token && notificationPermission === 'granted' && notificationSupported) {
+    if (
+      user.token &&
+      notificationPermission === "granted" &&
+      notificationSupported
+    ) {
       // 모달을 열지 않고 바로 푸시 토큰을 서버로 보냅니다.
       initializeFirebase();
     }
   }, [user.token, notificationPermission, notificationSupported]);
 
   const checkNotificationPermission = () => {
-    if ('Notification' in window) {
+    if ("Notification" in window) {
       setNotificationSupported(true); // Notification 객체가 존재하면 지원한다고 표시
-      if (Notification.permission === 'default') {
+      if (Notification.permission === "default") {
         setNotificationPermission(null); // 권한 요청 전
       } else {
         setNotificationPermission(Notification.permission); // 권한 요청 후
       }
     } else {
-      console.log('This browser does not support desktop notification');
+      console.log("This browser does not support desktop notification");
       setNotificationSupported(false); // Notification 객체가 없으면 지원하지 않는다고 표시
     }
   };
 
-  const handleNotificationSelect = value => {
+  const handleNotificationSelect = (value) => {
     onNotificationSelect(value);
     if (value && notificationSupported) {
       initializeFirebase();
@@ -54,13 +58,13 @@ const NotificationModal = ({ isOpen, onClose, onNotificationSelect }) => {
       storageBucket: "phocaforme.appspot.com",
       messagingSenderId: "250202437051",
       appId: "1:250202437051:web:14ab6bb0445aad9b08009e",
-      measurementId: "G-9EZG3PJXLT"
+      measurementId: "G-9EZG3PJXLT",
     };
     initializeApp(firebaseConfig);
 
     const messaging = getMessaging();
 
-    if (notificationPermission !== 'granted') {
+    if (notificationPermission !== "granted") {
       requestNotificationPermission(messaging);
     } else {
       // 이미 허용된 상태라면 바로 토큰 발급
@@ -70,13 +74,13 @@ const NotificationModal = ({ isOpen, onClose, onNotificationSelect }) => {
 
   const requestNotificationPermission = (messaging) => {
     // 사용자에게 알림 권한 요청
-    Notification.requestPermission().then(permission => {
-      if (permission === 'granted') {
-        console.log('Notification permission granted.');
+    Notification.requestPermission().then((permission) => {
+      if (permission === "granted") {
+        console.log("Notification permission granted.");
         setNotificationPermission(permission);
         sendTokenToServer(messaging);
-      } else if (permission === 'denied') {
-        console.log('Notification permission denied.');
+      } else if (permission === "denied") {
+        console.log("Notification permission denied.");
         setNotificationPermission(permission);
       }
     });
@@ -87,35 +91,42 @@ const NotificationModal = ({ isOpen, onClose, onNotificationSelect }) => {
       .then((currentToken) => {
         console.log("device_token: " + currentToken);
         sendTokenToServerBackend(currentToken);
-      }).catch((err) => {
-        console.log('An error occurred while retrieving token. ', err);
+      })
+      .catch((err) => {
+        console.log("An error occurred while retrieving token. ", err);
       });
   };
 
   const sendTokenToServerBackend = (currentToken) => {
-    fetch(process.env.REACT_APP_API_URL + `user/device`, {
-      method: 'POST',
+    fetch(import.meta.env.REACT_APP_API_URL + `user/device`, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         deviceToken: currentToken,
       }),
-      credentials: 'include'
+      credentials: "include",
     })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('서버 응답이 실패했습니다.');
-      }
-      console.log('푸시 토큰을 서버로 전송했습니다.');
-    })
-    .catch(error => {
-      console.error('푸시 토큰을 서버로 전송하는 중 오류 발생:', error);
-    });
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("서버 응답이 실패했습니다.");
+        }
+        console.log("푸시 토큰을 서버로 전송했습니다.");
+      })
+      .catch((error) => {
+        console.error("푸시 토큰을 서버로 전송하는 중 오류 발생:", error);
+      });
   };
 
   // Notification 객체가 지원되지 않으면, 모달을 렌더링하지 않습니다.
-  if (!user.token || !isOpen || !notificationSupported || notificationPermission === 'granted' || notificationPermission === 'denied') {
+  if (
+    !user.token ||
+    !isOpen ||
+    !notificationSupported ||
+    notificationPermission === "granted" ||
+    notificationPermission === "denied"
+  ) {
     return null;
   }
 

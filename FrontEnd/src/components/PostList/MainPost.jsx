@@ -17,7 +17,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import Card from "../../components/UI/Card";
-import usePostSearch from "../../utils/infiScroll.js";
+import usePostSearch from "../../utils/infiScroll";
 import PostCaution from "./PostCaution.jsx";
 
 const CustomTabPanel = (props) => {

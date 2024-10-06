@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { logoutUser } from "../../store2/loginUser.js";
+import { logoutUser } from "../../store2/loginUser";
 
 import Bell from "./Bell";
 import ProfileImage from "./ProfileImage";
@@ -26,7 +26,6 @@ const NavBar = ({ children }) => {
 
   return (
     <div id="nav-bar">
-      
       <img
         id="logo"
         onClick={() => {
@@ -38,7 +37,7 @@ const NavBar = ({ children }) => {
         <div id="nav-menus">
           <ProfileImage />
           {/* <button onClick={handleLogout}>로그아웃</button> */}
-          
+
           <div
             id="bell"
             onClick={() => {

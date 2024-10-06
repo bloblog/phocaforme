@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { TextField, Button } from "@mui/material";
 
-import { modifyPost } from "../../store2/loginUser.js";
-
 import NicknameModal from "../UI/Modal/NicknameModal";
 
 const Nickname = () => {

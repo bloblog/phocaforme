@@ -66,14 +66,13 @@ const ChartTab = () => {
   const getIdol = async (idolMemberId) => {
     try {
       const response = await axios.get(
-        process.env.REACT_APP_API_URL + `idol/${idolMemberId}`,
+        import.meta.env.REACT_APP_API_URL + `idol/${idolMemberId}`,
         {
           withCredentials: true,
         }
       );
       return response.data;
     } catch (error) {
-      
       console.error("Error get idol:", error);
     }
   };
@@ -82,7 +81,7 @@ const ChartTab = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          process.env.REACT_APP_API_URL + `idol/rank`,
+          import.meta.env.REACT_APP_API_URL + `idol/rank`,
           {
             withCredentials: true,
           }

@@ -14,7 +14,7 @@ const PostModify = () => {
   const { id } = useParams();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  
+
   const [imagePreviews, setImagePreviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cardType, setCardType] = useState(null);
@@ -43,12 +43,13 @@ const PostModify = () => {
   //     setImages([]);
   //   }
   // }, [postImages]);
-  
 
   useEffect(() => {
     if (post.photos && post.photos.length > 0) {
-      
-      const defaultImagePreviews = post.photos.map(photo => `https://photocardforme.s3.ap-northeast-2.amazonaws.com/${photo}`);
+      const defaultImagePreviews = post.photos.map(
+        (photo) =>
+          `https://photocardforme.s3.ap-northeast-2.amazonaws.com/${photo}`
+      );
       setImagePreviews(defaultImagePreviews);
     }
   }, [post]);
@@ -61,9 +62,14 @@ const PostModify = () => {
     // setFindIdolMembers(findIdolMembers || []);
     setCardType(postCardType ? postCardType.label : null); // 여기를 수정
     setLoading(false);
-  }, [postTitle, postContent, postImages, postCardType, postOwnIdolMembers, postFindIdolMembers]);
-
-  
+  }, [
+    postTitle,
+    postContent,
+    postImages,
+    postCardType,
+    postOwnIdolMembers,
+    postFindIdolMembers,
+  ]);
 
   const [ownMembers, setOwnMembers] = useState(null);
   const [targetMembers, setTargetMembers] = useState(null);
@@ -73,7 +79,7 @@ const PostModify = () => {
   useEffect(() => {
     if (fileInputRef.current && !fileInputRef.current.value) {
       // 파일을 선택하지 않았을 때, file input의 value를 postImages로 설정
-      fileInputRef.current.value = ''; // 빈 문자열로 설정
+      fileInputRef.current.value = ""; // 빈 문자열로 설정
     }
   }, [fileInputRef, postImages]);
 
@@ -88,7 +94,7 @@ const PostModify = () => {
   const handleTypeChange = (cardType) => {
     setCardType(cardType);
   };
-  //아래꺼 필요 없을 듯? 0214 수정 
+  //아래꺼 필요 없을 듯? 0214 수정
 
   // const handleTypeChange = (cardType) => {
   //   if (cardType == null) {
@@ -128,24 +134,25 @@ const PostModify = () => {
     fileInputRef.current.click();
   };
 
-  
-
   const handleImageChange = (event) => {
     const files = event.target.files;
     const newImages = Array.from(files);
     const newImagePreviews = [];
-  
+
     newImages.forEach((file) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         newImagePreviews.push(reader.result);
         if (newImagePreviews.length === newImages.length) {
-          setImagePreviews((prevImagePreviews) => [...prevImagePreviews, ...newImagePreviews]);
+          setImagePreviews((prevImagePreviews) => [
+            ...prevImagePreviews,
+            ...newImagePreviews,
+          ]);
         }
       };
       reader.readAsDataURL(file);
     });
-  
+
     // 이미지를 추가할 때 이전 상태를 기반으로 새로운 배열을 생성합니다.
     setImages((prevImages) => {
       if (prevImages) {
@@ -163,12 +170,12 @@ const PostModify = () => {
       formData.append("title", title);
       formData.append("content", content);
       formData.append("cardType", cardType ? cardType.label : ""); // 이제 문자로 줘서 cardType만 써도 될 거 같음
-      ownIdolMembers.forEach(member => {
-        formData.append('ownIdolMembers', member.idolMemberId);
+      ownIdolMembers.forEach((member) => {
+        formData.append("ownIdolMembers", member.idolMemberId);
       });
-      
-      findIdolMembers.forEach(member => {
-        formData.append('findIdolMembers', member.idolMemberId);
+
+      findIdolMembers.forEach((member) => {
+        formData.append("findIdolMembers", member.idolMemberId);
       });
 
       images.forEach((image) => {
@@ -176,18 +183,21 @@ const PostModify = () => {
       });
 
       for (var pair of formData.entries()) {
-        console.log(pair[0]+ ', ' + pair[1]); 
+        console.log(pair[0] + ", " + pair[1]);
       }
-      await axios.put(process.env.REACT_APP_API_URL + `barter/${id}`, formData, {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      
+      await axios.put(
+        import.meta.env.REACT_APP_API_URL + `barter/${id}`,
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
       navigate("/post");
     } catch (error) {
-      
       console.error("Error modifying post:", error);
     }
   };
@@ -199,7 +209,7 @@ const PostModify = () => {
   if (loading) {
     return <div>Loading...</div>;
   }
-  console.log(ownMembers)
+  console.log(ownMembers);
   return (
     <Container>
       <div id="write-container">
@@ -209,7 +219,9 @@ const PostModify = () => {
         <div id="image-input">
           <div>
             <h3>사진 (클릭시 삭제됩니다.)</h3>
-            <p className="info-msg">* 사진 사이즈는 포토카드 사이즈가 좋아요!</p>
+            <p className="info-msg">
+              * 사진 사이즈는 포토카드 사이즈가 좋아요!
+            </p>
           </div>
           <div id="image-list">
             <input
@@ -223,11 +235,19 @@ const PostModify = () => {
             <div id="image-add-button" onClick={handleImageAdd}>
               <AddIcon id="image-add-icon" />
             </div>
-      
+
             {imagePreviews &&
               imagePreviews.map((preview, index) => (
-                <div className="image-container" key={index} onClick={() => handleImageDelete(index)}>
-                  <img className="image-preview" src={preview} alt={`Image Preview ${index + 1}`} />
+                <div
+                  className="image-container"
+                  key={index}
+                  onClick={() => handleImageDelete(index)}
+                >
+                  <img
+                    className="image-preview"
+                    src={preview}
+                    alt={`Image Preview ${index + 1}`}
+                  />
                 </div>
               ))}
           </div>
@@ -242,7 +262,11 @@ const PostModify = () => {
             placeholder="앨범명, 버전명을 입력하세요"
           />
         </div>
-{/* 수정 */}{/* 수정 */}{/* 수정 */}{/* 수정 */}{/* 수정 */}
+        {/* 수정 */}
+        {/* 수정 */}
+        {/* 수정 */}
+        {/* 수정 */}
+        {/* 수정 */}
         <div id="group-member-input">
           <BarterModify
             defaultGroup={post.group || []} // defaultGroup 수정 필요
@@ -255,8 +279,7 @@ const PostModify = () => {
           />
         </div>
 
-
-{/* 
+        {/* 
         <div id="group-member-input">
           {postCardType === "교환" ? (
             <BarterModify
@@ -279,7 +302,10 @@ const PostModify = () => {
           )}
         </div> */}
 
-        {/* 수정 */}{/* 수정 */}{/* 수정 */}{/* 수정 */}
+        {/* 수정 */}
+        {/* 수정 */}
+        {/* 수정 */}
+        {/* 수정 */}
         <div id="card-input">
           <h3>포토카드 종류</h3>
           <TypeDropdown
@@ -289,7 +315,7 @@ const PostModify = () => {
             }}
           />
         </div>
-        
+
         <div id="content-input-container">
           <h3>상세 내용</h3>
           <textarea
@@ -308,7 +334,11 @@ const PostModify = () => {
           >
             수정
           </Button>
-          <Button variant="contained" color="warning" onClick={handleCancelButton}>
+          <Button
+            variant="contained"
+            color="warning"
+            onClick={handleCancelButton}
+          >
             취소
           </Button>
         </div>

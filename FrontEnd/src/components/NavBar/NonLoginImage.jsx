@@ -13,7 +13,7 @@ import {
   Divider,
 } from "@mui/material";
 
-import { logoutUser } from "../../store2/loginUser.js";
+import { logoutUser } from "../../store2/loginUser";
 
 import NonLoginImg from "../../assets/images/nonlogin.PNG";
 import kakao from "../../assets/images/kakao_login.png";
@@ -75,20 +75,18 @@ const NonLoginIcon = () => {
             onClose={handleCloseUserMenu}
             theme={theme}
           >
-            
-
             <img
               id="kakao-button"
               src={kakao}
               onClick={GotoLogin}
               style={{
-                display: "block", 
+                display: "block",
                 width: "8rem",
                 margin: theme.spacing(2), // 상단 여백 추가
               }}
             />
-              <Divider variant="middle" component="li" />
-              <Typography
+            <Divider variant="middle" component="li" />
+            <Typography
               sx={{
                 textAlign: "center",
                 color: theme.palette.primary.main,

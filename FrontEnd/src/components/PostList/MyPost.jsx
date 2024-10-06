@@ -63,12 +63,14 @@ const MyPost = () => {
   const fetchMyPosts = async () => {
     try {
       const response = await axios.get(
-        process.env.REACT_APP_API_URL + "barter"
+        import.meta.env.REACT_APP_API_URL + "barter"
       );
       const data = response.data;
 
       // 현재 사용자의 ID와 일치하는 게시글만 필터링
-      const userPosts = data.filter((post) => post.writerId === currentUser.userId);
+      const userPosts = data.filter(
+        (post) => post.writerId === currentUser.userId
+      );
 
       // 최신순으로 정렬
       const sortedPosts = userPosts.sort((a, b) => b.createdAt - a.createdAt);
@@ -79,7 +81,6 @@ const MyPost = () => {
       console.error("Error fetching posts:", error);
     }
   };
-
 
   // 게시물로 이동 핸들러
   const handleClick = (id) => {

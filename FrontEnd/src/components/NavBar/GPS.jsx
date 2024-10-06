@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Cookies from "js-cookie";
 import axios from "axios";
-import IOSSwitch from "../../styles/IOSSwitch.js";
+import IOSSwitch from "../../styles/IOSSwitch";
 import { FormControlLabel, Switch, CircularProgress } from "@mui/material";
 import {
   ReplayCircleFilledOutlined,
   LocationOnOutlined,
 } from "@mui/icons-material";
-import { setLocation, setLocationLongLat } from "../../store2/loginUser.js";
+import { setLocation, setLocationLongLat } from "../../store2/loginUser";
 
 export default function GPS() {
   const dispatch = useDispatch();
@@ -44,7 +44,7 @@ export default function GPS() {
   const getAddress = (long, lat) => {
     axios
       .put(
-        process.env.REACT_APP_API_URL + `gps`,
+        import.meta.env.REACT_APP_API_URL + `gps`,
         {
           longitude: long,
           latitude: lat,
@@ -65,7 +65,7 @@ export default function GPS() {
 
   const turnOffGps = () => {
     axios
-      .get(process.env.REACT_APP_API_URL + `gps`, {
+      .get(import.meta.env.REACT_APP_API_URL + `gps`, {
         withCredentials: true,
       })
       .then((response) => {

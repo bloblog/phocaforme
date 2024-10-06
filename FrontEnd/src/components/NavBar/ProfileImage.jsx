@@ -51,16 +51,17 @@ const ProfileImage = () => {
 
   const handleLogout = () => {
     // dispatch(logoutUser());
-    window.location.href = process.env.REACT_APP_LOGIN_API_URL + "auth/logout";
+    window.location.href =
+      import.meta.env.REACT_APP_LOGIN_API_URL + "auth/logout";
   };
 
   const [biasImg, setBiasImg] = useState(null);
 
   // 렌더링 시 최애 정보 가져오기
   useEffect(() => {
-    if (getCookie('profile')) {
+    if (getCookie("profile")) {
       axios
-        .get(process.env.REACT_APP_API_URL + `user/bias`, {
+        .get(import.meta.env.REACT_APP_API_URL + `user/bias`, {
           withCredentials: true,
         })
         .then((response) => {

@@ -3,8 +3,6 @@ import React, { useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { addPost } from "../../store2/post.js";
-
 import {
   Container,
   TextField,
@@ -165,7 +163,7 @@ const PostWrite = () => {
     // navigate("/post", {state: });
 
     axios
-      .post(process.env.REACT_APP_API_URL + "barter", newPost, {
+      .post(import.meta.env.REACT_APP_API_URL + "barter", newPost, {
         withCredentials: true,
         headers: {
           "Content-Type": "multipart/form-data",

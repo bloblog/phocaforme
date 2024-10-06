@@ -4,7 +4,7 @@ import axios from "axios";
 
 import getCookie from "../../utils/getCookie";
 
-import { setBias } from "../../store2/loginUser.js";
+import { setBias } from "../../store2/loginUser";
 
 import { Avatar, Button } from "@mui/material";
 
@@ -22,9 +22,9 @@ const Bias = () => {
 
   // useEffect 해서 렌더링할 때 최애 정보 들고와라
   useEffect(() => {
-    if (getCookie('profile')) {
+    if (getCookie("profile")) {
       axios
-        .get(process.env.REACT_APP_API_URL + `user/bias`, {
+        .get(import.meta.env.REACT_APP_API_URL + `user/bias`, {
           withCredentials: true,
         })
         .then((response) => {
@@ -59,7 +59,7 @@ const Bias = () => {
     // db 에 반영하기
     axios
       .put(
-        process.env.REACT_APP_API_URL + `user/bias`,
+        import.meta.env.REACT_APP_API_URL + `user/bias`,
         {
           idolMemberId: selectedMember.idolMemberId,
         },

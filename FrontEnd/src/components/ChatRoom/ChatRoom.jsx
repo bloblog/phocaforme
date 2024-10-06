@@ -4,9 +4,9 @@ import { useParams, useLocation } from "react-router-dom";
 
 import axios from "axios";
 
-import { sendChat, initChat } from "../../store2/chat.js";
+import { sendChat, initChat } from "../../store2/chat";
 
-import { timeFormat } from "../../utils/timeFormat.js";
+import { timeFormat } from "../../utils/timeFormat";
 
 import { useTheme } from "@mui/material/styles";
 
@@ -51,7 +51,7 @@ const ChatRoom = () => {
   useEffect(() => {
     const fetchData = async () => {
       await axios
-        .get(process.env.REACT_APP_API_URL + `chats/${roomId}`, {
+        .get(import.meta.env.REACT_APP_API_URL + `chats/${roomId}`, {
           withCredentials: true,
         })
         .then((response) => {
@@ -95,7 +95,7 @@ const ChatRoom = () => {
           : location.state.visiterId;
       await axios
         .post(
-          process.env.REACT_APP_API_URL + `users/nickname`,
+          import.meta.env.REACT_APP_API_URL + `users/nickname`,
           {
             userId: you,
           },
@@ -174,7 +174,9 @@ const ChatRoom = () => {
                     </div>
                   </div>
                   {messageData.userEmail != loginUser.userId ? (
-                    <div className="chat-time-container">{timeFormat(messageData.createdAt)}</div>
+                    <div className="chat-time-container">
+                      {timeFormat(messageData.createdAt)}
+                    </div>
                   ) : null}
                 </div>
               </div>

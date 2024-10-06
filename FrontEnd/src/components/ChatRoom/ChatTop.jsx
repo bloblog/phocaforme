@@ -19,7 +19,7 @@ import {
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
 import PayModal from "../UI/Modal/PayRequestModal";
-import axios from 'axios';
+import axios from "axios";
 
 const ChatMenu = ({ otherNickname, updateMessages, postId }) => {
   const theme = useTheme();
@@ -63,16 +63,16 @@ const ChatMenu = ({ otherNickname, updateMessages, postId }) => {
   };
 
   const handleDone = () => {
-    
-    axios.put(process.env.REACT_APP_API_URL + `chats/done/${roomId}`)
-      .then(response => {
-        console.log('완료');
+    axios
+      .put(import.meta.env.REACT_APP_API_URL + `chats/done/${roomId}`)
+      .then((response) => {
+        console.log("완료");
         setAnchorEl(null);
-        navigate("/chat"); 
+        navigate("/chat");
       })
-      .catch(error => {
+      .catch((error) => {
         setAnchorEl(null);
-        console.error('실패', error);
+        console.error("실패", error);
       });
   };
 

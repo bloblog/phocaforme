@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import axios from "axios";
 
-import { setNickname } from "../../../store2/loginUser.js";
+import { setNickname } from "../../../store2/loginUser";
 
 import { Box, TextField, Button, Modal } from "@mui/material";
 
@@ -54,7 +54,7 @@ const NicknameModal = ({
     if (inputValue.trim() !== "") {
       axios
         .post(
-          process.env.REACT_APP_API_URL + `user/nickname`,
+          import.meta.env.REACT_APP_API_URL + `user/nickname`,
           { nickname: inputValue },
           {
             withCredentials: true,
@@ -88,7 +88,7 @@ const NicknameModal = ({
   const handleChangeNickname = (userId) => {
     axios
       .put(
-        process.env.REACT_APP_API_URL + `user/nickname`,
+        import.meta.env.REACT_APP_API_URL + `user/nickname`,
         {
           isDuplicated: !validFlag,
           nickname: inputValue,

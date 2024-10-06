@@ -25,7 +25,7 @@ const ChatList = () => {
   const getNickname = async (id) => {
     try {
       const response = await axios.post(
-        process.env.REACT_APP_API_URL + `users/nickname`,
+        import.meta.env.REACT_APP_API_URL + `users/nickname`,
         {
           userId: id,
         },
@@ -45,7 +45,7 @@ const ChatList = () => {
   const getImages = async (boardId) => {
     try {
       const response = await axios.get(
-        process.env.REACT_APP_API_URL + `barter/${boardId}`,
+        import.meta.env.REACT_APP_API_URL + `barter/${boardId}`,
         { withCredentials: true }
       );
       if (response.data.photos.length > 0) {
@@ -63,7 +63,7 @@ const ChatList = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          process.env.REACT_APP_API_URL + `chatRoom`,
+          import.meta.env.REACT_APP_API_URL + `chatRoom`,
           {
             withCredentials: true,
           }
