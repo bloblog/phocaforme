@@ -1,27 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import GroupDropdown2 from "../UI/Dropdown/GroupDropdown.jsx";
-import MemberDropdown2 from "../UI/Dropdown/MemberDropdown.jsx";
+import GroupDropdown from "../../component/Dropdown/GroupDropdown2.jsx";
+import MemberDropdown from "../../component/Dropdown/MemberDropdown2.jsx";
 
 import Chip from "@mui/material/Chip";
 
-const BarterWrite2 = ({
-  defaultGroup,
-  defaultOwnMembers,
-  defaultTargetMembers,
-  onChange,
-}) => {
+const BarterWrite = ({ defaultGroup, onChange }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [selectedGroup, setSelectedGroup] = useState(defaultGroup);
-
-  const loginUser = useSelector((state) => state.user.user);
 
   const handleGroupChange = (group) => {
     if (group) {
       setSelectedGroup(group);
-      onChange(selectedGroup, ownMembers, targetMembers);
     } else {
       setSelectedGroup(null);
     }
@@ -32,12 +26,8 @@ const BarterWrite2 = ({
     setTargetMembersInput("");
   };
 
-  const [ownMembers, setOwnMembers] = useState(
-    defaultOwnMembers ? defaultOwnMembers : []
-  );
-  const [targetMembers, setTargetMembers] = useState(
-    defaultTargetMembers ? defaultTargetMembers : []
-  );
+  const [ownMembers, setOwnMembers] = useState([]);
+  const [targetMembers, setTargetMembers] = useState([]);
 
   const [ownMembersInput, setOwnMembersInput] = useState("");
   const [targetMembersInput, setTargetMembersInput] = useState("");
@@ -46,8 +36,8 @@ const BarterWrite2 = ({
   const handleOwnMemberChange = (member) => {
     if (member) {
       setOwnMembers((prevOwnMembers) => [...prevOwnMembers, member]);
-      onChange(selectedGroup, [...ownMembers, member], targetMembers);
-      setOwnMembersInput(member);
+      onChange([...ownMembers, member], targetMembers, selectedGroup);
+      setOwnMembersInput(member.value);
     } else {
       setOwnMembersInput(ownMembersInput);
     }
@@ -56,8 +46,8 @@ const BarterWrite2 = ({
   const handleTargetMemberChange = (member) => {
     if (member) {
       setTargetMembers((prevTargetMembers) => [...prevTargetMembers, member]);
-      onChange(selectedGroup, ownMembers, [...targetMembers, member]);
-      setTargetMembersInput(member);
+      onChange(ownMembers, [...targetMembers, member], selectedGroup);
+      setTargetMembersInput(member.value);
     } else {
       setTargetMembersInput(targetMembersInput);
     }
@@ -65,40 +55,20 @@ const BarterWrite2 = ({
 
   // 멤버 삭제 관련
   const handleOwnMemberDelete = (deletedMember) => {
-    setOwnMembers((prevOwnMembers) =>
-      prevOwnMembers.filter(
-        (member) => member.idolMemberId !== deletedMember.idolMemberId
-      )
-    );
-    onChange(
-      selectedGroup,
-      (prevOwnMembers) =>
-        prevOwnMembers.filter(
-          (member) => member.idolMemberId !== deletedMember.idolMemberId
-        ),
-      targetMembers
-    );
+    setOwnMembers(ownMembers.filter((member) => member !== deletedMember));
   };
 
   const handleTargetMemberDelete = (deletedMember) => {
-    setTargetMembers((prevTargetMembers) =>
-      prevTargetMembers.filter(
-        (member) => member.idolMemberId !== deletedMember.idolMemberId
-      )
-    );
-    onChange(selectedGroup, ownMembers, (prevTargetMembers) =>
-      prevTargetMembers.filter(
-        (member) => member.idolMemberId !== deletedMember.idolMemberId
-      )
+    setTargetMembers(
+      targetMembers.filter((member) => member !== deletedMember)
     );
   };
 
   return (
-    <div id="group-member-input">
+    <div>
       <div id="group-input" className="search-box-group">
-        <div className="searchbar-title">그룹명</div>
-        <GroupDropdown2
-          defaultGroup={defaultGroup}
+        <h3>그룹명</h3>
+        <GroupDropdown
           onChange={(group) => {
             handleGroupChange(group);
           }}
@@ -106,9 +76,8 @@ const BarterWrite2 = ({
       </div>
       <div id="member-input">
         <div id="own-member-dropdown">
-          <div className="searchbar-title">보유한 멤버</div>
-
-          <MemberDropdown2
+          <h3>보유한 멤버</h3>
+          <MemberDropdown
             selectedGroup={selectedGroup}
             onChange={(member) => {
               handleOwnMemberChange(member);
@@ -131,10 +100,9 @@ const BarterWrite2 = ({
               ))}
           </div>
         </div>
-        <div>
-          <div className="searchbar-title">찾는 멤버</div>
-
-          <MemberDropdown2
+        <div id="target-member-dropdown">
+          <h3>찾는 멤버</h3>
+          <MemberDropdown
             selectedGroup={selectedGroup}
             onChange={(member) => {
               handleTargetMemberChange(member);
@@ -162,4 +130,4 @@ const BarterWrite2 = ({
   );
 };
 
-export default BarterWrite2;
+export default BarterWrite;

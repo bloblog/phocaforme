@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
-import { addSearchData, clearSearchData } from "../../store2/search";
+import { addSearchData, clearSearchData } from "../../store/search.jsx";
 
 import { FaSearch } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
@@ -13,7 +13,7 @@ import { useTheme } from "@mui/material/styles";
 import { Button } from "@mui/material";
 import BarterWrite2 from "../../components/PostWrite/BarterWrite2.jsx";
 import SellWrite2 from "../../components/PostWrite/SellWrite2.jsx";
-import TypeDropdown2 from "../UI/Dropdown/TypeDropdown2.jsx";
+import TypeDropdown2 from "../../component/Dropdown/TypeDropdown2.jsx";
 
 const Search = () => {
   const [userInput, setUserInput] = useState("");

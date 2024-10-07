@@ -8,7 +8,7 @@ import {
   ReplayCircleFilledOutlined,
   LocationOnOutlined,
 } from "@mui/icons-material";
-import { setLocation, setLocationLongLat } from "../../store2/loginUser";
+import { setLocation, setLocationLongLat } from "../../store/loginUser";
 
 export default function GPS() {
   const dispatch = useDispatch();

@@ -13,7 +13,7 @@ import {
   Divider,
 } from "@mui/material";
 
-import { logoutUser } from "../../store2/loginUser";
+import { logoutUser } from "../../store/loginUser";
 
 import NonLoginImg from "../../assets/images/nonlogin.PNG";
 import kakao from "../../assets/images/kakao_login.png";

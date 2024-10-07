@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { logoutUser } from "../../store2/loginUser";
+import { logoutUser } from "../../store/loginUser.jsx";
 
-import Bell from "./Bell";
-import ProfileImage from "./ProfileImage";
+import Bell from "./Bell.jsx";
+import ProfileImage from "./ProfileImage.jsx";
 
 import logo from "../../assets/images/logo.PNG";
 import NonLoginImage from "./NonLoginImage.jsx";
