@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import axios from "axios";
-
 import { setNickname } from "@/store/loginUser";
 
 import { Box, TextField, Button, Modal } from "@mui/material";
+import { isVaild, updateNickname } from "@/api/nickname";
 
 const NicknameModal = ({
   open,
@@ -52,29 +51,21 @@ const NicknameModal = ({
   const handleSubmit = (userId) => {
     // 닉네임 중복 체크
     if (inputValue.trim() !== "") {
-      axios
-        .post(
-          import.meta.env.VITE_APP_API_URL + `user/nickname`,
-          { nickname: inputValue },
-          {
-            withCredentials: true,
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then((response) => {
-          setValidFlag(!response.data.isDuplicated);
-          if (response.data.isDuplicated) {
+      isVaild(
+        { nickname: inputValue },
+        (data) => {
+          setValidFlag(!data.data.isDuplicated);
+          if (data.data.isDuplicated) {
             setErrorMsg("중복된 닉네임입니다.");
           } else {
             setErrorMsg("사용 가능한 닉네임입니다.");
           }
-        })
-        .catch((error) => {
+        },
+        (error) => {
           setValidFlag(false);
           console.error("요청 실패:", error);
-        });
+        }
+      );
     } else {
       setErrorMsg("2글자 이상 입력해주세요.");
     }
@@ -86,25 +77,20 @@ const NicknameModal = ({
   }, [loginUser.nickname]);
 
   const handleChangeNickname = (userId) => {
-    axios
-      .put(
-        import.meta.env.VITE_APP_API_URL + `user/nickname`,
-        {
-          isDuplicated: !validFlag,
-          nickname: inputValue,
-        },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((response) => {
+    updateNickname(
+      {
+        isDuplicated: !validFlag,
+        nickname: inputValue,
+      },
+      (data) => {
         dispatch(setNickname(inputValue));
         setInputValue("");
         handleClose();
-      })
-      .catch((error) => {
+      },
+      (error) => {
         console.error("요청 실패:", error);
-      });
+      }
+    );
   };
 
   return (

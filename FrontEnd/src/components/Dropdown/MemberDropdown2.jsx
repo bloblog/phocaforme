@@ -1,7 +1,5 @@
 import * as React from "react";
-import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
-import axios from "axios";
 
 import { Box, TextField, Autocomplete } from "@mui/material";
 
@@ -24,26 +22,13 @@ const MemberDropdown2 = ({
     setValue(null);
     onChange(null);
 
-    const fetchData = async () => {
-      if (selectedGroup) {
-        try {
-          const response = await axios.get(
-            import.meta.env.VITE_APP_API_URL +
-              `idol/member/${selectedGroup.idolGroupId}`,
-            {
-              withCredentials: true,
-            }
-          );
-          setMemberItems(response.data);
-        } catch (error) {
-          console.error("멤버 세팅 오류:", error);
-        }
-      } else {
-        setMemberItems([]);
-      }
-    };
-
-    fetchData();
+    if (selectedGroup) {
+      getIdolMember(
+        selectedGroup.idolGroupId,
+        (data) => setMemberItems(data.data),
+        (error) => console.error("멤버 세팅 오류:", error)
+      );
+    }
   }, [selectedGroup]);
 
   return (
