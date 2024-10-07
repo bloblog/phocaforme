@@ -1,28 +1,17 @@
 // 게시물 생성용
 import * as React from "react";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { Box, TextField, Autocomplete } from "@mui/material";
+import { getIdolGroup } from "@/api/idolGroup";
 
 const GroupDropdown = ({ isProfile, defaultGroup, onChange }) => {
   const [groupItems, setGroupItems] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          import.meta.env.VITE_APP_API_URL + "idol/group",
-          {
-            withCredentials: true,
-          }
-        );
-        setGroupItems(response.data);
-      } catch (error) {
-        console.error("그룹 세팅 오류:", error);
-      }
-    };
-
-    fetchData();
+    getIdolGroup(
+      (data) => setGroupItems(data.data),
+      (error) => console.error("그룹 세팅 오류:", error)
+    );
   }, []);
 
   const [value, setValue] = useState(defaultGroup);
