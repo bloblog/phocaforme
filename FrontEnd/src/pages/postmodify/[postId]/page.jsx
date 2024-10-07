@@ -1,5 +1,5 @@
 import { Container } from "@mui/material";
-import PostModify from "../../../components/PostModify/PostModify";
+import PostModify from "@/containers/postmodify/index";
 
 const postModify = () => {
   return (

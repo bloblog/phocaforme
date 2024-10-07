@@ -14,8 +14,8 @@ import {
 } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 
-import GroupDropdown from "../UI/Dropdown/GroupDropdown2";
-import MemberDropdown from "../UI/Dropdown/MemberDropdown2";
+import GroupDropdown from "@/components/Dropdown/GroupDropdown2";
+import MemberDropdown from "@/components/Dropdown/MemberDropdown2";
 
 const WishCard = () => {
   const theme = useTheme();

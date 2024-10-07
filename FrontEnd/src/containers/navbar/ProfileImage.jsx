@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import axios from "axios";
 
-import getCookie from "../../utils/getCookie";
+import getCookie from "@/utils/getCookie";
 
 import { useTheme } from "@mui/material/styles";
 
@@ -24,7 +24,7 @@ import ChatOutlinedIcon from "@mui/icons-material/ChatOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 
 import GPS from "./GPS";
-import noBiasImg from "../../assets/images/no_bias.jpg";
+import noBiasImg from "@/assets/images/no_bias.jpg";
 
 const ProfileImage = () => {
   const theme = useTheme();

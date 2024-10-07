@@ -14,7 +14,7 @@ import {
   ImageListItem,
 } from "@mui/material";
 
-import Card from "../../components/UI/Card";
+import Card from "@/components/Card";
 
 const CustomTabPanel = (props) => {
   const { children, value, index, ...other } = props;

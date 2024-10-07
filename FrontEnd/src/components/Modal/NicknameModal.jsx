@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import axios from "axios";
 
-import { setNickname } from "../../../store2/loginUser";
+import { setNickname } from "@/store/loginUser";
 
 import { Box, TextField, Button, Modal } from "@mui/material";
 

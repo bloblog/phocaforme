@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
-import PayModal from "../../Component/Modal/PayRequestModal";
+import PayModal from "@/components/Modal/PayRequestModal";
 import axios from "axios";
 
 const ChatMenu = ({ otherNickname, updateMessages, postId }) => {

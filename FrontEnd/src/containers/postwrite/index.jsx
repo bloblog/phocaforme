@@ -10,13 +10,11 @@ import {
   TextareaAutosize,
   CircularProgress,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 
-import RadioButton2 from "../../components/UI/RadioButton2.jsx";
 import BarterWrite from "./BarterWrite.jsx";
 import SellWrite from "./SellWrite.jsx";
-import TypeDropdown from "../UI/Dropdown/TypeDropdown.jsx";
+import TypeDropdown from "@/components/Dropdown/TypeDropdown.jsx";
 import axios from "axios";
 
 const PostWrite = () => {

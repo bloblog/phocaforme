@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 
 import axios from "axios";
 
-import Search from "../Search/Search.jsx";
+import Search from "../search/index.jsx";
 
 import {
   Container,
@@ -16,8 +16,8 @@ import {
   Tab,
   CircularProgress,
 } from "@mui/material";
-import Card from "../../components/UI/Card";
-import usePostSearch from "../../utils/infiScroll";
+import Card from "@/components/Card";
+import usePostSearch from "@/utils/infiScroll.jsx";
 import PostCaution from "./PostCaution.jsx";
 
 const CustomTabPanel = (props) => {

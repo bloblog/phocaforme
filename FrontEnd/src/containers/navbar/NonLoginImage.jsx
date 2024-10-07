@@ -13,10 +13,8 @@ import {
   Divider,
 } from "@mui/material";
 
-import { logoutUser } from "../../store/loginUser";
-
-import NonLoginImg from "../../assets/images/nonlogin.PNG";
-import kakao from "../../assets/images/kakao_login.png";
+import NonLoginImg from "@/assets/images/nonlogin.PNG";
+import kakao from "@/assets/images/kakao_login.png";
 
 const NonLoginIcon = () => {
   const theme = useTheme();

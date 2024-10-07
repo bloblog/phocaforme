@@ -1,5 +1,5 @@
 import { Container } from "@mui/material";
-import AlarmList from "../../components/Alarm/AlarmList";
+import AlarmList from "@/containers/alarm/index";
 
 const alarm = () => {
   return (

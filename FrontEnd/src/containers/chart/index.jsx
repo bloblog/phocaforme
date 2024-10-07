@@ -6,8 +6,8 @@ import axios from "axios";
 
 import { Container, Tabs, Tab, Typography, Box } from "@mui/material";
 
-import ChartBoy from "./ChartBoy";
-import ChartGirl from "./ChartGirl";
+import ChartBoy from "./boytab";
+import ChartGirl from "./girltab";
 
 const CustomTabPanel = (props) => {
   const { children, value, index, ...other } = props;

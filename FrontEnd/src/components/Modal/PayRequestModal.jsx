@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 
-import { pay } from "../../store2/pay";
+import { pay } from "@/store/pay";
 
 import {
   Divider,
@@ -16,7 +16,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 
-import getCurrentTime from "../../utils/currentTime";
+import getCurrentTime from "@/utils/currentTime";
 
 const PayModal = ({ open, handleClose, updateMessages }) => {
   const { roomId } = useParams();

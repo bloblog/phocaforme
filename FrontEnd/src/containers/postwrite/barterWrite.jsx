@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import GroupDropdown from "../../component/Dropdown/GroupDropdown2.jsx";
-import MemberDropdown from "../../component/Dropdown/MemberDropdown2.jsx";
+import GroupDropdown from "@/components/Dropdown/GroupDropdown2.jsx";
+import MemberDropdown from "@/components/Dropdown/MemberDropdown2.jsx";
 
 import Chip from "@mui/material/Chip";
 

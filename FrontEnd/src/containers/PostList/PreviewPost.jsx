@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Container, Button, TextareaAutosize } from "@mui/material";
-import Card from "../../components/UI/Card";
-import MainPost from "../../components/PostList/MainPost.jsx";
-import axios from "axios";
+import Card from "@/components/Card";
 
 const PreviewPost = () => {
   const navigate = useNavigate();

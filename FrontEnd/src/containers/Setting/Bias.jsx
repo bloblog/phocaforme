@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 
-import getCookie from "../../utils/getCookie";
+import getCookie from "@/utils/getCookie";
 
-import { setBias } from "../../store2/loginUser";
+import { setBias } from "@/store/loginUser";
 
 import { Avatar, Button } from "@mui/material";
 
-import GroupDropdown from "../UI/Dropdown/GroupDropdown2";
-import MemberDropdown from "../UI/Dropdown/MemberDropdown2";
+import GroupDropdown from "@/components/Dropdown/GroupDropdown2";
+import MemberDropdown from "@/components/Dropdown/MemberDropdown2";
 
 const Bias = () => {
   const dispatch = useDispatch();

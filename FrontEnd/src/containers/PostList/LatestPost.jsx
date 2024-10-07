@@ -13,8 +13,7 @@ import {
   ImageListItem,
 } from "@mui/material";
 
-import Card from "../../components/UI/Card";
-import PostCaution from "./PostCaution";
+import Card from "@/components/Card";
 
 const CustomTabPanel = (props) => {
   const { children, value, index, ...other } = props;
@@ -55,7 +54,6 @@ const LatestPost = () => {
   const [recentPosts, setRecentPosts] = useState([]);
   const [sellPosts, setSellPosts] = useState([]);
 
-
   const [value, setValue] = React.useState(0);
 
   useEffect(() => {
@@ -93,91 +91,93 @@ const LatestPost = () => {
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
-          {recentPosts.length == 0 ? <div>최근 조회한 게시글이 없어요!</div> : (
+          {recentPosts.length == 0 ? (
+            <div>최근 조회한 게시글이 없어요!</div>
+          ) : (
             <ImageList
-            id="card-list"
-            sx={{ display: "flex", width: "100%" }}
-            rowHeight={200}
-          >
-            {recentPosts &&
-              recentPosts
-                .map((post, index) => (
-                  <div
-                    className="cards-container"
-                    key={index}
-                    onClick={() => handleClick(post.id)}
-                  >
-                    <Card
-                      key={post.id}
-                      style={{
-                        objectFit: "contain",
-                        margin: "0 16px 16px 0",
-                        cursor: "pointer",
-                      }}
-                      id={post.id}
-                      title={post.title}
-                      //이미지 2장 이상일 때
-                      images={post.images.map(
-                        (image) =>
-                          "https://photocardforme.s3.ap-northeast-2.amazonaws.com/" +
-                          image
-                      )}
-                      ownMembers={post.ownMembers.map((member) => ({
-                        member_name: member.name,
-                      }))} // 변경된 부분
-                      targetMembers={post.targetMembers.map((member) => ({
-                        member_name: member.name,
-                      }))} // 변경된 부분
-                      // 이부분
-                      // map(member => member) 로 했을 때는 안됐는데 위처럼  수정하면 되는 이유 알아보기
-                      content={post.content}
-                      type={post.cardType}
-                      isBartered={post.isBartered}
-                    ></Card>
-                  </div>
-                ))
-                .reverse()}
-          </ImageList>
+              id="card-list"
+              sx={{ display: "flex", width: "100%" }}
+              rowHeight={200}
+            >
+              {recentPosts &&
+                recentPosts
+                  .map((post, index) => (
+                    <div
+                      className="cards-container"
+                      key={index}
+                      onClick={() => handleClick(post.id)}
+                    >
+                      <Card
+                        key={post.id}
+                        style={{
+                          objectFit: "contain",
+                          margin: "0 16px 16px 0",
+                          cursor: "pointer",
+                        }}
+                        id={post.id}
+                        title={post.title}
+                        //이미지 2장 이상일 때
+                        images={post.images.map(
+                          (image) =>
+                            "https://photocardforme.s3.ap-northeast-2.amazonaws.com/" +
+                            image
+                        )}
+                        ownMembers={post.ownMembers.map((member) => ({
+                          member_name: member.name,
+                        }))} // 변경된 부분
+                        targetMembers={post.targetMembers.map((member) => ({
+                          member_name: member.name,
+                        }))} // 변경된 부분
+                        // 이부분
+                        // map(member => member) 로 했을 때는 안됐는데 위처럼  수정하면 되는 이유 알아보기
+                        content={post.content}
+                        type={post.cardType}
+                        isBartered={post.isBartered}
+                      ></Card>
+                    </div>
+                  ))
+                  .reverse()}
+            </ImageList>
           )}
-          
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-        {sellPosts.length == 0 ? <div>최근 조회한 게시글이 없어요!</div> : (
-
-          <ImageList
-            id="card-list"
-            sx={{ display: "flex", width: "100%" }}
-            rowHeight={200}
-          >
-            {recentPosts &&
-              recentPosts
-                .filter((post) => post.type === "판매")
-                .map((post, index) => (
-                  <div
-                    className="cards-container"
-                    key={index}
-                    onClick={() => handleClick(post.id)}
-                  >
-                    <Card
-                      key={post.id}
-                      style={{
-                        objectFit: "contain",
-                        margin: "0 16px 16px 0",
-                        cursor: "pointer",
-                      }}
-                      id={post.id}
-                      title={post.title}
-                      images={post.photos}
-                      ownMembers={post.ownMembers}
-                      content={post.content}
-                      type={post.cardType}
-                      isSold={post.isSold}
-                    ></Card>
-                  </div>
-                ))
-                .reverse()}
-          </ImageList>
-        )}
+          {sellPosts.length == 0 ? (
+            <div>최근 조회한 게시글이 없어요!</div>
+          ) : (
+            <ImageList
+              id="card-list"
+              sx={{ display: "flex", width: "100%" }}
+              rowHeight={200}
+            >
+              {recentPosts &&
+                recentPosts
+                  .filter((post) => post.type === "판매")
+                  .map((post, index) => (
+                    <div
+                      className="cards-container"
+                      key={index}
+                      onClick={() => handleClick(post.id)}
+                    >
+                      <Card
+                        key={post.id}
+                        style={{
+                          objectFit: "contain",
+                          margin: "0 16px 16px 0",
+                          cursor: "pointer",
+                        }}
+                        id={post.id}
+                        title={post.title}
+                        images={post.photos}
+                        ownMembers={post.ownMembers}
+                        content={post.content}
+                        type={post.cardType}
+                        isSold={post.isSold}
+                      ></Card>
+                    </div>
+                  ))
+                  .reverse()}
+            </ImageList>
+          )}
         </CustomTabPanel>
       </div>
     </div>

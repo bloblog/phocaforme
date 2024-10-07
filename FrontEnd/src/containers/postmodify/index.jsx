@@ -2,11 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { Container, Button } from "@mui/material";
-import RadioButton2 from "../../components/UI/RadioButton2.jsx";
-import BarterModify from "./BarterModify.jsx";
-import SellModify from "./SellModify.jsx";
+import BarterModify from "./barterpost.jsx";
 import AddIcon from "@mui/icons-material/Add";
-import TypeDropdown from "../UI/Dropdown/TypeDropdown.jsx";
+import TypeDropdown from "@/components/Dropdown/TypeDropdown.jsx";
 
 const PostModify = () => {
   const navigate = useNavigate(); // useNavigate 훅 추가

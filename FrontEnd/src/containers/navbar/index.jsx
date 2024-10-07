@@ -1,12 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { logoutUser } from "../../store/loginUser.jsx";
+import { logoutUser } from "@/store/loginUser.jsx";
 
 import Bell from "./Bell.jsx";
 import ProfileImage from "./ProfileImage.jsx";
 
-import logo from "../../assets/images/logo.PNG";
+import logo from "@/assets/images/logo.PNG";
 import NonLoginImage from "./NonLoginImage.jsx";
 
 const NavBar = ({ children }) => {

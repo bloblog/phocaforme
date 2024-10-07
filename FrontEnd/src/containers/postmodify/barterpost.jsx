@@ -4,15 +4,14 @@ import { useNavigate } from "react-router-dom";
 
 import Chip from "@mui/material/Chip";
 
-import GroupDropdown from "../UI/Dropdown/GroupDropdown2.jsx";
-import MemberDropdown from "../UI/Dropdown/MemberDropdown2.jsx";
+import GroupDropdown from "@/components/Dropdown/GroupDropdown2.jsx";
+import MemberDropdown from "@/components/Dropdown/MemberDropdown2.jsx";
 
 const BarterModify = ({
   defaultGroup,
   defaultOwnMember,
   defaultTargetMember,
   onChange,
-  
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -21,7 +20,6 @@ const BarterModify = ({
 
   const handleGroupChange = (group) => {
     setSelectedGroup(group || { value: "", label: "", avatarSrc: "" });
-    
   };
 
   const [ownMembers, setOwnMembers] = useState([]);
@@ -61,7 +59,7 @@ const BarterModify = ({
       targetMembers.filter((member) => member !== deletedMember)
     );
   };
- 
+
   return (
     <div>
       <div id="group-input" className="search-box-group">
@@ -114,7 +112,6 @@ const BarterModify = ({
           <div>
             {targetMembers &&
               targetMembers.map((tag) => (
-                
                 <Chip
                   key={tag.id}
                   label={tag?.idolName}

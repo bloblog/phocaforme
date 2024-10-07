@@ -4,9 +4,9 @@ import { useParams, useLocation } from "react-router-dom";
 
 import axios from "axios";
 
-import { sendChat, initChat } from "../../store2/chat";
+import { sendChat, initChat } from "@/store/chat";
 
-import { timeFormat } from "../../utils/timeFormat";
+import { timeFormat } from "@/utils/timeFormat";
 
 import { useTheme } from "@mui/material/styles";
 

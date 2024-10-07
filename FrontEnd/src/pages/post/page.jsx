@@ -1,9 +1,9 @@
 import { useSelector } from "react-redux";
 
 import { Container } from "@mui/material";
-import MainPost from "../../components/PostList/MainPost.jsx";
-import SearchResult from "../../components/PostList/SearchResult.jsx";
-import Search from "../../components/Search/Search.jsx";
+import MainPost from "@/containers/postList/MainPost.jsx";
+import SearchResult from "@/containers/postList/SearchResult.jsx";
+import Search from "@/containers/search/index.jsx";
 
 const Post = () => {
   const searchs = useSelector((state) =>

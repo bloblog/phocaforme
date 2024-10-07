@@ -1,5 +1,5 @@
 import { Container } from "@mui/material";
-import Guide from "../../components/Guide";
+import Guide from "@/containers/guide/index";
 
 const guide = () => {
   return (

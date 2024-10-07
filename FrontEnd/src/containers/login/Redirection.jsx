@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 
-import { actionCreators as userActions } from "../../store/user.jsx";
+import { actionCreators as userActions } from "@/store/user.jsx";
 
 const Redirection = (props) => {
   const dispatch = useDispatch();

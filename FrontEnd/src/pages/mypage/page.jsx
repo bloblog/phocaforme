@@ -1,11 +1,11 @@
 import { Container } from "@mui/material";
 
-import Nickname from "../../components/Setting/Nickname";
-import Bias from "../../components/Setting/Bias";
-import WishCard from "../../components/Setting/WishCard";
-import LatestPost from "../../components/PostList/LatestPost";
-import MyPost from "../../components/PostList/MyPost";
-import QnaButton from "../../components/UI/QnaButton";
+import Nickname from "@/containers/setting/Nickname";
+import Bias from "@/containers/setting/Bias";
+import WishCard from "@/containers/setting/WishCard";
+import LatestPost from "@/containers/postList/LatestPost";
+import MyPost from "@/containers/postList/MyPost";
+import QnaButton from "@/components/QnaButton";
 
 const myPage = () => {
   return (

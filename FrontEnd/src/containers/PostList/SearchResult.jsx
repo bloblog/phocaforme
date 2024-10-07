@@ -13,8 +13,8 @@ import {
   Tabs,
   Tab,
 } from "@mui/material";
-import Card from "../UI/Card.jsx";
-import usePostSearch from "../../utils/infiScroll";
+import Card from "@/components/Card.jsx";
+import usePostSearch from "@/utils/infiScroll";
 import PostCaution from "./PostCaution.jsx";
 
 const CustomTabPanel = (props) => {

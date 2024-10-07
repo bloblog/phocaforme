@@ -1,5 +1,5 @@
 import { Container } from "@mui/material";
-import LoginPage from "../../containers/Login/LoginPage.jsx";
+import LoginPage from "@/containers/login/index.jsx";
 
 const Login = () => {
   return (

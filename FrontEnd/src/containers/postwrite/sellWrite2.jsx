@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import GroupDropdown2 from "../../component/Dropdown/GroupDropdown2.jsx";
-import MemberDropdown2 from "../../component/Dropdown/MemberDropdown2.jsx";
+import GroupDropdown2 from "@/component/Dropdown/GroupDropdown2.jsx";
+import MemberDropdown2 from "@/component/Dropdown/MemberDropdown2.jsx";
 
 const BarterWrite = () => {
   const dispatch = useDispatch();

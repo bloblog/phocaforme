@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { TextField, Button } from "@mui/material";
 
-import NicknameModal from "../UI/Modal/NicknameModal";
+import NicknameModal from "@/components/Modal/NicknameModal";
 
 const Nickname = () => {
   const loginUser = useSelector((state) =>

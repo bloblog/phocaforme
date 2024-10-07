@@ -1,5 +1,5 @@
 import { Container } from "@mui/material";
-import PostWrite from "../../components/PostWrite/PostWrite";
+import PostWrite from "@/containers/postWrite/index";
 
 const postWrite = () => {
   return (

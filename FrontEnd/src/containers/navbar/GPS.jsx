@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Cookies from "js-cookie";
 import axios from "axios";
-import IOSSwitch from "../../styles/IOSSwitch";
+import IOSSwitch from "@/styles/IOSSwitch";
 import { FormControlLabel, Switch, CircularProgress } from "@mui/material";
 import {
   ReplayCircleFilledOutlined,
   LocationOnOutlined,
 } from "@mui/icons-material";
-import { setLocation, setLocationLongLat } from "../../store/loginUser";
+import { setLocation, setLocationLongLat } from "@/store/loginUser";
 
 export default function GPS() {
   const dispatch = useDispatch();

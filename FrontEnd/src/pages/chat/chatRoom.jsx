@@ -1,5 +1,5 @@
 import { Container } from "@mui/material";
-import ChatRoom from "../../components/ChatRoom/ChatRoom";
+import ChatRoom from "@/containers/chatRoom/ChatRoom";
 
 const chatRoom = () => {
   return (
