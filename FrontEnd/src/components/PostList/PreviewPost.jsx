@@ -20,7 +20,7 @@ const PreviewPost = () => {
     // const fetchData = async () => {
     //   try {
     //     const response = await axios.get(
-    //       import.meta.env.REACT_APP_API_URL + "barter/search",
+    //       import.meta.env.VITE_APP_API_URL + "barter/search",
     //       {
     //         withCredentials: true,
     //       }

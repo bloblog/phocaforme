@@ -27,7 +27,7 @@ const LoginPage = () => {
   // }
 
   // const tokenExtension = () => {
-  //   axios.post(import.meta.env.REACT_APP_API_URL + "auth/login-status",
+  //   axios.post(import.meta.env.VITE_APP_API_URL + "auth/login-status",
   //       { loginStatus: loginPersistChecked },
   //       { withCredentials: true,}
   //   ).then(res => {

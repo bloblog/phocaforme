@@ -163,7 +163,7 @@ const PostWrite = () => {
     // navigate("/post", {state: });
 
     axios
-      .post(import.meta.env.REACT_APP_API_URL + "barter", newPost, {
+      .post(import.meta.env.VITE_APP_API_URL + "barter", newPost, {
         withCredentials: true,
         headers: {
           "Content-Type": "multipart/form-data",

@@ -123,7 +123,7 @@ const BasicTabs = ({ isPreview }) => {
           }
 
           const response = await axios.get(
-            import.meta.env.REACT_APP_API_URL + "barter/search",
+            import.meta.env.VITE_APP_API_URL + "barter/search",
             { params },
             {
               headers: {

@@ -24,7 +24,7 @@ const Bias = () => {
   useEffect(() => {
     if (getCookie("profile")) {
       axios
-        .get(import.meta.env.REACT_APP_API_URL + `user/bias`, {
+        .get(import.meta.env.VITE_APP_API_URL + `user/bias`, {
           withCredentials: true,
         })
         .then((response) => {
@@ -59,7 +59,7 @@ const Bias = () => {
     // db 에 반영하기
     axios
       .put(
-        import.meta.env.REACT_APP_API_URL + `user/bias`,
+        import.meta.env.VITE_APP_API_URL + `user/bias`,
         {
           idolMemberId: selectedMember.idolMemberId,
         },

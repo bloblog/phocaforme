@@ -28,7 +28,7 @@ const MemberDropdown2 = ({
       if (selectedGroup) {
         try {
           const response = await axios.get(
-            import.meta.env.REACT_APP_API_URL +
+            import.meta.env.VITE_APP_API_URL +
               `idol/member/${selectedGroup.idolGroupId}`,
             {
               withCredentials: true,

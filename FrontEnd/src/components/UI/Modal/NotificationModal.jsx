@@ -98,7 +98,7 @@ const NotificationModal = ({ isOpen, onClose, onNotificationSelect }) => {
   };
 
   const sendTokenToServerBackend = (currentToken) => {
-    fetch(import.meta.env.REACT_APP_API_URL + `user/device`, {
+    fetch(import.meta.env.VITE_APP_API_URL + `user/device`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

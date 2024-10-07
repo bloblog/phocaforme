@@ -64,7 +64,7 @@ const ChatMenu = ({ otherNickname, updateMessages, postId }) => {
 
   const handleDone = () => {
     axios
-      .put(import.meta.env.REACT_APP_API_URL + `chats/done/${roomId}`)
+      .put(import.meta.env.VITE_APP_API_URL + `chats/done/${roomId}`)
       .then((response) => {
         console.log("완료");
         setAnchorEl(null);

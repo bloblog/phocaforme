@@ -18,7 +18,7 @@ export default function usePostSearch(pageNumber) {
     axios({
       method: "GET",
       url:
-        import.meta.env.REACT_APP_API_URL + `barter/search?page=${pageNumber}`,
+        import.meta.env.VITE_APP_API_URL + `barter/search?page=${pageNumber}`,
       // params: {page: pageNumber },
       withCredentials: true,
       params: { page: pageNumber },

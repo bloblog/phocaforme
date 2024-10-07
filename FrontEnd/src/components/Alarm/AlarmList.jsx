@@ -29,7 +29,7 @@ const InteractiveList = () => {
   const fetchNotifications = async () => {
     try {
       const response = await axios.get(
-        import.meta.env.REACT_APP_API_URL + "notification",
+        import.meta.env.VITE_APP_API_URL + "notification",
         { withCredentials: true }
       );
 
@@ -52,7 +52,7 @@ const InteractiveList = () => {
 
       // 서버에 알림을 읽은 상태로 변경 요청 보내기
       await axios.post(
-        import.meta.env.REACT_APP_API_URL + `notification`,
+        import.meta.env.VITE_APP_API_URL + `notification`,
         { notificationId: item.notificationId },
         { withCredentials: true }
       );
@@ -71,7 +71,7 @@ const InteractiveList = () => {
       const notificationId = notification.notificationId; // 알림 ID 추출
 
       // 서버에 삭제 요청 보내기
-      await axios.delete(import.meta.env.REACT_APP_API_URL + `notification`, {
+      await axios.delete(import.meta.env.VITE_APP_API_URL + `notification`, {
         // 옵션 객체
         data: { notificationId }, // 요청 body에 데이터 설정
         withCredentials: true, // 인증 설정
@@ -95,7 +95,7 @@ const InteractiveList = () => {
 
       // 서버에 모든 알림을 읽은 상태로 변경 요청 보내기
       await axios.post(
-        import.meta.env.REACT_APP_API_URL + `notification`,
+        import.meta.env.VITE_APP_API_URL + `notification`,
         { notificationId: notificationIds },
         { withCredentials: true }
       );

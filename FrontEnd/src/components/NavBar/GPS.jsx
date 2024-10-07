@@ -44,7 +44,7 @@ export default function GPS() {
   const getAddress = (long, lat) => {
     axios
       .put(
-        import.meta.env.REACT_APP_API_URL + `gps`,
+        import.meta.env.VITE_APP_API_URL + `gps`,
         {
           longitude: long,
           latitude: lat,
@@ -65,7 +65,7 @@ export default function GPS() {
 
   const turnOffGps = () => {
     axios
-      .get(import.meta.env.REACT_APP_API_URL + `gps`, {
+      .get(import.meta.env.VITE_APP_API_URL + `gps`, {
         withCredentials: true,
       })
       .then((response) => {

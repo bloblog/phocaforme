@@ -11,7 +11,7 @@ const GroupDropdown = ({ isProfile, defaultGroup, onChange }) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          import.meta.env.REACT_APP_API_URL + "idol/group",
+          import.meta.env.VITE_APP_API_URL + "idol/group",
           {
             withCredentials: true,
           }

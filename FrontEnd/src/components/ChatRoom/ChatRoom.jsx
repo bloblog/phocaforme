@@ -51,7 +51,7 @@ const ChatRoom = () => {
   useEffect(() => {
     const fetchData = async () => {
       await axios
-        .get(import.meta.env.REACT_APP_API_URL + `chats/${roomId}`, {
+        .get(import.meta.env.VITE_APP_API_URL + `chats/${roomId}`, {
           withCredentials: true,
         })
         .then((response) => {
@@ -95,7 +95,7 @@ const ChatRoom = () => {
           : location.state.visiterId;
       await axios
         .post(
-          import.meta.env.REACT_APP_API_URL + `users/nickname`,
+          import.meta.env.VITE_APP_API_URL + `users/nickname`,
           {
             userId: you,
           },

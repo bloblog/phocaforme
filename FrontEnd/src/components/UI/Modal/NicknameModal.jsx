@@ -54,7 +54,7 @@ const NicknameModal = ({
     if (inputValue.trim() !== "") {
       axios
         .post(
-          import.meta.env.REACT_APP_API_URL + `user/nickname`,
+          import.meta.env.VITE_APP_API_URL + `user/nickname`,
           { nickname: inputValue },
           {
             withCredentials: true,
@@ -88,7 +88,7 @@ const NicknameModal = ({
   const handleChangeNickname = (userId) => {
     axios
       .put(
-        import.meta.env.REACT_APP_API_URL + `user/nickname`,
+        import.meta.env.VITE_APP_API_URL + `user/nickname`,
         {
           isDuplicated: !validFlag,
           nickname: inputValue,

@@ -66,7 +66,7 @@ const ChartTab = () => {
   const getIdol = async (idolMemberId) => {
     try {
       const response = await axios.get(
-        import.meta.env.REACT_APP_API_URL + `idol/${idolMemberId}`,
+        import.meta.env.VITE_APP_API_URL + `idol/${idolMemberId}`,
         {
           withCredentials: true,
         }
@@ -81,7 +81,7 @@ const ChartTab = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          import.meta.env.REACT_APP_API_URL + `idol/rank`,
+          import.meta.env.VITE_APP_API_URL + `idol/rank`,
           {
             withCredentials: true,
           }

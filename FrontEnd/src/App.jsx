@@ -3,27 +3,27 @@ import { Provider } from "react-redux";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 
 import Main from "./pages/main.jsx";
-import Alarm from "./pages/alarm.jsx";
-import Chat from "./pages/chat.jsx";
-import Profile from "./pages/profile.jsx";
-import Login from "./pages/login.jsx";
-import NavBar from "./components/NavBar/NavBar.jsx";
-import ChatRoom from "./pages/chatRoom.jsx";
-import PostWrite from "./pages/postWrite.jsx";
-import Post from "./pages/post.jsx";
-import FloatingActionButtons from "./components/UI/FloatingActionButtons.jsx";
-import Guide from "./pages/guide.jsx";
-import Modify from "./pages/postModify.jsx";
+import Alarm from "./pages/alarm/page.jsx";
+import Chat from "./pages/chat/page.jsx";
+import Profile from "./pages/mypage/page.jsx";
+import Login from "./pages/login/page.jsx";
+import ChatRoom from "./pages/chat/chatRoom.jsx";
+import PostWrite from "./pages/postwrite/page.jsx";
+import Post from "./pages/post/page.jsx";
+import Guide from "./pages/guide/page.jsx";
+import Modify from "./pages/postmodify/[postId]/page.jsx";
+
 import DetailPost from "./components/PostList/DetailPost.jsx";
 import MainPost from "./components/PostList/MainPost.jsx";
+import NavBar from "./components/NavBar/NavBar.jsx";
+import FloatingActionButtons from "./components/UI/FloatingActionButtons.jsx";
 
-import { Grid, Container } from "@mui/material";
 import theme from "./styles/theme.jsx";
 import { ThemeProvider } from "@mui/material/styles";
 
 import store from "./store2/index.jsx";
-// import './firebase-messaging.js';
 import NotificationModal from "./components/UI/Modal/NotificationModal.jsx";
+// import './firebase-messaging.js';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();

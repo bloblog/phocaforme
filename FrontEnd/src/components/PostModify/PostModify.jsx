@@ -186,7 +186,7 @@ const PostModify = () => {
         console.log(pair[0] + ", " + pair[1]);
       }
       await axios.put(
-        import.meta.env.REACT_APP_API_URL + `barter/${id}`,
+        import.meta.env.VITE_APP_API_URL + `barter/${id}`,
         formData,
         {
           withCredentials: true,

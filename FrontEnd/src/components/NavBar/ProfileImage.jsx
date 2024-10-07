@@ -52,7 +52,7 @@ const ProfileImage = () => {
   const handleLogout = () => {
     // dispatch(logoutUser());
     window.location.href =
-      import.meta.env.REACT_APP_LOGIN_API_URL + "auth/logout";
+      import.meta.env.VITE_APP_LOGIN_API_URL + "auth/logout";
   };
 
   const [biasImg, setBiasImg] = useState(null);
@@ -61,7 +61,7 @@ const ProfileImage = () => {
   useEffect(() => {
     if (getCookie("profile")) {
       axios
-        .get(import.meta.env.REACT_APP_API_URL + `user/bias`, {
+        .get(import.meta.env.VITE_APP_API_URL + `user/bias`, {
           withCredentials: true,
         })
         .then((response) => {

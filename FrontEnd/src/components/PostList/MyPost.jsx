@@ -63,7 +63,7 @@ const MyPost = () => {
   const fetchMyPosts = async () => {
     try {
       const response = await axios.get(
-        import.meta.env.REACT_APP_API_URL + "barter"
+        import.meta.env.VITE_APP_API_URL + "barter"
       );
       const data = response.data;
 

@@ -27,7 +27,7 @@ const DetailPost = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        import.meta.env.REACT_APP_API_URL + `barter/${id}`,
+        import.meta.env.VITE_APP_API_URL + `barter/${id}`,
         { withCredentials: true }
       );
       const detailData = response.data;
@@ -88,7 +88,7 @@ const DetailPost = () => {
   const handleChatClick = () => {
     // 채팅방 생성
     axios
-      .post(import.meta.env.REACT_APP_API_URL + `chatRoom/${id}`, null, {
+      .post(import.meta.env.VITE_APP_API_URL + `chatRoom/${id}`, null, {
         headers: {
           Authorization: `${
             document.cookie.match("(^|;) ?" + "token" + "=([^;]*)(;|$)")[2]
@@ -117,7 +117,7 @@ const DetailPost = () => {
   const handlePullupClick = async () => {
     try {
       const response = await axios.post(
-        import.meta.env.REACT_APP_API_URL + `barter/regen/${post.id}`,
+        import.meta.env.VITE_APP_API_URL + `barter/regen/${post.id}`,
         null,
         {
           withCredentials: true,
@@ -138,7 +138,7 @@ const DetailPost = () => {
     const postId = post.id;
 
     axios
-      .delete(import.meta.env.REACT_APP_API_URL + `barter/${postId}`, {
+      .delete(import.meta.env.VITE_APP_API_URL + `barter/${postId}`, {
         withCredentials: true,
       })
       .then((response) => {
