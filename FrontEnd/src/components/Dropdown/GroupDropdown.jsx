@@ -2,7 +2,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { Box, TextField, Autocomplete } from "@mui/material";
-import { getIdolGroup } from "@/api/idolGroup";
+import { getIdolGroup } from "@/api/idolinfo";
 
 const GroupDropdown = ({ isProfile, defaultGroup, onChange }) => {
   const [groupItems, setGroupItems] = useState([]);
