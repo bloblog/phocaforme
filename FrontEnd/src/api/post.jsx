@@ -3,6 +3,11 @@ import { localAxios } from "./http";
 const local = localAxios();
 const url = "/barter"; // 공통 URL
 
+// 전체 게시글 가져오기
+function getAllPost(success, fail) {
+  local.get(url).then(success).catch(fail);
+}
+
 // 교환 게시글 가져오기
 function getPost(param, success, fail) {
   local.get(`${url}/${param}`).then(success).catch(fail);
@@ -23,4 +28,4 @@ function deletePost(param, success, fail) {
   local.delete(`${url}/${param}`).then(success).catch(fail);
 }
 
-export { getPost, getImage, pullupPost, deletePost };
+export { getAllPost, getPost, getImage, pullupPost, deletePost };

@@ -4,8 +4,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 
-import axios from "axios";
-
 import Search from "../search/index.jsx";
 
 import {
