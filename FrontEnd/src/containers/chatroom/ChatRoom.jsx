@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useLocation } from "react-router-dom";
 
-import axios from "axios";
-
 import { sendChat, initChat } from "@/store/chat";
 
 import { timeFormat } from "@/utils/timeFormat";
@@ -15,6 +13,8 @@ import { PushPinRounded } from "@mui/icons-material";
 
 import ChatMenu from "./ChatTop";
 import ChatSend from "./ChatSend";
+import { getChatList } from "../../api/chat";
+import { getNickname } from "../../api/nickname";
 
 const ChatRoom = () => {
   const theme = useTheme();
@@ -49,19 +49,15 @@ const ChatRoom = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      await axios
-        .get(import.meta.env.VITE_APP_API_URL + `chats/${roomId}`, {
-          withCredentials: true,
-        })
-        .then((response) => {
-          dispatch(initChat(response.data));
-        })
-        .catch((error) => {
-          console.error("Error get chatting:", error);
-        });
-    };
-    fetchData();
+    getChatList(
+      roomId,
+      (data) => {
+        dispatch(initChat(data.data));
+      },
+      (error) => {
+        console.error("Error get chatting:", error);
+      }
+    );
   }, [dispatch, roomId]);
 
   // 항상 맨 아래로 스크롤
@@ -85,33 +81,23 @@ const ChatRoom = () => {
   };
 
   // 채팅 상대방 이름 가져와
-  const [otherNickname, setOtherNickname] = useState(null);
+  const [otherNickname, setOtherNickname] = useState("");
 
   useEffect(() => {
-    const fetchData = async () => {
-      const you =
-        loginUser.userId == location.state.visiterId
-          ? location.state.ownerId
-          : location.state.visiterId;
-      await axios
-        .post(
-          import.meta.env.VITE_APP_API_URL + `users/nickname`,
-          {
-            userId: you,
-          },
-          {
-            "Content-Type": "application/json",
-            withCredentials: true,
-          }
-        )
-        .then((response) => {
-          setOtherNickname(response.data);
-        })
-        .catch((error) => {
-          console.error("Error get nickname:", error);
-        });
-    };
-    fetchData();
+    const you =
+      loginUser.userId == location.state.visiterId
+        ? location.state.ownerId
+        : location.state.visiterId;
+
+    getNickname(
+      { userId: you },
+      (data) => {
+        setOtherNickname(data.data);
+      },
+      (error) => {
+        console.error("Error get nickname:", error);
+      }
+    );
   }, []);
 
   return (

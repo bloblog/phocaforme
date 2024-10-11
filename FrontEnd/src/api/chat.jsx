@@ -3,11 +3,12 @@ import { getNickname } from "./nickname";
 import { getImage } from "./post";
 
 const local = localAxios();
-const url = "/chatRoom"; // 공통 URL
+const url_chatroom = "/chatRoom"; // 공통 URL
+const url_chat = "/chats"; // 공통 URL
 
 // 채팅방 가져오기
 function getChatRoom(success, fail) {
-  local.get(url).then(success).catch(fail);
+  local.get(url_chatroom).then(success).catch(fail);
 }
 
 // 채팅방 정보 가져오기 (상대방 닉네임, 썸네일)
@@ -47,4 +48,14 @@ function getChatRoomInfo(chatrooms, loginUser, success, fail) {
   Promise.all(promises).then(success).catch(fail);
 }
 
-export { getChatRoom, getChatRoomInfo };
+// 채팅 내역 가져오기
+function getChatList(param, success, fail) {
+  local.get(`${url_chat}/${param}`).then(success).catch(fail);
+}
+
+// 판매 완료 처리하기
+function updateChatState(param, success, fail) {
+  local.put(`${url_chat}/done/${param}`).then(success).catch(fail);
+}
+
+export { getChatRoom, getChatRoomInfo, getChatList, updateChatState };

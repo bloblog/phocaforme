@@ -2,6 +2,7 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 
 import { Box, TextField, Autocomplete } from "@mui/material";
+import { getIdolMember } from "../../api/idolinfo";
 
 const MemberDropdown2 = ({
   isProfile,

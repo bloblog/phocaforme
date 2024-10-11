@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Cookies from "js-cookie";
-import axios from "axios";
 import IOSSwitch from "@/styles/IOSSwitch";
 import { FormControlLabel, Switch, CircularProgress } from "@mui/material";
 import {
@@ -9,6 +8,7 @@ import {
   LocationOnOutlined,
 } from "@mui/icons-material";
 import { setLocation, setLocationLongLat } from "@/store/loginUser";
+import { deleteGPS, getGPS } from "../../api/user";
 
 export default function GPS() {
   const dispatch = useDispatch();
@@ -42,39 +42,32 @@ export default function GPS() {
   }, [isSwitchOn, dispatch]);
 
   const getAddress = (long, lat) => {
-    axios
-      .put(
-        import.meta.env.VITE_APP_API_URL + `gps`,
-        {
-          longitude: long,
-          latitude: lat,
-        },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((response) => {
-        const [, ...restArray] = response.data.split(" ");
+    getGPS(
+      {
+        longitude: long,
+        latitude: lat,
+      },
+      (data) => {
+        const [, ...restArray] = data.data.split(" ");
         const formattedLocation = restArray.join(" ");
         dispatch(setLocation(formattedLocation));
-      })
-      .catch((error) => {
-        console.error("주소변환 실패:", error);
-      });
+      },
+      (error) => {
+        console.error("Error Get GPS: ", error);
+      }
+    );
   };
 
   const turnOffGps = () => {
-    axios
-      .get(import.meta.env.VITE_APP_API_URL + `gps`, {
-        withCredentials: true,
-      })
-      .then((response) => {
+    deleteGPS(
+      (data) => {
         dispatch(setLocation(null));
         dispatch(setLocationLongLat([]));
-      })
-      .catch((error) => {
-        console.error("gps off error:", error);
-      });
+      },
+      (error) => {
+        console.error("Error GPS Off:", error);
+      }
+    );
   };
 
   const handleRefresh = () => {

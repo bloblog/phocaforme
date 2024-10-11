@@ -80,7 +80,6 @@ const ChartTab = () => {
 
     getIdolRank(
       (data) => {
-        console.log(data.data);
         const order = ["first", "second", "third"];
 
         for (const key in data.data) {

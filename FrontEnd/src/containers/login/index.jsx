@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import axios from "axios";
 import { KAKAO_AUTH_URL } from "./OAuth";
 
 import icon from "@/assets/images/icon.PNG";

@@ -19,7 +19,7 @@ import {
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
 import PayModal from "@/components/Modal/PayRequestModal";
-import axios from "axios";
+import { updateChatState } from "../../api/chat";
 
 const ChatMenu = ({ otherNickname, updateMessages, postId }) => {
   const theme = useTheme();
@@ -63,17 +63,17 @@ const ChatMenu = ({ otherNickname, updateMessages, postId }) => {
   };
 
   const handleDone = () => {
-    axios
-      .put(import.meta.env.VITE_APP_API_URL + `chats/done/${roomId}`)
-      .then((response) => {
-        console.log("완료");
+    updateChatState(
+      roomId,
+      (data) => {
         setAnchorEl(null);
         navigate("/chat");
-      })
-      .catch((error) => {
+      },
+      (error) => {
         setAnchorEl(null);
-        console.error("실패", error);
-      });
+        console.error("Error Update Chat State", error);
+      }
+    );
   };
 
   return (
