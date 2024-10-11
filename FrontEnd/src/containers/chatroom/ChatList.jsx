@@ -2,11 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import axios from "axios";
-
 import { timeFormat } from "@/utils/timeFormat";
 
 import { Container, List, ListItem, Typography } from "@mui/material";
+import { getNickname } from "../../api/nickname";
+import { getChatRoom, getChatRoomInfo } from "../../api/chat";
+import { getImage } from "../../api/post";
+
+import MainIcon from "@/assets/icons/main";
 
 const ChatList = () => {
   const navigate = useNavigate();
@@ -18,95 +21,36 @@ const ChatList = () => {
     navigate(`/chatroom/${roomId}`, { state: chatroom });
   };
 
-  const [nicknames, setNicknames] = useState({});
-  const [thumbnails, setThumbnails] = useState({});
+  const [chatInfoList, setChatInfoList] = useState([]);
   const [chatLists, setChatLists] = useState([]);
-
-  const getNickname = async (id) => {
-    try {
-      const response = await axios.post(
-        import.meta.env.VITE_APP_API_URL + `users/nickname`,
-        {
-          userId: id,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Error get nickname:", error);
-    }
-  };
-
-  const getImages = async (boardId) => {
-    try {
-      const response = await axios.get(
-        import.meta.env.VITE_APP_API_URL + `barter/${boardId}`,
-        { withCredentials: true }
-      );
-      if (response.data.photos.length > 0) {
-        return response.data.photos[0];
-      } else {
-        return null; // If no photos, return null or handle accordingly
-      }
-    } catch (error) {
-      console.error("Error get image:", error);
-      return null; // Handle error, e.g., return default thumbnail or handle accordingly
-    }
-  };
+  const [loading, setLoading] = useState(true); // 로딩 상태 추가
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          import.meta.env.VITE_APP_API_URL + `chatRoom`,
-          {
-            withCredentials: true,
+    getChatRoom(
+      (data) => {
+        setChatLists(data.data);
+        // 닉네임 및 썸네일 설정
+        getChatRoomInfo(
+          data.data,
+          loginUser,
+          (data) => {
+            setChatInfoList(data);
+            setLoading(false); // 데이터 로딩 완료 시 로딩 상태 해제
+          },
+          (error) => {
+            console.error("Error Get Chatroom Info: ", error);
           }
         );
-        const chatData = response.data;
-
-        const nicknamePromises = chatData.map((chatroom) =>
-          getNickname(
-            chatroom.ownerId !== loginUser.userId
-              ? chatroom.ownerId
-              : chatroom.visiterId
-          )
-        );
-        const nicknameResults = await Promise.all(nicknamePromises);
-
-        const imagePromises = chatData.map((chatroom) =>
-          getImages(chatroom.boardId)
-        );
-        const imageResults = await Promise.all(imagePromises);
-
-        const nicknameMap = {};
-        chatData.forEach((chatroom, index) => {
-          const nickname = nicknameResults[index];
-          nicknameMap[chatroom.chatRoomId] = nickname;
-        });
-
-        const thumbnailMap = {};
-        chatData.forEach((chatroom, index) => {
-          const thumbnail = imageResults[index];
-          thumbnailMap[chatroom.chatRoomId] = thumbnail;
-        });
-
-        setNicknames(nicknameMap);
-        setThumbnails(thumbnailMap);
-        setChatLists(chatData);
-      } catch (error) {
-        console.error("Error ChatList:", error);
+      },
+      (error) => {
+        console.log("Error Get ChatRoom: ", error);
       }
-    };
-    fetchData();
-  }, [loginUser.userId]);
+    );
+  }, []);
 
-  console.log(chatLists);
+  if (loading) {
+    return <div>Loading...</div>; // 로딩 중일 때 표시할 컴포넌트
+  }
 
   return (
     <Container>
@@ -132,16 +76,18 @@ const ChatList = () => {
             >
               <div className="chatlist-info">
                 <div className="chatlist-thumb-content">
-                  <img
-                    className="chatlist-thumbnail"
-                    src={`https://photocardforme.s3.ap-northeast-2.amazonaws.com/${
-                      thumbnails[chatroom.chatRoomId]
-                    }`}
-                    alt="Thumbnail"
-                  />
+                  {chatInfoList[index].image == null ? (
+                    <MainIcon />
+                  ) : (
+                    <img
+                      className="chatlist-thumbnail"
+                      src={`https://photocardforme.s3.ap-northeast-2.amazonaws.com/${chatInfoList[index].image}`}
+                      alt="Thumbnail"
+                    />
+                  )}
                   <div className="chatlist-content">
                     <div className="chatlist-nickname">
-                      {nicknames[chatroom.chatRoomId]}
+                      {chatInfoList[index].nickname}
                     </div>
                     <Typography color="text.primary">
                       {chatroom.latestChat
