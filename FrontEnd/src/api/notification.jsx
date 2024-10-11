@@ -13,4 +13,30 @@ function updateNotification(param, success, fail) {
   local.post(url, JSON.stringify(param)).then(success).catch(fail);
 }
 
-export { getNotification, updateNotification };
+// 알림 모두읽음 처리
+function updateAllNotification(notifications, success, fail) {
+  const promises = notifications.map((notification) => {
+    return new Promise((resolve, reject) => {
+      updateNotification(
+        { notificationId: notification.notificationId },
+        resolve,
+        reject
+      );
+    });
+  });
+
+  // 모든 업데이트가 완료되면 처리
+  Promise.all(promises).then(success).catch(fail);
+}
+
+// 알림 삭제
+function deleteNotification(param, success, fail) {
+  local.delete(url, { data: param }).then(success).catch(fail);
+}
+
+export {
+  getNotification,
+  updateNotification,
+  updateAllNotification,
+  deleteNotification,
+};

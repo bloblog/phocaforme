@@ -14,7 +14,12 @@ import {
 } from "@mui/material";
 
 import { TaskAlt, Close, RadioButtonUnchecked } from "@mui/icons-material";
-import { getNotification, updateNotification } from "../../api/notification";
+import {
+  deleteNotification,
+  getNotification,
+  updateAllNotification,
+  updateNotification,
+} from "../../api/notification";
 
 const InteractiveList = () => {
   const navigate = useNavigate();
@@ -58,78 +63,55 @@ const InteractiveList = () => {
     }
   };
 
-  // 알림 읽음 처리 핸들러 (삭제버튼 누른거)
-  const handleReadAlarm = async (index) => {
-    try {
-      const updatedNotifications = [...notifications];
-
-      const notification = updatedNotifications[index];
-      console.log(notification);
-      const notificationId = notification.notificationId; // 알림 ID 추출
-
-      // 서버에 삭제 요청 보내기
-      await axios.delete(import.meta.env.VITE_APP_API_URL + `notification`, {
-        // 옵션 객체
-        data: { notificationId }, // 요청 body에 데이터 설정
-        withCredentials: true, // 인증 설정
-      });
-
-      // 클라이언트에서 상태 업데이트
-      updatedNotifications.splice(index, 1);
-      setNotifications(updatedNotifications);
-    } catch (error) {
-      console.error("Error deleting notification:", error);
-    }
+  // 알림 삭제 핸들러
+  const handleReadAlarm = (index) => {
+    console.log(notifications[index].notificationId);
+    deleteNotification(
+      { notificationId: notifications[index].notificationId },
+      () => {
+        const updatedNotifications = [...notifications];
+        updatedNotifications.splice(index, 1);
+        setNotifications(updatedNotifications);
+      },
+      (error) => {
+        console.error("Error deleting notification:", error);
+      }
+    );
   };
 
-  // 모두읽음 처리
-  const markAllAsRead = async () => {
-    try {
-      // 현재 알림 데이터의 모든 notificationId를 배열로 추출
-      const notificationIds = notifications.map(
-        (notification) => notification.notificationId
-      );
-
-      // 서버에 모든 알림을 읽은 상태로 변경 요청 보내기
-      await axios.post(
-        import.meta.env.VITE_APP_API_URL + `notification`,
-        { notificationId: notificationIds },
-        { withCredentials: true }
-      );
-
-      // 클라이언트에서 상태 업데이트
-      const updatedNotifications = notifications.map((notification) => ({
-        ...notification,
-        readStatus: true,
-      }));
-      setNotifications(updatedNotifications);
-    } catch (error) {
-      console.error("Error marking all as read:", error);
-    }
+  // 알림 모두읽음 처리
+  const markAllAsRead = () => {
+    updateAllNotification(
+      notifications,
+      () => {
+        // 화면 상태 업데이트
+        const updatedNotifications = notifications.map((notification) => ({
+          ...notification,
+          readStatus: true,
+        }));
+        setNotifications(updatedNotifications);
+      },
+      (error) => {
+        console.error("Error marking all as read:", error);
+      }
+    );
   };
 
   return (
     <Container>
       <div>
         <h2 className="alarm-title">알림리스트</h2>
-        {/* <FormControlLabel
+        <FormControlLabel
           id="alarm-check-all"
           control={
-            // 여기주석처리하고 함수넣어보기
             <Checkbox
-              // checked={() => markAllAsRead()}
-              checked={notifications.every((item) => item.isRead)}
+              checked={notifications.every((item) => item.readStatus)}
               onChange={markAllAsRead}
-              // onChange={() =>
-              //   setNotifications((prevNotifications) =>
-              //     prevNotifications.map((item) => ({ ...item, readStatus: true }))
-              //   )
-              // }
-              // disabled={notifications.every((item) => item.isRead)}
+              disabled={notifications.every((item) => item.readStatus)}
             />
           }
           label="모두 읽음"
-        /> */}
+        />
       </div>
 
       <div>
