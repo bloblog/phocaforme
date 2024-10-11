@@ -15,6 +15,7 @@ import {
   Button,
 } from "@mui/material";
 import { openChatRoom } from "../../api/chat";
+import { deletePost, getPost, pullupPost } from "../../api/post";
 
 const DetailPost = () => {
   const navigate = useNavigate();
@@ -25,18 +26,6 @@ const DetailPost = () => {
   // const post = posts.find((p) => p.id === id); // 얘도 필요 없을 거 같은데
   const [post, setPost] = useState(null);
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(
-        import.meta.env.VITE_APP_API_URL + `barter/${id}`,
-        { withCredentials: true }
-      );
-      const detailData = response.data;
-      setPost(detailData);
-    } catch (error) {
-      console.error("Error fetching post:", error);
-    }
-  };
   // 디테일 페이지에 진입했을 떄 로컬스토리지에 저장
   const saveToLocalStorage = () => {
     if (post && post.id) {
@@ -71,16 +60,20 @@ const DetailPost = () => {
   };
 
   useEffect(() => {
-    fetchData();
-  }, [id]);
+    getPost(
+      id,
+      (data) => {
+        setPost(data.data);
+        if (post) {
+          saveToLocalStorage();
+        }
+      },
+      (error) => {
+        console.error("Error fetching post:", error);
+      }
+    );
+  }, []);
 
-  useEffect(() => {
-    if (post) {
-      saveToLocalStorage();
-    }
-  }, [post]);
-
-  console.log(post); // 현재 이 컴포넌트가 4번 렌더링됨 이유는 모르겠음 나중에 여유있으면 수정해야 할듯?
   // 내 게시글인지 판별
   const currentUser = useSelector((state) => state.user.user);
   const isCurrentUserWriter =
@@ -91,8 +84,6 @@ const DetailPost = () => {
     openChatRoom(
       id,
       (data) => {
-        console.log(data);
-        // const chatRoomInfo = data.data;
         navigate(`/chatroom/${data.data.chatRoomId}`, {
           state: data.data,
         });
@@ -110,46 +101,36 @@ const DetailPost = () => {
     navigate(`/modify/${id}`, { state: post });
   };
   // 끌올
-  const handlePullupClick = async () => {
-    try {
-      const response = await axios.post(
-        import.meta.env.VITE_APP_API_URL + `barter/regen/${post.id}`,
-        null,
-        {
-          withCredentials: true,
-        }
-      );
 
-      // 성공적으로 업데이트되었을 때의 처리
-      console.log("게시글이 성공적으로 끌어올려졌습니다.");
-      navigate("/mainpost");
-    } catch (error) {
-      // 오류 처리
-      console.error("게시글 끌어올리기에 실패했습니다:", error);
-    }
+  const handlePullupClick = () => {
+    pullupPost(post.id),
+      (data) => {
+        navigate("/mainpost");
+      },
+      (error) => {
+        console.error("Error Pull Up Post: ", error);
+      };
   };
 
   //삭제
   const handleDeleteClick = () => {
     const postId = post.id;
 
-    axios
-      .delete(import.meta.env.VITE_APP_API_URL + `barter/${postId}`, {
-        withCredentials: true,
-      })
-      .then((response) => {
-        console.log("게시물이 성공적으로 삭제되었습니다.");
+    deletePost(
+      postId,
+      (data) => {
         const existingRecentCard =
           JSON.parse(localStorage.getItem("recentCard")) || [];
         const updatedRecentCard = existingRecentCard.filter(
           (card) => card.id !== postId
         );
         localStorage.setItem("recentCard", JSON.stringify(updatedRecentCard));
-      })
-      .catch((error) => {
-        console.error("게시물 삭제 중 에러가 발생했습니다:", error);
-      });
-    navigate(-1);
+        navigate(-1);
+      },
+      (error) => {
+        console.error("Error Delete Post:", error);
+      }
+    );
   };
 
   if (post === null) {
