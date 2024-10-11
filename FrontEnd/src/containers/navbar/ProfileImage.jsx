@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
-import axios from "axios";
-
 import getCookie from "@/utils/getCookie";
 
 import { useTheme } from "@mui/material/styles";
@@ -25,6 +22,7 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 
 import GPS from "./GPS";
 import noBiasImg from "@/assets/images/no_bias.jpg";
+import { getBias } from "../../api/user";
 
 const ProfileImage = () => {
   const theme = useTheme();
@@ -60,16 +58,14 @@ const ProfileImage = () => {
   // 렌더링 시 최애 정보 가져오기
   useEffect(() => {
     if (getCookie("profile")) {
-      axios
-        .get(import.meta.env.VITE_APP_API_URL + `user/bias`, {
-          withCredentials: true,
-        })
-        .then((response) => {
-          setBiasImg(response.data.idolImage);
-        })
-        .catch((error) => {
+      getBias(
+        (data) => {
+          setBiasImg(data.data.idolImage);
+        },
+        (error) => {
           console.error("Error get bias:", error);
-        });
+        }
+      );
     }
   }, [user]);
 
