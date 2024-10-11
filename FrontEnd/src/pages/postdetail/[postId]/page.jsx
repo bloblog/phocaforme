@@ -1,13 +1,12 @@
 import React from "react";
 
 import { Container } from "@mui/material";
-// import DetailPost from "@/containers/postList/DetailPost";
+import DetailPost from "@/containers/postList/DetailPost";
 
 const postDetail = () => {
   return (
     <Container>
-      {/* <DetailPost /> */}
-      디테일포스트
+      <DetailPost />
     </Container>
   );
 };

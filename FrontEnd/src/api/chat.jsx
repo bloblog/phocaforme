@@ -6,6 +6,20 @@ const local = localAxios();
 const url_chatroom = "/chatRoom"; // 공통 URL
 const url_chat = "/chats"; // 공통 URL
 
+// 채팅방 생성하기
+function openChatRoom(param, success, fail) {
+  local
+    .post(`${url_chatroom}/${param}`, null, {
+      headers: {
+        Authorization: `${
+          document.cookie.match("(^|;) ?token=([^;]*)(;|$)")[2]
+        }`,
+      },
+    })
+    .then(success)
+    .catch(fail);
+}
+
 // 채팅방 가져오기
 function getChatRoom(success, fail) {
   local.get(url_chatroom).then(success).catch(fail);
@@ -58,4 +72,10 @@ function updateChatState(param, success, fail) {
   local.put(`${url_chat}/done/${param}`).then(success).catch(fail);
 }
 
-export { getChatRoom, getChatRoomInfo, getChatList, updateChatState };
+export {
+  openChatRoom,
+  getChatRoom,
+  getChatRoomInfo,
+  getChatList,
+  updateChatState,
+};

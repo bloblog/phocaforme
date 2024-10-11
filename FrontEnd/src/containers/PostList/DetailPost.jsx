@@ -14,6 +14,7 @@ import {
   Avatar,
   Button,
 } from "@mui/material";
+import { openChatRoom } from "../../api/chat";
 
 const DetailPost = () => {
   const navigate = useNavigate();
@@ -87,27 +88,22 @@ const DetailPost = () => {
 
   const handleChatClick = () => {
     // 채팅방 생성
-    axios
-      .post(import.meta.env.VITE_APP_API_URL + `chatRoom/${id}`, null, {
-        headers: {
-          Authorization: `${
-            document.cookie.match("(^|;) ?" + "token" + "=([^;]*)(;|$)")[2]
-          }`,
-        },
-        withCredentials: true,
-      })
-      .then((response) => {
-        const chatRoomInfo = response.data;
-        console.log(response.data);
-        navigate(`/chatroom/${chatRoomInfo.chatRoomId}`, {
-          state: chatRoomInfo,
+    openChatRoom(
+      id,
+      (data) => {
+        console.log(data);
+        // const chatRoomInfo = data.data;
+        navigate(`/chatroom/${data.data.chatRoomId}`, {
+          state: data.data,
         });
-      })
-      .catch((error) => {
+      },
+      (error) => {
         // 요청 실패 시 에러 처리
-        console.error("Error fetching posts:", error);
-      });
+        console.error("Error Open ChatRoom:", error);
+      }
+    );
   };
+
   //수정
   const handleModifyClick = (id) => {
     console.log(id);
