@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react";
 
 import PropTypes from "prop-types";
 
-import axios from "axios";
-
 import { Container, Tabs, Tab, Typography, Box } from "@mui/material";
 
 import ChartBoy from "./boytab";
 import ChartGirl from "./girltab";
+import { getIdolMemberInfo, getIdolRank } from "../../api/idolinfo";
 
 const CustomTabPanel = (props) => {
   const { children, value, index, ...other } = props;
@@ -63,61 +62,66 @@ const ChartTab = () => {
   const [rankBoy, setRankBoy] = useState([]);
   const [rankGirl, setRankGirl] = useState([]);
 
-  const getIdol = async (idolMemberId) => {
-    try {
-      const response = await axios.get(
-        import.meta.env.VITE_APP_API_URL + `idol/${idolMemberId}`,
-        {
-          withCredentials: true,
-        }
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Error get idol:", error);
-    }
+  const getIdol = (idolMemberId) => {
+    getIdolMemberInfo(
+      idolMemberId,
+      (data) => {
+        return data.data;
+      },
+      (error) => {
+        console.error("Error get idol:", error);
+      }
+    );
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          import.meta.env.VITE_APP_API_URL + `idol/rank`,
-          {
-            withCredentials: true,
-          }
-        );
+    const newRankGirl = [];
+    const newRankBoy = [];
 
+    getIdolRank(
+      (data) => {
+        console.log(data.data);
         const order = ["first", "second", "third"];
-        const newRankGirl = [];
-        const newRankBoy = [];
 
-        for (const key in response.data) {
+        for (const key in data.data) {
           for (const prefix of order) {
             if (key.includes(`${prefix}FemaleIdolId`)) {
-              const idolData = await getIdol(response.data[key]);
-              newRankGirl.push(idolData);
+              getIdolMemberInfo(
+                data.data[key],
+                (data) => {
+                  newRankGirl.push(data.data);
+                  if (newRankGirl.length == 3) {
+                    setRankGirl(newRankGirl);
+                  }
+                },
+                (error) => {
+                  console.error("Error get idol:", error);
+                }
+              );
             } else if (key.includes(`${prefix}MaleIdolId`)) {
-              const idolData = await getIdol(response.data[key]);
-              newRankBoy.push(idolData);
+              getIdolMemberInfo(
+                data.data[key],
+                (data) => {
+                  newRankBoy.push(data.data);
+                  if (newRankBoy.length == 3) {
+                    setRankBoy(newRankBoy);
+                  }
+                },
+                (error) => {
+                  console.error("Error get idol:", error);
+                }
+              );
             }
           }
         }
-
-        if (newRankGirl.length > 0) {
-          setRankGirl(newRankGirl);
-        }
-        if (newRankBoy.length > 0) {
-          setRankBoy(newRankBoy);
-        }
-      } catch (error) {
+      },
+      (error) => {
+        console.log("Error get Idol Rank : ", error);
         // 데이터 없을 때 그냥 에러 떠버림
         setIsNull(true);
-
-        // console.error("Error get rank:", error);
       }
-    };
-    fetchData();
-  }, [value]);
+    );
+  }, []);
 
   return (
     <Container sx={{ width: "100%" }}>

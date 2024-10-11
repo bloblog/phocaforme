@@ -13,4 +13,17 @@ function getIdolMember(param, success, fail) {
   local.get(`${url}/member/${param}`).then(success).catch(fail);
 }
 
-export { getIdolGroup, getIdolMember };
+// 특정 아이돌의 멤버 정보 가져오기
+function getIdolMemberInfo(param, success, fail) {
+  local.get(`${url}/${param}`).then(success).catch(fail);
+}
+
+// 아이돌 랭킹 가져오기
+function getIdolRank(success, fail) {
+  local
+    .get(url + "/rank")
+    .then(success)
+    .catch(fail);
+}
+
+export { getIdolGroup, getIdolMember, getIdolMemberInfo, getIdolRank };
