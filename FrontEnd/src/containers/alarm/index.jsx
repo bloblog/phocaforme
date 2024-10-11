@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 
 import { TaskAlt, Close, RadioButtonUnchecked } from "@mui/icons-material";
+import { getNotification, updateNotification } from "../../api/notification";
 
 const InteractiveList = () => {
   const navigate = useNavigate();
@@ -23,21 +24,15 @@ const InteractiveList = () => {
 
   // 컴포넌트가 마운트될 때 알림 데이터를 가져오는 useEffect
   useEffect(() => {
-    fetchNotifications();
+    getNotification(
+      (data) => {
+        setNotifications(data.data);
+      },
+      (error) => {
+        console.error("Error fetching notifications:", error);
+      }
+    );
   }, []);
-
-  const fetchNotifications = async () => {
-    try {
-      const response = await axios.get(
-        import.meta.env.VITE_APP_API_URL + "notification",
-        { withCredentials: true }
-      );
-
-      setNotifications(response.data);
-    } catch (error) {
-      console.error("Error fetching notifications:", error);
-    }
-  };
 
   // 알림 클릭 핸들러
   const handleItemClick = async (item) => {
@@ -51,10 +46,12 @@ const InteractiveList = () => {
       }
 
       // 서버에 알림을 읽은 상태로 변경 요청 보내기
-      await axios.post(
-        import.meta.env.VITE_APP_API_URL + `notification`,
+      updateNotification(
         { notificationId: item.notificationId },
-        { withCredentials: true }
+        () => {},
+        (error) => {
+          console.error("Error handling item click:", error);
+        }
       );
     } catch (error) {
       console.error("Error handling item click:", error);
