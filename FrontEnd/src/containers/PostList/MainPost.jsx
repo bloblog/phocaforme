@@ -24,7 +24,7 @@ const CustomTabPanel = (props) => {
   const user = useSelector((state) => (state.user ? state.user.user : null));
 
   return (
-    <div>
+    <div style={{ width: "100%" }}>
       <div
         role="tabpanel"
         hidden={value !== index}
@@ -111,7 +111,11 @@ const BasicTabs = ({ isPreview }) => {
           <PostCaution message={"게시글이 없습니다."} />
         ) : (
           <div
-            style={{ display: "flex", flexWrap: "wrap", flexDirection: "row" }}
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              flexDirection: "row",
+            }}
           >
             {boards.map((post, index) => (
               <div key={index}>
