@@ -1,45 +1,42 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { getPostInfi } from "../api/post";
 
 export default function usePostSearch(pageNumber) {
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
   const [boards, setBoards] = useState([]);
   const [hasMore, setHasMore] = useState(false);
 
   useEffect(() => {
-    setBoards([]);
-  }, []);
+    setLoading(true); // 데이터를 가져오기 전에 로딩 상태로 변경
 
-  useEffect(() => {
-    setLoading(true);
-    setError(false);
-    let cancel;
-    axios({
-      method: "GET",
-      url:
-        import.meta.env.VITE_APP_API_URL + `barter/search?page=${pageNumber}`,
-      // params: {page: pageNumber },
-      withCredentials: true,
-      params: { page: pageNumber },
-      cancelToken: new axios.CancelToken((c) => (cancel = c)),
-    })
-      .then((res) => {
-        console.log(res.data);
-        console.log(pageNumber); //<-
-        setBoards((prevBoards) => {
-          // Concatenate the new data with the previous boards
-          return [...prevBoards, ...res.data];
-        });
-        setHasMore(res.data.length > 0);
+    getPostInfi(
+      pageNumber,
+      (data) => {
+        console.log(data.data);
+
+        if (pageNumber === 2) {
+          setBoards(data.data);
+        } else {
+          // 그 외의 경우 기존 데이터에 새로운 데이터 추가
+          setBoards((prevBoards) => {
+            // 중복 방지를 위해 고유한 게시글만 추가
+            // const newPosts = data.data.filter(
+            //   (newPost) =>
+            //     !prevBoards.some((prevPost) => prevPost.id === newPost.id)
+            // );
+            return [...prevBoards, ...data.data];
+          });
+        }
+
         setLoading(false);
-      })
-      .catch((e) => {
-        if (axios.isCancel(e)) return;
-        setError(true);
-      });
-    return () => cancel();
+        setHasMore(data.data.length > 0);
+      },
+      (err) => {
+        console.error("Error Get Post (infi): ", err);
+        setLoading(false);
+      }
+    );
   }, [pageNumber]);
 
-  return { loading, error, boards, hasMore };
+  return { boards, hasMore, loading };
 }

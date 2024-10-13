@@ -21,7 +21,6 @@ import PostCaution from "./PostCaution.jsx";
 const CustomTabPanel = (props) => {
   const { children, value, index, ...other } = props;
 
-  const [posts, setPosts] = useState([]);
   const user = useSelector((state) => (state.user ? state.user.user : null));
 
   return (
@@ -63,9 +62,7 @@ const BasicTabs = ({ isPreview }) => {
 
   const dispatch = useDispatch();
 
-  // search 부분 삭제
-
-  const { boards, hasMore, loading, error } = usePostSearch(pageNumber);
+  const { boards, hasMore, loading } = usePostSearch(pageNumber);
 
   const observer = useRef();
   const lastBookElementRef = useCallback(
@@ -166,7 +163,6 @@ const BasicTabs = ({ isPreview }) => {
                 ></Card>
               ))}
             <div>{loading && <CircularProgress />}</div>
-            <div>{error && "Error"}</div>
           </div>
         )}
       </CustomTabPanel>

@@ -28,4 +28,9 @@ function deletePost(param, success, fail) {
   local.delete(`${url}/${param}`).then(success).catch(fail);
 }
 
-export { getAllPost, getPost, getImage, pullupPost, deletePost };
+// 검색 결과 가져오기 (무한 스크롤)
+function getPostInfi(param, success, fail) {
+  local.get(`${url}/search?page=${param}`).then(success).catch(fail);
+}
+
+export { getAllPost, getPost, getImage, pullupPost, deletePost, getPostInfi };
