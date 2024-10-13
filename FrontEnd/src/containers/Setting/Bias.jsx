@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
 
 import getCookie from "@/utils/getCookie";
 
@@ -10,6 +9,7 @@ import { Avatar, Button } from "@mui/material";
 
 import GroupDropdown from "@/components/Dropdown/GroupDropdown2";
 import MemberDropdown from "@/components/Dropdown/MemberDropdown2";
+import { addBias, getBias } from "../../api/user";
 
 const Bias = () => {
   const dispatch = useDispatch();
@@ -23,16 +23,14 @@ const Bias = () => {
   // useEffect 해서 렌더링할 때 최애 정보 들고와라
   useEffect(() => {
     if (getCookie("profile")) {
-      axios
-        .get(import.meta.env.VITE_APP_API_URL + `user/bias`, {
-          withCredentials: true,
-        })
-        .then((response) => {
-          setImageUrl(response.data.idolImage);
-        })
-        .catch((error) => {
+      getBias(
+        (data) => {
+          setImageUrl(data.data.idolImage);
+        },
+        (error) => {
           console.error("Error get bias:", error);
-        });
+        }
+      );
     }
   }, [user]);
 
@@ -57,26 +55,18 @@ const Bias = () => {
 
   const handleApplyClick = () => {
     // db 에 반영하기
-    axios
-      .put(
-        import.meta.env.VITE_APP_API_URL + `user/bias`,
-        {
-          idolMemberId: selectedMember.idolMemberId,
-        },
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
-      .then((response) => {
-        setImageUrl(response.data);
+    addBias(
+      {
+        idolMemberId: selectedMember.idolMemberId,
+      },
+      (data) => {
+        setImageUrl(data.data);
         dispatch(setBias([selectedGroup, selectedMember]));
-      })
-      .catch((error) => {
-        console.error("Error setting bias:", error);
-      });
+      },
+      (err) => {
+        console.error("Error setting bias:", err);
+      }
+    );
   };
 
   return (

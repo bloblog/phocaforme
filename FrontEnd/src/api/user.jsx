@@ -11,6 +11,14 @@ function getBias(success, fail) {
     .catch(fail);
 }
 
+// 최애 설정하기
+function addBias(param, success, fail) {
+  local
+    .put(url + "/bias", JSON.stringify(param))
+    .then(success)
+    .catch(fail);
+}
+
 // 위시카드 수정 및 생성
 function makeWishcard(param, success, fail) {
   local.put(`${url}/wishCard`, param).then(success).catch(fail);
@@ -38,6 +46,7 @@ function deleteGPS(success, fail) {
 
 export {
   getBias,
+  addBias,
   makeWishcard,
   getWishcard,
   deleteWishcard,
