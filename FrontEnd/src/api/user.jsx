@@ -11,6 +11,21 @@ function getBias(success, fail) {
     .catch(fail);
 }
 
+// 위시카드 수정 및 생성
+function makeWishcard(param, success, fail) {
+  local.put(`${url}/wishCard`, param).then(success).catch(fail);
+}
+
+// 위시카드 가져오기
+function getWishcard(success, fail) {
+  local.get(`${url}/wishCard`).then(success).catch(fail);
+}
+
+// 위시카드 삭제
+function deleteWishcard(success, fail) {
+  local.delete(`${url}/wishCard`).then(success).catch(fail);
+}
+
 // GPS 위치 가져오기
 function getGPS(param, success, fail) {
   local.put("/gps", JSON.stringify(param)).then(success).catch(fail);
@@ -21,4 +36,11 @@ function deleteGPS(success, fail) {
   local.get("/gps").then(success).catch(fail);
 }
 
-export { getBias, getGPS, deleteGPS };
+export {
+  getBias,
+  makeWishcard,
+  getWishcard,
+  deleteWishcard,
+  getGPS,
+  deleteGPS,
+};

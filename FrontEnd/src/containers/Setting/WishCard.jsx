@@ -1,21 +1,13 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 
 import { useTheme } from "@mui/material/styles";
 
-import {
-  Card,
-  Box,
-  CardContent,
-  CardMedia,
-  Button,
-  TextField,
-  Chip,
-} from "@mui/material";
+import { Button, TextField, Chip } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 
 import GroupDropdown from "@/components/Dropdown/GroupDropdown2";
 import MemberDropdown from "@/components/Dropdown/MemberDropdown2";
+import { deleteWishcard, getWishcard, makeWishcard } from "../../api/user";
 
 const WishCard = () => {
   const theme = useTheme();
@@ -59,20 +51,15 @@ const WishCard = () => {
     };
 
     // db 에 반영하기
-    axios
-      .put(import.meta.env.VITE_APP_API_URL + `user/wishCard`, data, {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
+    makeWishcard(
+      data,
+      (res) => {
         setWishCard(data);
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error("Error setting bias:", error);
-      });
+      },
+      (error) => {
+        console.error("Error setting wishcard:", error);
+      }
+    );
   };
 
   // 키워드 관련
@@ -111,30 +98,26 @@ const WishCard = () => {
 
   // 이미 갈망포카가 있다면 가져와라
   useEffect(() => {
-    axios
-      .get(import.meta.env.VITE_APP_API_URL + `user/wishCard`, {
-        withCredentials: true,
-      })
-      .then((response) => {
-        setWishCard(response.data);
-      })
-      .catch((error) => {
+    getWishcard(
+      (data) => {
+        setWishCard(data.data);
+      },
+      (error) => {
         console.error("Error get wishcard:", error);
-      });
-  }, [wishCard]);
+      }
+    );
+  }, []);
 
   // 갈망포카 삭제
   const handleDelete = () => {
-    axios
-      .delete(import.meta.env.VITE_APP_API_URL + `user/wishCard`, {
-        withCredentials: true,
-      })
-      .then((response) => {
+    deleteWishcard(
+      (data) => {
         setWishCard(null);
-      })
-      .catch((error) => {
-        console.error("Error delete wishcard:", error);
-      });
+      },
+      (err) => {
+        console.error("Error delete wishcard:", err);
+      }
+    );
   };
 
   return (
