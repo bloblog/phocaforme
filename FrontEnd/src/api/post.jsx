@@ -3,6 +3,18 @@ import { localAxios } from "./http";
 const local = localAxios();
 const url = "/barter"; // 공통 URL
 
+// 게시글 작성
+function addPost(param, success, fail) {
+  local
+    .post(url, param, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+    .then(success)
+    .catch(fail);
+}
+
 // 전체 게시글 가져오기
 function getAllPost(success, fail) {
   local.get(url).then(success).catch(fail);
@@ -33,4 +45,12 @@ function getPostInfi(param, success, fail) {
   local.get(`${url}/search?page=${param}`).then(success).catch(fail);
 }
 
-export { getAllPost, getPost, getImage, pullupPost, deletePost, getPostInfi };
+export {
+  addPost,
+  getAllPost,
+  getPost,
+  getImage,
+  pullupPost,
+  deletePost,
+  getPostInfi,
+};

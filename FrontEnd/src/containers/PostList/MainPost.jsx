@@ -57,6 +57,8 @@ const a11yProps = (index) => {
 const BasicTabs = ({ isPreview }) => {
   const location = useLocation();
 
+  const { state: refresh } = location;
+
   const [value, setValue] = useState(0);
   const [pageNumber, setPageNumber] = useState(2);
 

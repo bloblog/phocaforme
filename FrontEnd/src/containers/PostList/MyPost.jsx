@@ -2,17 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
-import axios from "axios";
 
-import {
-  Tabs,
-  Tab,
-  Typography,
-  Box,
-  Container,
-  ImageList,
-  ImageListItem,
-} from "@mui/material";
+import { Tabs, Tab, Typography, Box, ImageList } from "@mui/material";
 
 import Card from "@/components/Card";
 import { getAllPost } from "../../api/post";

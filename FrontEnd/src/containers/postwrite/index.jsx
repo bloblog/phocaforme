@@ -15,7 +15,7 @@ import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import BarterWrite from "./BarterWrite.jsx";
 import SellWrite from "./SellWrite.jsx";
 import TypeDropdown from "@/components/Dropdown/TypeDropdown.jsx";
-import axios from "axios";
+import { addPost } from "../../api/post.jsx";
 
 const PostWrite = () => {
   const dispatch = useDispatch();
@@ -147,39 +147,22 @@ const PostWrite = () => {
 
     newPost.append("groupId", selectedGroup.idolGroupId);
 
-    // formdata값확인용 코드 //////
-    const formDataToJson = (formData) => {
-      const jsonObject = {};
-      for (const [key, value] of formData.entries()) {
-        jsonObject[key] = value;
+    addPost(
+      newPost,
+      (data) => {
+        console.log(data.data);
+        if (data.data) {
+          setTimeout(() => {
+            setLoading(false);
+            navigate("/post");
+          }, 1000);
+        }
+      },
+      (error) => {
+        setLoading(false);
+        console.error("Error creating post:", error);
       }
-      return JSON.stringify(jsonObject);
-    };
-
-    const test = formDataToJson(newPost);
-    console.log(test);
-    // navigate("/post", {state: });
-
-    axios
-      .post(import.meta.env.VITE_APP_API_URL + "barter", newPost, {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((response) => {
-        // navigate("/post");
-        setTimeout(() => {
-          setLoading(false);
-          navigate("/post");
-        }, 3000);
-      })
-      .catch((error) => {
-        setTimeout(() => {
-          setLoading(false);
-          console.error("Error creating post:", error);
-        }, 3000);
-      });
+    );
   };
 
   const handleCancelButton = () => {
