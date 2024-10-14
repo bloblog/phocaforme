@@ -1,146 +1,138 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#FB37A3',
+      main: "#FB37A3",
     },
     secondary: {
-      main: '#FD9DD1',
+      main: "#FD9DD1",
     },
     warning: {
-      main: 'rgba(142, 96, 203, 1)',
+      main: "rgba(142, 96, 203, 1)",
     },
     info: {
-        main: '#FFFFFF'
+      main: "#FFFFFF",
     },
     success: {
-      main: 'rgba(135, 141, 150, 1)'
-    }
-
+      main: "rgba(135, 141, 150, 1)",
+    },
   },
 
   components: {
     MuiContainer: {
       styleOverrides: {
         root: {
-          maxWidth: '100%',
-        }
-      }
+          maxWidth: "100%",
+        },
+      },
     },
     MuiFab: {
       styleOverrides: {
-        root:{
-          width: '8vh',
-          height: '8vh'
-        }
-      }
+        root: {
+          width: "8vh",
+          height: "8vh",
+        },
+      },
     },
     MuiAutocomplete: {
       styleOverrides: {
         inputRoot: {
           borderRadius: "10px",
-        }
-      }
+        },
+      },
     },
-    
-    
+
     MuiMenu: {
       styleOverrides: {
         paper: {
-          backgroundColor: '#FD9DD1', 
-          padding: '0.5rem',
-          width: '10rem'
+          backgroundColor: "#FD9DD1",
+          padding: "0.5rem",
+          width: "10rem",
         },
       },
     },
     MuiListItem: {
       styleOverrides: {
         root: {
-          padding: '0.5rem 1rem',
-        }
-
-      }
+          padding: "0.5rem 1rem",
+        },
+      },
     },
     MuiFormControlLabel: {
       styleOverrides: {
         label: {
-          fontFamily: 'Pretendard'
-        }
-      }
+          fontFamily: "Pretendard",
+        },
+      },
     },
     MuiTypography: {
       styleOverrides: {
         root: {
-          fontFamily: 'Pretendard',
-        }
-      }
-    }, 
+          fontFamily: "Pretendard",
+        },
+      },
+    },
     MuiTab: {
       styleOverrides: {
         root: {
-          fontFamily: 'Pretendard',
-          padding: '0rem 1rem',
-        }
-      }
+          fontFamily: "Pretendard",
+          padding: "0rem 1rem",
+        },
+      },
     },
     MuiCardHeader: {
       styleOverrides: {
         title: {
-          fontSize: '18px',
-          fontWeight: 'bold'
+          fontSize: "18px",
+          fontWeight: "bold",
         },
         root: {
-          padding:'0.5rem 0'
-        }
-      }
+          padding: "0.5rem 0",
+        },
+      },
     },
     MuiCardMedia: {
       styleOverrides: {
         root: {
-          objectFit: 'cover',
+          objectFit: "cover",
           borderRadius: "10px",
           height: "8rem",
           width: "7rem",
-          
-        }
-      }
+        },
+      },
     },
     MuiCard: {
       styleOverrides: {
         root: {
-          padding: '0.2rem 0 0 0',
+          padding: "0.2rem 0 0 0",
           cursor: "pointer",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: 'center',
-          borderRadius: '10px',
+          justifyContent: "center",
+          borderRadius: "10px",
         },
-      
-      }
+      },
     },
     MuiButton: {
       styleOverrides: {
         root: {
-          fontFamily: 'Cafe24SSurround',
-        }
-      }
+          fontFamily: "Cafe24SSurround",
+        },
+      },
     },
     MuiTextField: {
       styleOverrides: {
         root: {
-          '& input': {
-            fontFamily: 'Pretendard',
-            fontSize: '15px',
+          "& input": {
+            fontFamily: "Pretendard",
+            fontSize: "15px",
           },
-          
         },
-      }
+      },
     },
-    
-  
-  }
+  },
 });
 
 export default theme;

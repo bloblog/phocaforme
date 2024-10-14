@@ -51,8 +51,8 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <BrowserRouter>
           <ScrollToTop />
-          <NavBar />
           <FloatingActionButtons />
+          <NavBar />
           <Routes>
             <Route path="/" element={<Main />} />
             <Route path="/main" element={<Main />} />

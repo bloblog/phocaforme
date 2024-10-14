@@ -36,8 +36,6 @@ const NavBar = ({ children }) => {
       {user.userId ? (
         <div id="nav-menus">
           <ProfileImage />
-          {/* <button onClick={handleLogout}>로그아웃</button> */}
-
           <div
             id="bell"
             onClick={() => {
