@@ -54,19 +54,9 @@ const PostWrite = () => {
   };
 
   const handleSelectedGroupChange = (group) => {
-    console.log(group);
-    setSelectedGroup(group);
+    console.log(group.idolGroupId);
+    setSelectedGroup(group.idolGroupId);
   };
-
-  // const handleTypeChange = (cardType) => {
-  //   if (cardType == null) {
-  //     cardType = {
-  //       value: "",
-  //       label: "",
-  //     };
-  //   }
-  //   setCardType(cardType);
-  // };
 
   // 제목 변경 핸들러
   const handleTitleChange = (event) => {
@@ -128,10 +118,10 @@ const PostWrite = () => {
     // 새로운 게시물 객체 생성
     const newPost = new FormData();
     newPost.append("title", title);
-    // newPost.append("content", content);
-
     const encodedContent = encodeURIComponent(content);
     newPost.append("content", encodedContent);
+    newPost.append("groupId", selectedGroup);
+    console.log(selectedGroup);
     ownIdolMembers.forEach((member) => {
       newPost.append("ownIdolMembers", member.idolMemberId);
     });
@@ -145,12 +135,9 @@ const PostWrite = () => {
       newPost.append(`photos`, image);
     });
 
-    newPost.append("groupId", selectedGroup.idolGroupId);
-
     addPost(
       newPost,
       (data) => {
-        console.log(data.data);
         if (data.data) {
           setTimeout(() => {
             setLoading(false);

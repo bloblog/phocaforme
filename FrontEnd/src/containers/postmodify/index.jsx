@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
 import { Container, Button } from "@mui/material";
 import BarterModify from "./barterpost.jsx";
 import AddIcon from "@mui/icons-material/Add";
 import TypeDropdown from "@/components/Dropdown/TypeDropdown.jsx";
+import { modifyPost } from "../../api/post.jsx";
 
 const PostModify = () => {
   const navigate = useNavigate(); // useNavigate 훅 추가
@@ -16,6 +16,7 @@ const PostModify = () => {
   const [imagePreviews, setImagePreviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cardType, setCardType] = useState(null);
+  const [groupId, setGroupId] = useState(0);
   const [ownIdolMembers, setOwnIdolMembers] = useState([]);
   const [findIdolMembers, setFindIdolMembers] = useState([]);
   const [imagesChanged, setImagesChanged] = useState(false); // 이미지 변경 여부 추적
@@ -29,6 +30,7 @@ const PostModify = () => {
     content: postContent,
     photos: postImages,
     cardType: postCardType,
+    groupId: postGroupId,
     ownMembers: postOwnIdolMembers,
     targetMembers: postFindIdolMembers,
   } = location.state;
@@ -56,18 +58,12 @@ const PostModify = () => {
     setTitle(postTitle || "");
     setContent(postContent || "");
     setImages(postImages || []);
+    setGroupId(postGroupId || null);
     // setOwnIdolMembers(postOwnIdolMembers || []);
     // setFindIdolMembers(findIdolMembers || []);
     setCardType(postCardType ? postCardType.label : null); // 여기를 수정
     setLoading(false);
-  }, [
-    postTitle,
-    postContent,
-    postImages,
-    postCardType,
-    postOwnIdolMembers,
-    postFindIdolMembers,
-  ]);
+  }, []);
 
   const [ownMembers, setOwnMembers] = useState(null);
   const [targetMembers, setTargetMembers] = useState(null);
@@ -87,6 +83,10 @@ const PostModify = () => {
 
   const handleTargetMemberSelection = (members) => {
     setFindIdolMembers(members);
+  };
+
+  const handleGroupSelection = (group) => {
+    setGroupId(group);
   };
 
   const handleTypeChange = (cardType) => {
@@ -162,42 +162,39 @@ const PostModify = () => {
       }
     });
   };
-  const handleModifyClick = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("title", title);
-      formData.append("content", content);
-      formData.append("cardType", cardType ? cardType.label : ""); // 이제 문자로 줘서 cardType만 써도 될 거 같음
-      ownIdolMembers.forEach((member) => {
-        formData.append("ownIdolMembers", member.idolMemberId);
-      });
 
-      findIdolMembers.forEach((member) => {
-        formData.append("findIdolMembers", member.idolMemberId);
-      });
+  const handleModifyClick = () => {
+    const formData = new FormData();
+    // formData.append("articleId", id);
+    formData.append("title", title);
+    const encodedContent = encodeURIComponent(content);
+    formData.append("content", encodedContent);
+    formData.append("cardType", cardType ? cardType.label : "");
+    formData.append("groupId", groupId);
+    ownIdolMembers.forEach((member) => {
+      formData.append("ownIdolMembers", member.idolMemberId);
+    });
 
-      images.forEach((image) => {
-        formData.append("photos", image);
-      });
+    findIdolMembers.forEach((member) => {
+      formData.append("findIdolMembers", member.idolMemberId);
+    });
 
-      for (var pair of formData.entries()) {
-        console.log(pair[0] + ", " + pair[1]);
+    images.forEach((image) => {
+      formData.append("photos", image);
+    });
+
+    console.log(formData);
+
+    modifyPost(
+      formData,
+      id,
+      (data) => {
+        navigate("/post");
+      },
+      (error) => {
+        console.error("Error modifying post:", error);
       }
-      await axios.put(
-        import.meta.env.VITE_APP_API_URL + `barter/${id}`,
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      navigate("/post");
-    } catch (error) {
-      console.error("Error modifying post:", error);
-    }
+    );
   };
 
   const handleCancelButton = () => {
@@ -207,7 +204,7 @@ const PostModify = () => {
   if (loading) {
     return <div>Loading...</div>;
   }
-  console.log(ownMembers);
+
   return (
     <Container>
       <div id="write-container">
@@ -267,7 +264,7 @@ const PostModify = () => {
         {/* 수정 */}
         <div id="group-member-input">
           <BarterModify
-            defaultGroup={post.group || []} // defaultGroup 수정 필요
+            defaultGroup={groupId || 0} // defaultGroup 수정 필요
             defaultOwnMember={ownMembers || []}
             defaultTargetMember={targetMembers || []}
             onChange={(ownMembers, targetMembers) => {

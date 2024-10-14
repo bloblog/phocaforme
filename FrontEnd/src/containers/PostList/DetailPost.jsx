@@ -33,6 +33,7 @@ const DetailPost = () => {
         id: post.id,
         title: post.title,
         images: post.photos,
+        groupId: post.groupId,
         ownMembers: post.ownIdolMembers,
         targetMembers: post.findIdolMembers,
         isBartered: post.bartered,
@@ -61,6 +62,7 @@ const DetailPost = () => {
     getPost(
       id,
       (data) => {
+        console.log(data.data);
         setPost(data.data);
         if (post) {
           saveToLocalStorage();
@@ -95,7 +97,7 @@ const DetailPost = () => {
 
   //수정
   const handleModifyClick = (id) => {
-    console.log(id);
+    console.log(post);
     navigate(`/modify/${id}`, { state: post });
   };
   // 끌올

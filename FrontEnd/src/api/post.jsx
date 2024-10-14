@@ -15,6 +15,18 @@ function addPost(param, success, fail) {
     .catch(fail);
 }
 
+// 게시글 수정
+function modifyPost(param, id, success, fail) {
+  local
+    .put(`${url}/${id}`, param, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+    .then(success)
+    .catch(fail);
+}
+
 // 전체 게시글 가져오기
 function getAllPost(success, fail) {
   local.get(url).then(success).catch(fail);
@@ -47,6 +59,7 @@ function getPostInfi(param, success, fail) {
 
 export {
   addPost,
+  modifyPost,
   getAllPost,
   getPost,
   getImage,
