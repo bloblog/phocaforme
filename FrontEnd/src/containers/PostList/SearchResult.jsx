@@ -3,8 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
-import axios from "axios";
-
 import {
   CircularProgress,
   Container,
@@ -15,7 +13,9 @@ import {
 } from "@mui/material";
 import Card from "@/components/Card.jsx";
 import usePostSearch from "@/utils/infiScroll";
+import { searchPosts } from "@/store/post";
 import PostCaution from "./PostCaution.jsx";
+import { getPostGPS } from "../../api/post.jsx";
 
 const CustomTabPanel = (props) => {
   const { children, value, index, ...other } = props;
@@ -85,60 +85,50 @@ const BasicTabs = ({ isPreview }) => {
 
   useEffect(() => {
     if (!isPreview) {
-      const fetchData = async () => {
-        try {
-          const params = {};
-          if (searchs.group) {
-            params.groupId = searchs.group.idolGroupId;
-          }
+      const params = {};
+      if (searchs.group) {
+        params.groupId = searchs.group.idolGroupId;
+      }
 
-          if (searchs.targetMembers.length > 0) {
-            if (searchs.targetMembers.length == 1) {
-              params.target = searchs.targetMembers[0].idolMemberId;
-            } else {
-              params.target = searchs.targetMembers.idolMemberId.join(",");
-            }
-          }
-
-          if (searchs.ownMembers.length > 0) {
-            if (searchs.ownMembers.length == 1) {
-              params.own = searchs.ownMembers[0].idolMemberId;
-            } else {
-              params.own = searchs.ownMembers.idolMemberId.join(",");
-            }
-          }
-
-          if (searchs.cardType && searchs.cardType.value !== "") {
-            params.cardType = searchs.cardType.value;
-          }
-
-          if (searchs.query) {
-            params.query = searchs.query;
-          }
-
-          // gps 켜져있을 때 위도 경도 넣기
-          if (user.location_longlat) {
-            params.longitude = user.location_longlat[0];
-            params.latitude = user.location_longlat[1];
-          }
-
-          const response = await axios.get(
-            import.meta.env.VITE_APP_API_URL + "barter/search",
-            { params },
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-
-          dispatch(searchPosts(response.data));
-        } catch (error) {
-          console.error("검색 오류 :", error);
+      if (searchs.targetMembers.length > 0) {
+        if (searchs.targetMembers.length == 1) {
+          params.target = searchs.targetMembers[0].idolMemberId;
+        } else {
+          params.target = searchs.targetMembers.idolMemberId.join(",");
         }
-      };
+      }
 
-      fetchData();
+      if (searchs.ownMembers.length > 0) {
+        if (searchs.ownMembers.length == 1) {
+          params.own = searchs.ownMembers[0].idolMemberId;
+        } else {
+          params.own = searchs.ownMembers.idolMemberId.join(",");
+        }
+      }
+
+      if (searchs.cardType && searchs.cardType.value !== "") {
+        params.cardType = searchs.cardType.value;
+      }
+
+      if (searchs.query) {
+        params.query = searchs.query;
+      }
+
+      // gps 켜져있을 때 위도 경도 넣기
+      if (user.location_longlat) {
+        params.longitude = user.location_longlat[0];
+        params.latitude = user.location_longlat[1];
+      }
+
+      getPostGPS(
+        params,
+        (data) => {
+          dispatch(searchPosts(data.data));
+        },
+        (error) => {
+          console.error("Error Get Post GPS :", error);
+        }
+      );
     }
   }, [dispatch, searchs]);
 

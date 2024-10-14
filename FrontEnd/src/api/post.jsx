@@ -32,6 +32,11 @@ function getAllPost(success, fail) {
   local.get(url).then(success).catch(fail);
 }
 
+// GPS 기반으로 게시글 가져오기
+function getPostGPS(param, success, fail) {
+  local.get(`${url}/search`, JSON.stringify(param)).then(success).catch(fail);
+}
+
 // 교환 게시글 가져오기
 function getPost(param, success, fail) {
   local.get(`${url}/${param}`).then(success).catch(fail);
@@ -66,4 +71,5 @@ export {
   pullupPost,
   deletePost,
   getPostInfi,
+  getPostGPS,
 };
