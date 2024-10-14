@@ -48,7 +48,6 @@ const ProfileImage = () => {
   const user = useSelector((state) => state.user.user);
 
   const handleLogout = () => {
-    // dispatch(logoutUser());
     window.location.href =
       import.meta.env.VITE_APP_LOGIN_API_URL + "auth/logout";
   };
