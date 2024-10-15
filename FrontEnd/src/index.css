@@ -1,5 +1,4 @@
-/* 기본 세팅 */
-html,
+기본 세팅 html,
 body,
 #root {
   height: 100%;
@@ -934,8 +933,7 @@ textarea:focus {
   height: auto;
 }
 
-.image-container {
-  /* background-color: var(--info-color); */
+/* .image-container {
   width: 20%;
   height: 0;
   border-radius: 10px;
@@ -943,7 +941,7 @@ textarea:focus {
   margin: 0.2rem;
   position: relative;
   padding-bottom: calc(20% * 1.5);
-}
+} */
 
 #image-add-icon {
   color: var(--primary-color);
