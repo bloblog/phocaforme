@@ -282,49 +282,6 @@ body,
   padding: 0.5rem;
 }
 
-/* 알림페이지 */
-#no-alarm-title {
-  font-family: "PyeongchangPeace";
-  font-size: 20px;
-}
-
-.alarm-read-item {
-  border-top: var(--primary-color) 2px solid;
-  margin: 0.2rem;
-  background-color: rgba(242, 244, 248, 1);
-}
-
-.alarm-item {
-  border-top: rgba(105, 112, 119, 1) 2px solid;
-  margin: 0.2rem;
-}
-
-#alarm-check-all {
-  display: flex;
-  justify-content: flex-end;
-}
-
-#alarm-time {
-  font-size: 10px;
-}
-
-.alarm-text-container {
-  width: 100%;
-  display: flex;
-  align-items: center;
-}
-
-.alarm-item-container {
-  width: 100%;
-  padding: 0 3rem 0 0;
-  display: flex;
-  align-items: center;
-}
-
-.alarm-content {
-  width: 100%;
-}
-
 /* 랭킹 컴포넌트 */
 #no-content-title {
   font-family: "PyeongChangPeace";

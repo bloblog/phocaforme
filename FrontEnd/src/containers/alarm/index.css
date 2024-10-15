@@ -1,0 +1,53 @@
+/* 알림페이지 */
+#no-alarm-title {
+  font-family: "PyeongchangPeace";
+  font-size: 20px;
+}
+
+.alarm-read-item {
+  /* border: rgba(105, 112, 119, 1) 2px solid; */
+
+  margin: 0.2rem;
+  border-radius: 10px;
+  background-color: rgba(242, 244, 248, 1);
+}
+
+.alarm-item {
+  border: var(--primary-color) 2px solid;
+  border-radius: 10px;
+  margin: 0.2rem;
+}
+
+#alarm-check-all {
+  display: flex;
+  justify-content: flex-end;
+}
+#alarm-title {
+  font-weight: 500;
+  padding-bottom: 5px;
+}
+#alarm-time {
+  font-weight: 100;
+  font-size: small;
+}
+
+.alarm-title-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.alarm-text-container {
+  width: 100%;
+}
+
+.alarm-item-container {
+  width: 100%;
+  padding: 5px 3rem 5px 0;
+  display: flex;
+  align-items: center;
+}
+
+.alarm-content {
+  width: 100%;
+  font-weight: 200;
+}

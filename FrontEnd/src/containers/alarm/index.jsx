@@ -1,3 +1,4 @@
+import "./index.css";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -5,7 +6,6 @@ import {
   List,
   ListItem,
   ListItemAvatar,
-  ListItemText,
   IconButton,
   FormControlLabel,
   Checkbox,
@@ -18,15 +18,15 @@ import {
   getNotification,
   updateAllNotification,
   updateNotification,
-} from "../../api/notification";
+} from "@/api/notification";
+import { alarmTimeFormat } from "../../utils/timeFormat";
 
-const InteractiveList = () => {
+const AlarmList = () => {
+  const alarmType = { Chatting: "채팅 ✉️", Article: "갈망포카 🛒" };
   const navigate = useNavigate();
 
-  // 알림 데이터를 저장할 상태
   const [notifications, setNotifications] = useState([]);
 
-  // 컴포넌트가 마운트될 때 알림 데이터를 가져오는 useEffect
   useEffect(() => {
     getNotification(
       (data) => {
@@ -39,27 +39,21 @@ const InteractiveList = () => {
   }, []);
 
   // 알림 클릭 핸들러
-  const handleItemClick = async (item) => {
-    try {
-      if (item.notificationType === "Article") {
-        console.log("click");
-        navigate(`/post/${item.articleId}`);
-      } else if (item.notificationType === "Chatting") {
-        console.log("click");
-        navigate(`/chat`);
-      }
-
-      // 서버에 알림을 읽은 상태로 변경 요청 보내기
-      updateNotification(
-        { notificationId: item.notificationId },
-        () => {},
-        (error) => {
-          console.error("Error handling item click:", error);
-        }
-      );
-    } catch (error) {
-      console.error("Error handling item click:", error);
+  const handleItemClick = (item) => {
+    if (item.notificationType === "Article") {
+      navigate(`/post/${item.articleId}`);
+    } else if (item.notificationType === "Chatting") {
+      navigate(`/chat`);
     }
+
+    // 서버에 알림을 읽은 상태로 변경 요청 보내기
+    updateNotification(
+      { notificationId: item.notificationId },
+      () => {},
+      (error) => {
+        console.error("Error handling item click:", error);
+      }
+    );
   };
 
   // 알림 삭제 핸들러
@@ -120,6 +114,7 @@ const InteractiveList = () => {
           <List>
             {notifications.map((item, index) => (
               <ListItem
+                onClick={() => handleItemClick(item)}
                 key={index}
                 className={
                   item.readStatus === true ? "alarm-read-item" : "alarm-item"
@@ -139,13 +134,15 @@ const InteractiveList = () => {
                     )}
                   </ListItemAvatar>
                   <div className="alarm-text-container">
-                    <ListItemText
-                      onClick={() => handleItemClick(item)}
-                      className="alarm-content"
-                      primary={item.notificationType}
-                      secondary={item.content}
-                    />
-                    <span id="alarm-time">{item.sendTime}</span>
+                    <div className="alarm-title-container">
+                      <div id="alarm-title">
+                        {alarmType[item.notificationType]}
+                      </div>
+                      <div id="alarm-time">
+                        {alarmTimeFormat(item.createdAt)}
+                      </div>
+                    </div>
+                    <div className="alarm-content">{item.content}</div>
                   </div>
                 </div>
               </ListItem>
@@ -157,4 +154,4 @@ const InteractiveList = () => {
   );
 };
 
-export default InteractiveList;
+export default AlarmList;

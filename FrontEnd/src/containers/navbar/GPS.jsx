@@ -8,7 +8,7 @@ import {
   LocationOnOutlined,
 } from "@mui/icons-material";
 import { setLocation, setLocationLongLat } from "@/store/loginUser";
-import { deleteGPS, getGPS } from "../../api/user";
+import { deleteGPS, getGPS } from "@/api/user";
 
 export default function GPS() {
   const dispatch = useDispatch();
