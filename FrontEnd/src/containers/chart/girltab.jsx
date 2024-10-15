@@ -13,14 +13,14 @@ const ChartGirl = ({ isNull, rankGirl }) => {
   return (
     <div className="chart-align">
       {isNull ? (
-        <div id="no-content-title">데이터 모으는 중...📂</div>
+        <div id="no-content-title">차트 데이터 모으는 중...</div>
       ) : (
         <div>
           {loading ? (
             <CircularProgress />
           ) : (
-            <Grid direction="row" id="chart-container">
-              <Grid item xs={5} id="rank-1-idol">
+            <Grid container direction="row" id="chart-container">
+              <Grid item xs={7} id="rank-1-idol">
                 <div className="rank-1-imoji">
                   <p id="medal">🥇</p>
                   <Avatar id="rank-1-image" src={rankGirl[0].idolImage} />
@@ -33,22 +33,20 @@ const ChartGirl = ({ isNull, rankGirl }) => {
                 </div>
               </Grid>
               <Grid item id="rank-23-idol" xs={5}>
-                <div id="rank-2-idol">
-                  <div>2위</div>
-                  <Avatar
-                    className="rank-23-image"
-                    src={rankGirl[1].idolImage}
-                  />
-                  <div>{rankGirl[1].idolName}</div>
-                </div>
-                <div id="rank-3-idol">
-                  <div>3위</div>
-                  <Avatar
-                    className="rank-23-image"
-                    src={rankGirl[2].idolImage}
-                  />
-                  <div>{rankGirl[2].idolName}</div>
-                </div>
+                {[2, 3].map((rank) => {
+                  return (
+                    <>
+                      <div id={`rank-${rank}-idol`}>
+                        <div>{rank}위</div>
+                        <Avatar
+                          className="rank-23-image"
+                          src={rankGirl[rank - 1]?.idolImage}
+                        />
+                        <div>{rankGirl[rank - 1]?.idolName}</div>
+                      </div>
+                    </>
+                  );
+                })}
               </Grid>
             </Grid>
           )}

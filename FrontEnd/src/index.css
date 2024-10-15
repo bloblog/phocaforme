@@ -387,6 +387,8 @@ body,
 
 .rank-23-image {
   margin: 0.5rem;
+  height: 50px;
+  width: 50px;
 }
 
 #chart-time {

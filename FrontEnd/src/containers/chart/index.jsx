@@ -1,144 +1,89 @@
 import React, { useState, useEffect } from "react";
-
-import PropTypes from "prop-types";
-
-import { Container, Tabs, Tab, Typography, Box } from "@mui/material";
-
+import { Container } from "@mui/material";
 import ChartBoy from "./boytab";
 import ChartGirl from "./girltab";
-import { getIdolMemberInfo, getIdolRank } from "../../api/idolinfo";
 
-const CustomTabPanel = (props) => {
-  const { children, value, index, ...other } = props;
-
-  const now = new Date();
-  now.setDate(now.getDate() - 1);
-
-  const formattedDate = `${now.getFullYear()}-${(now.getMonth() + 1)
-    .toString()
-    .padStart(2, "0")}-${now.getDate().toString().padStart(2, "0")}`;
-
-  return (
-    <div>
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`tabpanel-${index}`}
-        {...other}
-      >
-        <p id="chart-time">{formattedDate.toLocaleString()} 기준</p>
-        {value === index && (
-          <Box sx={{ p: 1 }}>
-            <Typography>{children}</Typography>
-          </Box>
-        )}
-      </div>
-    </div>
-  );
-};
-
-CustomTabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-const a11yProps = (index) => {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-};
+import { getIdolMemberInfo, getIdolRank } from "@/api/idolinfo";
+import { CustomTabs, CustomTabPanel } from "@/components/Tab";
 
 const ChartTab = () => {
-  const [value, setValue] = React.useState(0);
-
+  const [value, setValue] = useState(0);
   const [isNull, setIsNull] = useState(false);
+  const [rankBoy, setRankBoy] = useState([]);
+  const [rankGirl, setRankGirl] = useState([]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const [rankBoy, setRankBoy] = useState([]);
-  const [rankGirl, setRankGirl] = useState([]);
-
-  const getIdol = (idolMemberId) => {
-    getIdolMemberInfo(
-      idolMemberId,
-      (data) => {
-        return data.data;
-      },
-      (error) => {
-        console.error("Error get idol:", error);
-      }
-    );
-  };
-
   useEffect(() => {
-    const newRankGirl = [];
-    const newRankBoy = [];
+    const newRankGirl = [null, null, null];
+    const newRankBoy = [null, null, null];
 
-    getIdolRank(
-      (data) => {
-        const order = ["first", "second", "third"];
+    const fetchRankData = async () => {
+      getIdolRank(
+        async (data) => {
+          const order = [
+            { prefix: "first", idx: 1 },
+            { prefix: "second", idx: 2 },
+            { prefix: "third", idx: 3 },
+          ];
 
-        for (const key in data.data) {
-          for (const prefix of order) {
-            if (key.includes(`${prefix}FemaleIdolId`)) {
+          const girlPromises = [];
+          const boyPromises = [];
+
+          // Promise로 콜백을 감싸는 함수
+          const getIdolInfo = (idolId) => {
+            return new Promise((resolve, reject) => {
               getIdolMemberInfo(
-                data.data[key],
-                (data) => {
-                  newRankGirl.push(data.data);
-                  if (newRankGirl.length == 3) {
-                    setRankGirl(newRankGirl);
-                  }
-                },
-                (error) => {
-                  console.error("Error get idol:", error);
-                }
+                idolId,
+                (data) => resolve(data.data),
+                (error) => reject(error)
               );
-            } else if (key.includes(`${prefix}MaleIdolId`)) {
-              getIdolMemberInfo(
-                data.data[key],
-                (data) => {
-                  newRankBoy.push(data.data);
-                  if (newRankBoy.length == 3) {
-                    setRankBoy(newRankBoy);
-                  }
-                },
-                (error) => {
-                  console.error("Error get idol:", error);
-                }
-              );
+            });
+          };
+
+          for (const key in data.data) {
+            for (const { prefix, idx } of order) {
+              if (key.includes(`${prefix}FemaleIdolId`)) {
+                girlPromises.push(
+                  getIdolInfo(data.data[key]).then((idolData) => {
+                    newRankGirl[idx - 1] = idolData;
+                  })
+                );
+              } else if (key.includes(`${prefix}MaleIdolId`)) {
+                boyPromises.push(
+                  getIdolInfo(data.data[key]).then((idolData) => {
+                    newRankBoy[idx - 1] = idolData;
+                  })
+                );
+              }
             }
           }
+
+          // 모든 비동기 작업이 완료되면 상태 업데이트
+          await Promise.all([...girlPromises, ...boyPromises]);
+          setRankGirl([...newRankGirl]);
+          setRankBoy([...newRankBoy]);
+        },
+        (error) => {
+          console.error("Error get Idol Rank : ", error);
+          setIsNull(null);
         }
-      },
-      (error) => {
-        console.log("Error get Idol Rank : ", error);
-        // 데이터 없을 때 그냥 에러 떠버림
-        setIsNull(true);
-      }
-    );
+      );
+    };
+
+    fetchRankData();
   }, []);
 
   return (
     <Container sx={{ width: "100%" }}>
       <h2 className="main-title">오늘의 포포차트 📊</h2>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs value={value} onChange={handleChange}>
-          <Tab
-            label="남자아이돌"
-            {...a11yProps(0)}
-            sx={{ fontWeight: value === 0 ? 600 : 400 }}
-          />
-          <Tab
-            label="여자아이돌"
-            {...a11yProps(1)}
-            sx={{ fontWeight: value === 1 ? 600 : 400 }}
-          />
-        </Tabs>
-      </Box>
+      <CustomTabs
+        value={value}
+        handleChange={handleChange}
+        labels={["남자아이돌", "여자아이돌"]}
+      />
       <CustomTabPanel value={value} index={0}>
         <ChartBoy isNull={isNull} rankBoy={rankBoy} />
       </CustomTabPanel>
@@ -148,4 +93,5 @@ const ChartTab = () => {
     </Container>
   );
 };
+
 export default ChartTab;
