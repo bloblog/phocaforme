@@ -33,9 +33,9 @@ const ChartBoy = ({ isNull, rankBoy }) => {
                 </div>
               </Grid>
               <Grid item id="rank-23-idol" xs={5}>
-                {[2, 3].map((rank) => {
+                {[2, 3].map((rank, idx) => {
                   return (
-                    <>
+                    <div key={idx}>
                       <div id={`rank-${rank}-idol`}>
                         <div>{rank}위</div>
                         <Avatar
@@ -44,7 +44,7 @@ const ChartBoy = ({ isNull, rankBoy }) => {
                         />
                         <div>{rankBoy[rank - 1]?.idolName}</div>
                       </div>
-                    </>
+                    </div>
                   );
                 })}
               </Grid>
