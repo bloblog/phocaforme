@@ -85,7 +85,6 @@ const PostWrite = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         newImagePreviews.push(reader.result);
-        // 모든 파일의 미리보기 이미지가 준비되면 상태 업데이트
         if (newImagePreviews.length === newImages.length) {
           setImagePreviews((prevImagePreviews) => [
             ...prevImagePreviews,
@@ -157,7 +156,6 @@ const PostWrite = () => {
           id="write-container"
           className={loading ? "write-container loading" : "write-container"}
         >
-          {/* 기존 내용 */}
           <div id="image-input">
             <div id="image-list">
               <input
@@ -174,16 +172,11 @@ const PostWrite = () => {
               {imagePreviews &&
                 imagePreviews.map((preview, index) => (
                   <div
-                    className="image-container-c"
+                    className="img-preview"
                     key={index}
+                    style={{ backgroundImage: `url(${preview})` }}
                     onClick={() => handleImageDelete(index)}
-                  >
-                    <img
-                      className="image-preview"
-                      src={preview}
-                      alt={`Image Preview ${index + 1}`}
-                    />
-                  </div>
+                  ></div>
                 ))}
             </div>
             <p className="info-msg">* 사진 클릭 시 삭제됩니다.</p>

@@ -117,13 +117,7 @@ textarea:focus {
   flex-wrap: wrap;
 }
 
-.image-preview {
-  border-radius: 10px;
-  width: 100%;
-  height: auto;
-}
-
-.image-container-c {
+.img-preview {
   width: 20%;
   height: 0;
   border-radius: 10px;
@@ -131,6 +125,10 @@ textarea:focus {
   margin: 0.2rem;
   position: relative;
   padding-bottom: calc(20% * 1.5);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor: pointer;
 }
 
 #image-add-icon {
