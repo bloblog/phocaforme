@@ -70,11 +70,8 @@ const DetailPost = () => {
       id,
       (data) => {
         setPost(data.data);
-        console.log(data.data);
         setLoading(false);
-        if (post) {
-          saveToLocalStorage();
-        }
+        saveToLocalStorage();
       },
       (error) => {
         console.error("Error fetching post:", error);

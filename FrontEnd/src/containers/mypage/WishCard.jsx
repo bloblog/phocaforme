@@ -173,7 +173,7 @@ const WishCard = () => {
       <div>
         <div id="wishcard-input-container">
           <div className="bias-title" id="bias-keyword">
-            키워드를 입력해주세요
+            키워드 입력 후 엔터 (최대 3개)
           </div>
           <TextField
             size="small"

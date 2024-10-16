@@ -1,68 +1,28 @@
 import "./index.css";
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import PropTypes from "prop-types";
 
-import { Tabs, Tab, Typography, Box, ImageList } from "@mui/material";
-
+import { CustomTabs, CustomTabPanel } from "@/components/Tab/index";
+import { ImageList, Box } from "@mui/material";
 import Card from "@/components/Card";
 import { getAllPost } from "../../api/post";
-
-const CustomTabPanel = (props) => {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <>
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`tabpanel-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box sx={{ p: 1 }}>
-            <Typography>{children}</Typography>
-          </Box>
-        )}
-      </div>
-    </>
-  );
-};
-
-CustomTabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-const a11yProps = (index) => {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-};
 
 const MyPost = () => {
   const navigate = useNavigate();
   const currentUser = useSelector((state) => state.user.user);
   const [value, setValue] = useState(0);
   const [myPostList, setMyPostList] = useState([]);
+  const [mySellPostList, setMySellPostList] = useState([]);
 
   useEffect(() => {
     getAllPost(
       (data) => {
         console.log(data.data);
-        // 현재 사용자의 ID와 일치하는 게시글만 필터링
         const userPosts = data.data.filter(
           (post) => post.writerId === currentUser.userId
         );
-
-        // 최신순으로 정렬
         const sortedPosts = userPosts.sort((a, b) => b.createdAt - a.createdAt);
-
-        // 상태 업데이트
         setMyPostList(sortedPosts.slice(0, 20));
       },
       (error) => {
@@ -76,32 +36,29 @@ const MyPost = () => {
     navigate(`/post/${id}`);
   };
 
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   return (
     <div id="mypost-container">
       <h2 className="profile-title">나의 게시글</h2>
+      <CustomTabs
+        value={value}
+        handleChange={handleChange}
+        labels={["교환", "판매"]}
+      />
       <div>
-        <Box sx={{ width: "100%", borderBottom: 1, borderColor: "divider" }}>
-          <Tabs value={value}>
-            <Tab
-              label="교환"
-              {...a11yProps(0)}
-              sx={{ fontWeight: value === 0 ? 600 : 400 }}
-            />
-            <Tab
-              label="판매"
-              {...a11yProps(1)}
-              sx={{ fontWeight: value === 1 ? 600 : 400 }}
-            />
-          </Tabs>
-        </Box>
         <CustomTabPanel value={value} index={0}>
-          <ImageList
-            id="card-list"
-            sx={{ display: "flex", width: "100%" }}
-            rowHeight={200}
-          >
-            {myPostList &&
-              myPostList.map((post, index) => (
+          {myPostList.length === 0 ? (
+            <div className="no-content">최근 게시한 글이 없어요!</div>
+          ) : (
+            <ImageList
+              id="card-list"
+              sx={{ display: "flex", width: "100%" }}
+              rowHeight={200}
+            >
+              {myPostList.map((post, index) => (
                 <div
                   className="cards-container"
                   key={index}
@@ -125,21 +82,23 @@ const MyPost = () => {
                     content={post.content || ""}
                     type={post.type || ""}
                     isBartered={post.isBartered || false}
-                  ></Card>
+                  />
                 </div>
               ))}
-          </ImageList>
+            </ImageList>
+          )}
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-          <ImageList
-            id="card-list"
-            sx={{ display: "flex", width: "100%" }}
-            rowHeight={200}
-          >
-            {myPostList &&
-              myPostList
-                // .filter((post) => post.type === "판매")
-                .map((post, index) => (
+          {mySellPostList.length === 0 ? (
+            <div className="no-content">최근 게시한 글이 없어요!</div>
+          ) : (
+            <ImageList
+              id="card-list"
+              sx={{ display: "flex", width: "100%" }}
+              rowHeight={200}
+            >
+              {myPostList &&
+                myPostList.map((post, index) => (
                   <div
                     className="cards-container"
                     key={index}
@@ -159,10 +118,11 @@ const MyPost = () => {
                       content={post.content}
                       type={post.type}
                       isSold={post.isSold}
-                    ></Card>
+                    />
                   </div>
                 ))}
-          </ImageList>
+            </ImageList>
+          )}
         </CustomTabPanel>
       </div>
     </div>

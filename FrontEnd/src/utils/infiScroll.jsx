@@ -7,7 +7,7 @@ const usePostSearch = (pageNumber) => {
   const [hasMore, setHasMore] = useState(false);
 
   useEffect(() => {
-    setLoading(true); // 데이터를 가져오기 전에 로딩 상태로 변경
+    setLoading(true);
     getPostInfi(
       pageNumber,
       (data) => {
