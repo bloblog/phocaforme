@@ -18,7 +18,6 @@ const MyPost = () => {
   useEffect(() => {
     getAllPost(
       (data) => {
-        console.log(data.data);
         const userPosts = data.data.filter(
           (post) => post.writerId === currentUser.userId
         );

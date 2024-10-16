@@ -32,7 +32,7 @@ const DetailPost = () => {
     setOpen(false);
   };
 
-  // 디테일 페이지에 진입했을 떄 로컬스토리지에 저장
+  // 디테일 페이지에 진입했을 때 로컬스토리지에 저장
   const saveToLocalStorage = () => {
     if (post && post.id) {
       const existingRecentCard =
@@ -71,13 +71,16 @@ const DetailPost = () => {
       (data) => {
         setPost(data.data);
         setLoading(false);
-        saveToLocalStorage();
       },
       (error) => {
         console.error("Error fetching post:", error);
       }
     );
   }, []);
+
+  useEffect(() => {
+    saveToLocalStorage();
+  }, [post]);
 
   // 내 게시글인지 판별
   const currentUser = useSelector((state) => state.user.user);
