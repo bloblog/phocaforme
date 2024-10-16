@@ -1,16 +1,17 @@
+import "./index.css";
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-
-import PostCaution from "./PostCaution";
+import { Dialog, DialogContent } from "@mui/material";
+import PostCaution from "@/components/PostCaution";
 
 import {
   Container,
   ImageList,
   ImageListItem,
   Chip,
-  Avatar,
   Button,
+  CircularProgress,
 } from "@mui/material";
 import { openChatRoom } from "../../api/chat";
 import { deletePost, getPost, pullupPost } from "../../api/post";
@@ -19,10 +20,17 @@ const DetailPost = () => {
   const navigate = useNavigate();
 
   const { id } = useParams();
-  // 일단 주석
-  // const posts = useSelector((state) => (state.post ? state.post.posts : [])); //이건 필요 없을 듯?
-  // const post = posts.find((p) => p.id === id); // 얘도 필요 없을 거 같은데
   const [post, setPost] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   // 디테일 페이지에 진입했을 떄 로컬스토리지에 저장
   const saveToLocalStorage = () => {
@@ -37,7 +45,6 @@ const DetailPost = () => {
         ownMembers: post.ownIdolMembers,
         targetMembers: post.findIdolMembers,
         isBartered: post.bartered,
-        // type: post.cardType.value
       };
 
       const isExisting = existingRecentCard.some((card) => card.id === post.id);
@@ -62,8 +69,9 @@ const DetailPost = () => {
     getPost(
       id,
       (data) => {
-        console.log(data.data);
         setPost(data.data);
+        console.log(data.data);
+        setLoading(false);
         if (post) {
           saveToLocalStorage();
         }
@@ -100,8 +108,8 @@ const DetailPost = () => {
     console.log(post);
     navigate(`/modify/${id}`, { state: post });
   };
-  // 끌올
 
+  // 끌올
   const handlePullupClick = () => {
     pullupPost(post.id),
       (data) => {
@@ -132,9 +140,16 @@ const DetailPost = () => {
       }
     );
   };
+  if (loading) {
+    return (
+      <Container id="circular">
+        <CircularProgress />
+      </Container>
+    );
+  }
 
   if (post === null) {
-    return <PostCaution message={"이미 삭제된 게시글입니다."} />; // 데이터가 로드되기 전에는 로딩 중을 표시
+    return <PostCaution message={"이미 삭제된 게시글입니다."} />;
   }
 
   const ownMembers = post?.ownIdolMembers || []; // post가 정의되지 않았거나 ownMembers가 없을 때 빈 배열로 설정
@@ -171,16 +186,25 @@ const DetailPost = () => {
             {post.photos.map((photo, index) => (
               <ImageListItem key={index}>
                 <img
+                  onClick={handleClickOpen}
                   src={`https://photocardforme.s3.ap-northeast-2.amazonaws.com/${photo}`}
                   loading="lazy"
                   style={{
                     width: "15vh",
                     height: "23.7vh",
-                    objectFit: "contain",
+                    objectFit: "cover",
                     borderRadius: "10px",
-                    backgroundColor: "lightgray",
                   }}
                 />
+                <Dialog onClose={handleClose} open={open} maxWidth={false}>
+                  <DialogContent>
+                    <img
+                      src={`https://photocardforme.s3.ap-northeast-2.amazonaws.com/${photo}`}
+                      alt={photo}
+                      style={{ maxWidth: "100%", maxHeight: "100vh" }}
+                    />
+                  </DialogContent>
+                </Dialog>
               </ImageListItem>
             ))}
             <img

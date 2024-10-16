@@ -62,7 +62,7 @@ const PreviewPost = () => {
                 onClick={() => {
                   // setSelectedPostId(post.id)  // <= 근데 이거 기능이 뭐임?
                   navigate(`/barter/${post.id}`); // 디테일 페이지로 이동
-                }} // 클릭 이벤트 추가
+                }}
               />
             </div>
           ))}

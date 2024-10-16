@@ -10,11 +10,13 @@ import { CustomTabs, CustomTabPanel } from "@/components/Tab/index";
 
 const BasicTabs = () => {
   const location = useLocation();
-  const [value, setValue] = useState(0);
-  const [pageNumber, setPageNumber] = useState(2);
-  const { boards, hasMore, loading } = usePostSearch(pageNumber);
   const observer = useRef();
   const navigate = useNavigate();
+
+  const [value, setValue] = useState(0);
+  const [pageNumber, setPageNumber] = useState(2);
+
+  const { boards, hasMore, loading } = usePostSearch(pageNumber);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -34,10 +36,24 @@ const BasicTabs = () => {
     [loading, hasMore]
   );
 
+  const getInfoComp = () => {
+    if (!loading) {
+      return (
+        <PostCaution className="no-content" message={"게시글이 없습니다."} />
+      );
+    } else {
+      return (
+        <div id="circular">
+          <CircularProgress />
+        </div>
+      );
+    }
+  };
+
   return (
     <Container id="mainpost-container">
       {location.state ? <Search /> : null}
-      <div>
+      <div className="post-tab">
         <CustomTabs
           value={value}
           handleChange={handleChange}
@@ -46,7 +62,7 @@ const BasicTabs = () => {
 
         <CustomTabPanel value={value} index={0}>
           {boards.length === 0 ? (
-            <PostCaution message={"게시글이 없습니다."} />
+            getInfoComp()
           ) : (
             <div id="main-card-container">
               {boards.map((post, index) => (
@@ -63,9 +79,6 @@ const BasicTabs = () => {
                     ownMembers={post.ownMember}
                     targetMembers={post.targetMember}
                     isBartered={post.bartered}
-                    onClick={() => {
-                      navigate(`/barter/${post.id}`); // 디테일 페이지로 이동
-                    }}
                   />
                   {index === boards.length - 1 ? (
                     <div ref={lastBookElementRef} />
@@ -95,7 +108,6 @@ const BasicTabs = () => {
                     isSold={post.isSold}
                   />
                 ))}
-              {loading && <CircularProgress />}
             </div>
           )}
         </CustomTabPanel>

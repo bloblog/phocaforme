@@ -9,8 +9,7 @@ import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import BarterWrite from "./BarterWrite.jsx";
 import SellWrite from "./SellWrite.jsx";
 import TypeDropdown from "@/components/Dropdown/TypeDropdown.jsx";
-import { addPostApi } from "@/api/post.jsx";
-import { addPost } from "@/store/post";
+import { addPostApi, getPost } from "@/api/post.jsx";
 
 const PostWrite = () => {
   const dispatch = useDispatch();
@@ -27,9 +26,6 @@ const PostWrite = () => {
 
   // 카드 타입 핸들러
   const [cardType, setCardType] = useState(null);
-
-  const posts = useSelector((state) => (state.post ? state.post.posts : []));
-  const user = useSelector((state) => (state.user ? state.user.user : []));
 
   // 교환인지 판매인지
   function onExchangeChange(value) {
@@ -107,6 +103,7 @@ const PostWrite = () => {
   };
 
   const [loading, setLoading] = useState(false);
+
   // 게시물 생성 버튼 클릭 핸들러
   const handlePostClick = () => {
     setLoading(true);
@@ -116,7 +113,7 @@ const PostWrite = () => {
     const encodedContent = encodeURIComponent(content);
     newPost.append("content", encodedContent);
     newPost.append("groupId", selectedGroup);
-    console.log(selectedGroup);
+
     ownIdolMembers.forEach((member) => {
       newPost.append("ownIdolMembers", member.idolMemberId);
     });
@@ -135,13 +132,13 @@ const PostWrite = () => {
       (data) => {
         if (data.data) {
           setLoading(false);
-          dispatch(addPost(data.data));
           navigate("/post");
         }
       },
       (error) => {
         setLoading(false);
-        console.error("Error creating post:", error);
+
+        console.error("Error fetching post:", error);
       }
     );
   };

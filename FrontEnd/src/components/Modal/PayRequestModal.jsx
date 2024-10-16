@@ -16,7 +16,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 
-import getCurrentTime from "@/utils/currentTime";
+import { currentTime } from "@/utils/timeFormat";
 
 const PayModal = ({ open, handleClose, updateMessages }) => {
   const { roomId } = useParams();
@@ -77,7 +77,7 @@ const PayModal = ({ open, handleClose, updateMessages }) => {
       sender: loginUser,
       message: `[결제 요청서]\n\n거래수량 ${amount} 개\n배송비 ${fee} 원\n----------------\n총 금액 ${total} 원`,
       imgCode: "",
-      sendTime: getCurrentTime(),
+      sendTime: currentTime(),
       isPay: true,
     };
     updateMessages(newMessage);

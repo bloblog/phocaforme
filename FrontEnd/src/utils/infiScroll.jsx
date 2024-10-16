@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { getPostInfi } from "../api/post";
-import { useSelector } from "react-redux";
 
 const usePostSearch = (pageNumber) => {
   const [loading, setLoading] = useState(true);
