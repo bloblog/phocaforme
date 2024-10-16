@@ -1,4 +1,4 @@
-// 게시글 생성 페이지
+import "./index.css";
 import React, { useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -178,7 +178,7 @@ const PostWrite = () => {
             {imagePreviews &&
               imagePreviews.map((preview, index) => (
                 <div
-                  className="image-container"
+                  className="image-container-c"
                   key={index}
                   onClick={() => handleImageDelete(index)}
                 >

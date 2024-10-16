@@ -2,7 +2,6 @@ import "./index.css";
 import React from "react";
 import { Link } from "react-router-dom";
 import Carousel from "react-material-ui-carousel";
-import zIndex from "@mui/material/styles/zIndex";
 
 const MyCarousel = () => {
   const example = [

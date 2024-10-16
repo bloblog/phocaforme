@@ -1,0 +1,277 @@
+/* 채팅리스트 */
+#chat-list-container {
+  width: 100%;
+  max-width: 500;
+  margin: 2rem 0;
+}
+.chatlist-nickname {
+  font-weight: bold;
+}
+
+.chatlist-thumb-content {
+  display: flex;
+}
+
+.chatlist-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.chatlist-content {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 채팅페이지 */
+
+.chat-image {
+  width: 40vw;
+}
+
+#fileInput {
+  display: none;
+}
+
+#chatroom-title {
+  font-weight: 700;
+}
+.chatlist-content {
+  display: flex;
+  justify-content: center;
+}
+.chatlist-thumbnail {
+  height: 6vh;
+  width: 6vh;
+  object-fit: cover;
+  border-radius: 10px;
+  margin: 0 1rem 0 0;
+}
+
+.chatlist-item,
+.unread-chatlist-item {
+  margin: 0.5rem;
+  height: 8vh;
+  border-radius: 10px;
+}
+
+.chatlist-item {
+  border: 1px solid grey;
+}
+
+@keyframes rippleEffect {
+  from {
+    background-size: 100% 100%;
+  }
+  to {
+    background-size: 120% 120%;
+  }
+}
+
+.unread-chatlist-item {
+  border: 0.5px solid grey;
+  background-image: linear-gradient(
+    to top right,
+    rgba(251, 55, 163, 0.7),
+    rgba(249, 209, 233, 0.7)
+  );
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+#chat-alarm-icon {
+  padding: 1rem 1rem 1rem 0;
+}
+
+#notice-content {
+  display: flex;
+  border: var(--primary-color) solid 2px;
+  border-radius: 10px;
+  margin: 1rem;
+  padding: 0 0.5rem 0.5rem 0.5rem;
+}
+
+#notice-title {
+  display: flex;
+  align-items: flex-start;
+  min-width: fit-content;
+  padding: 1rem 1rem 0 0;
+}
+
+#chat-notice {
+  display: flex;
+}
+
+#notice-icon {
+  font-size: 12px;
+  color: var(--primary-color);
+  margin: 0.5rem 0 0 0;
+}
+
+#chat-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+#chat-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#chat-menu-container {
+  width: 100%;
+}
+
+#hamburger-icon {
+  padding: 0 1rem;
+}
+
+#add-popover-container {
+  display: flex;
+  width: 25rem;
+  height: 10rem;
+}
+
+#image-icon-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#image-icon-background {
+  background-color: var(--secondary-color);
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50px;
+  margin: 1rem 1rem 0;
+}
+
+#image-icon {
+  padding: 1.7rem 1.7rem;
+}
+
+.chat-visiter {
+  display: flex;
+  align-items: center;
+}
+
+.chat-owner {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.chat-owner-name {
+  display: flex;
+  justify-content: flex-end;
+  text-align: end;
+  padding: 0 1rem;
+  font-size: medium;
+}
+
+.chat-visiter-name {
+  padding: 0 1rem;
+  font-size: medium;
+}
+
+.chat-visiter .chat-message {
+  background-color: var(--warning-color);
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  color: #ffffff;
+  white-space: pre-line;
+}
+
+.chat-owner .chat-message {
+  background-color: var(--secondary-color);
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  white-space: pre-line;
+}
+
+.chat-message {
+  margin: 0.5rem;
+}
+
+#sendIcon {
+  border-radius: 10px;
+  background-image: linear-gradient(
+    to right bottom,
+    rgba(251, 55, 163, 1),
+    rgba(249, 209, 233, 1)
+  );
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  color: white;
+}
+
+#chat-message-area {
+  display: flex;
+  flex-direction: column;
+  height: 70vh;
+}
+
+#chat-content-container {
+  overflow-x: hidden;
+}
+
+#pay-button {
+  background-color: var(--primary-color);
+  color: #f2f4f8;
+  margin: 0.5rem 0;
+}
+
+#send-message-container {
+  width: 100%;
+  background-color: var(--info-color);
+  position: sticky;
+  bottom: 0;
+  padding: 2rem;
+  z-index: 100;
+}
+
+.chat-time-container {
+  font-size: 8px;
+}
+
+/* 결제 전송 모달 */
+#pay-modal-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pay-input-container {
+  display: flex;
+  align-items: center;
+  width: 70%;
+  justify-content: center;
+  margin: 0 0 0.5rem 0;
+}
+
+.pay-input {
+  width: 70%;
+}
+
+.pay-label {
+  width: 50%;
+}
+
+.unit-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+#pay-divider {
+  margin: 1rem 0;
+  background-color: var(--primary-color);
+}
+
+#pay-buttons {
+  margin: 0.5rem 0;
+}

@@ -1,0 +1,69 @@
+#no-content-title {
+  font-family: "PyeongChangPeace";
+}
+
+.chart-align {
+  text-align: center;
+}
+.rank-1-title {
+  display: flex;
+  gap: 5px;
+}
+
+.rank-1-imoji {
+  position: relative;
+  display: flex;
+  justify-content: left;
+}
+
+#medal {
+  position: absolute;
+  font-size: xx-large;
+  z-index: 10;
+  bottom: 20px;
+}
+
+#rank-1-idol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#rank-23-idol {
+  display: flex;
+}
+
+#rank-2-idol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#rank-3-idol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#chart-container {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+#rank-1-image {
+  margin: 0.5rem;
+  height: 70px;
+  width: 70px;
+}
+
+.rank-23-image {
+  margin: 0.5rem;
+  height: 50px;
+  width: 50px;
+}
+
+#chart-time {
+  font-size: 12px;
+  color: gray;
+}
