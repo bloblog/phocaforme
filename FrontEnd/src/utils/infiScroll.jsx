@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { getPostInfi } from "../api/post";
+import { useSelector } from "react-redux";
 
-export default function usePostSearch(pageNumber) {
+const usePostSearch = (pageNumber) => {
   const [loading, setLoading] = useState(true);
   const [boards, setBoards] = useState([]);
   const [hasMore, setHasMore] = useState(false);
@@ -11,8 +12,6 @@ export default function usePostSearch(pageNumber) {
     getPostInfi(
       pageNumber,
       (data) => {
-        console.log(data.data);
-
         if (pageNumber == 2) {
           setBoards(data.data);
         } else {
@@ -20,7 +19,6 @@ export default function usePostSearch(pageNumber) {
             return [...prevBoards, ...data.data];
           });
         }
-
         setLoading(false);
         setHasMore(data.data.length > 0);
       },
@@ -32,4 +30,6 @@ export default function usePostSearch(pageNumber) {
   }, [pageNumber]);
 
   return { boards, hasMore, loading };
-}
+};
+
+export default usePostSearch;

@@ -1,3 +1,5 @@
+import "./index.css";
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -36,10 +38,10 @@ const PreviewPost = () => {
 
   return (
     <Container>
+      <h2 className="main-title" id="preview-title">
+        둘러보기 🔍
+      </h2>
       <div id="preview-container">
-        <h2 className="main-title" id="preview-title">
-          둘러보기 🔍
-        </h2>
         {/* <MainPost isPreview={true} /> */}
         <div
           className="preview-card"

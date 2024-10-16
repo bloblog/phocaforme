@@ -2,7 +2,23 @@
 #write-container {
   display: flex;
   flex-direction: column;
+  position: relative;
 }
+
+/* 로딩 중일 때 opacity 조절 */
+.write-container.loading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+
 #search-title-input {
   background-color: #f2f4f8;
   border: none;

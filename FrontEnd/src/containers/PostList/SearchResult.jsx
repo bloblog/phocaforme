@@ -1,3 +1,4 @@
+import "./index.css";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +15,7 @@ import {
 import Card from "@/components/Card.jsx";
 import usePostSearch from "@/utils/infiScroll";
 import { searchPosts } from "@/store/post";
-import PostCaution from "./PostCaution.jsx";
+import PostCaution from "@/components/PostCaution.jsx";
 import { getPostGPS } from "../../api/post.jsx";
 
 const CustomTabPanel = (props) => {

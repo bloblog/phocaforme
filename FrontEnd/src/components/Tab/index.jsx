@@ -3,13 +3,6 @@ import { Tabs, Tab, Box } from "@mui/material";
 import PropTypes from "prop-types";
 
 const CustomTabPanel = ({ children, value, index, ...other }) => {
-  const now = new Date();
-  now.setDate(now.getDate() - 1);
-
-  const formattedDate = `${now.getFullYear()}-${(now.getMonth() + 1)
-    .toString()
-    .padStart(2, "0")}-${now.getDate().toString().padStart(2, "0")}`;
-
   return (
     <div
       role="tabpanel"
@@ -17,7 +10,6 @@ const CustomTabPanel = ({ children, value, index, ...other }) => {
       id={`tabpanel-${index}`}
       {...other}
     >
-      <p id="chart-time">{formattedDate.toLocaleString()} 기준</p>
       {value === index && <Box sx={{ p: 1 }}>{children}</Box>}
     </div>
   );

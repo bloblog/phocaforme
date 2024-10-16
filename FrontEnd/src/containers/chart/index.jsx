@@ -77,6 +77,13 @@ const ChartTab = () => {
     fetchRankData();
   }, []);
 
+  const now = new Date();
+  now.setDate(now.getDate() - 1);
+
+  const formattedDate = `${now.getFullYear()}-${(now.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${now.getDate().toString().padStart(2, "0")}`;
+
   return (
     <Container sx={{ width: "100%" }}>
       <h2 className="main-title">오늘의 포포차트 📊</h2>
@@ -85,6 +92,8 @@ const ChartTab = () => {
         handleChange={handleChange}
         labels={["남자아이돌", "여자아이돌"]}
       />
+      <p id="chart-time">{formattedDate.toLocaleString()} 기준</p>
+
       <CustomTabPanel value={value} index={0}>
         <ChartBoy isNull={isNull} rankBoy={rankBoy} />
       </CustomTabPanel>

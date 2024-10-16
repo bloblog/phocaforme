@@ -4,7 +4,7 @@ const local = localAxios();
 const url = "/barter"; // 공통 URL
 
 // 게시글 작성
-function addPost(param, success, fail) {
+function addPostApi(param, success, fail) {
   local
     .post(url, param, {
       headers: {
@@ -63,7 +63,7 @@ function getPostInfi(param, success, fail) {
 }
 
 export {
-  addPost,
+  addPostApi,
   modifyPost,
   getAllPost,
   getPost,
