@@ -62,11 +62,10 @@ const LatestPost = () => {
                       }}
                       id={post.id}
                       title={post.title}
-                      images={post.images.map(
-                        (image) =>
-                          "https://photocardforme.s3.ap-northeast-2.amazonaws.com/" +
-                          image
-                      )}
+                      images={
+                        "https://photocardforme.s3.ap-northeast-2.amazonaws.com/" +
+                        post.images[0]
+                      }
                       ownMembers={post.ownMembers.map((member) => ({
                         member_name: member.name,
                       }))}
@@ -109,7 +108,7 @@ const LatestPost = () => {
                       }}
                       id={post.id}
                       title={post.title}
-                      images={post.photos}
+                      images={post.photos[0]}
                       ownMembers={post.ownMembers}
                       content={post.content}
                       type={post.cardType}

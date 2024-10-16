@@ -112,7 +112,7 @@ const MyPost = () => {
                       }}
                       id={post.id}
                       title={post.title}
-                      images={post.images}
+                      images={post.images[0]}
                       ownMembers={post.ownMembers}
                       content={post.content}
                       type={post.type}

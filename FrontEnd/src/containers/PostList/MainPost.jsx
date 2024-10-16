@@ -50,6 +50,8 @@ const BasicTabs = () => {
     }
   };
 
+  console.log(boards);
+
   return (
     <Container id="mainpost-container">
       {location.state ? <Search /> : null}
@@ -101,7 +103,7 @@ const BasicTabs = () => {
                     key={post.id}
                     id={post.id}
                     title={post.title}
-                    images={post.images}
+                    images={post.images[0]}
                     content={post.content}
                     ownMembers={post.ownMembers}
                     type={post.type}

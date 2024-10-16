@@ -203,7 +203,7 @@ const BasicTabs = ({ isPreview }) => {
                   key={post.id}
                   id={post.id}
                   title={post.title}
-                  images={post.images}
+                  images={post.images[0]}
                   content={post.content}
                   ownMembers={post.ownMembers}
                   type={post.type}
