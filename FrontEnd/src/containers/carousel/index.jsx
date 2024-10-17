@@ -24,12 +24,6 @@ const MyCarousel = () => {
     },
   ];
 
-  const carouselStyle = {
-    "& .Carousel-button": {
-      display: "none",
-    },
-  };
-
   // 호버 관련
   const overlayStyle = {
     position: "absolute",
@@ -37,12 +31,12 @@ const MyCarousel = () => {
     left: 0,
     width: "100%",
     height: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.3)", // 불투명한 배경 색상
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    opacity: 0, // 기본적으로 숨김
-    transition: "opacity 0.3s ease-in-out", // 페이드 인/아웃 트랜지션
+    opacity: 0,
+    transition: "opacity 0.3s ease-in-out",
   };
 
   const getBackColor = (url) => {
@@ -50,28 +44,9 @@ const MyCarousel = () => {
     return data;
   };
 
-  const customNextIcon = () => null; // 숨김
-  const customPrevIcon = () => null; // 숨김
-
   return (
     <div className="container">
-      <Carousel
-        className="carousel-container"
-        NextIcon={customNextIcon}
-        PrevIcon={customPrevIcon}
-        IndicatorContainerProps={{ style: { display: "none" } }} // 숨김
-        style={carouselStyle}
-        cycleNavigation={true}
-        navButtonsAlwaysVisible={false}
-        centerMode={true}
-        centerSlidePercentage={30}
-        showThumbs={false}
-        showStatus={false}
-        autoPlay={true}
-        interval={3000}
-        infiniteLoop={true}
-        hideArrows={true}
-      >
+      <Carousel className="carousel-container" interval={3000}>
         {example.map((content, index) => (
           <Link key={index} to={content.link}>
             <div
