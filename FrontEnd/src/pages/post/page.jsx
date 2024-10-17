@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 
 import { Container } from "@mui/material";
-import MainPost from "@/containers/postList/MainPost.jsx";
+import MainPost from "@/containers/postList/index";
 import SearchResult from "@/containers/postList/SearchResult.jsx";
 import Search from "@/containers/search/index.jsx";
 

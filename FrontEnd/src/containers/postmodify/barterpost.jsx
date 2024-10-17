@@ -8,15 +8,12 @@ import GroupDropdown from "@/components/Dropdown/GroupDropdown2.jsx";
 import MemberDropdown from "@/components/Dropdown/MemberDropdown2.jsx";
 
 const BarterModify = ({
-  defaultGroup,
+  groupId,
   defaultOwnMember,
   defaultTargetMember,
   onChange,
 }) => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const [selectedGroup, setSelectedGroup] = useState(defaultGroup);
+  const [selectedGroup, setSelectedGroup] = useState(groupId);
 
   const handleGroupChange = (group) => {
     setSelectedGroup(group || { value: "", label: "", avatarSrc: "" });
@@ -65,7 +62,7 @@ const BarterModify = ({
       <div id="group-input" className="search-box-group">
         <h3>그룹명</h3>
         <GroupDropdown
-          defaultGroup={selectedGroup}
+          groupId={selectedGroup}
           onChange={(group) => {
             handleGroupChange(group);
           }}
@@ -93,8 +90,6 @@ const BarterModify = ({
                   style={{
                     margin: "4px",
                     border: 0,
-                    // backgroundColor: tag.color,
-                    // color: "white",
                   }}
                 />
               ))}

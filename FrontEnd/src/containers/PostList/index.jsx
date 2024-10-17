@@ -52,7 +52,8 @@ const BasicTabs = () => {
 
   return (
     <Container id="mainpost-container">
-      {location.state ? <Search /> : null}
+      {/* {location.state ? <Search /> : null} */}
+      <Search />
       <div className="post-tab">
         <CustomTabs
           value={value}

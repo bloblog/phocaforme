@@ -10,7 +10,6 @@ import BarterModify from "./barterpost.jsx";
 import AddIcon from "@mui/icons-material/Add";
 import TypeDropdown from "@/components/Dropdown/TypeDropdown.jsx";
 import { getPost, modifyPost } from "../../api/post.jsx";
-import PairButton from "../../components/Button/pair.jsx";
 
 const PostModify = () => {
   const navigate = useNavigate();
@@ -198,6 +197,9 @@ const PostModify = () => {
   return (
     <Container>
       <div id="write-container">
+        {/* <div id="write-radio-container">
+          <RadioButton2 defaultType={postCardType} />
+        </div> */}
         <div id="image-input">
           <div>
             <h3>사진 (클릭시 삭제됩니다.)</h3>
@@ -251,10 +253,33 @@ const PostModify = () => {
           />
         </div>
 
+        {/* 
+        <div id="group-member-input">
+          {postCardType === "교환" ? (
+            <BarterModify
+              defaultGroup={post.group || []} // defaultGroup 수정 필요
+              defaultOwnMember={ownMembers || []}
+              defaultTargetMember={targetMembers || []}
+              onChange={(ownMembers, targetMembers) => {
+                handleOwnMemberSelection(ownMembers);
+                handleTargetMemberSelection(targetMembers);
+              }}
+            />
+          ) : (
+            <SellModify
+              defaultGroup={post.group || []} // defaultGroup 수정 필요
+              defaultOwnMember={ownMembers || []}
+              onChange={(ownMembers) => {
+                handleOwnMemberSelection(ownMembers);
+              }}
+            />
+          )}
+        </div> */}
+
         <div id="card-input">
           <h3>포토카드 종류</h3>
           <TypeDropdown
-            defaultCardType={cardType}
+            // defaultCardType={cardType}
             onChange={(type) => {
               handleTypeChange(type);
             }}
@@ -270,12 +295,23 @@ const PostModify = () => {
             placeholder="포토카드 상태에 대한 세부 내용을 적어주세요."
           />
         </div>
-        <PairButton
-          type1={"수정"}
-          type2={"취소"}
-          handler1={handleModifyClick}
-          handler2={handleCancelButton}
-        ></PairButton>
+        <div id="button-container">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleModifyClick}
+            style={{ marginRight: "10px" }}
+          >
+            수정
+          </Button>
+          <Button
+            variant="contained"
+            color="warning"
+            onClick={handleCancelButton}
+          >
+            취소
+          </Button>
+        </div>
       </div>
     </Container>
   );

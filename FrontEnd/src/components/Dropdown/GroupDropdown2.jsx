@@ -4,19 +4,19 @@ import { useState, useEffect } from "react";
 import { Box, TextField, Autocomplete } from "@mui/material";
 import { getIdolGroup } from "@/api/idolinfo";
 
-const GroupDropdown2 = ({ defaultGroup, isProfile, onChange }) => {
+const GroupDropdown2 = ({ groupId, isProfile, onChange }) => {
   const [groupItems, setGroupItems] = useState([]);
+  const [value, setValue] = useState(null);
 
   useEffect(() => {
     getIdolGroup(
       (data) => {
         setGroupItems(data.data);
+        // setValue(data.data[groupId - 1]);
       },
       (error) => console.error("그룹 세팅 오류:", error)
     );
   }, []);
-
-  const [value, setValue] = useState(isProfile ? null : defaultGroup);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

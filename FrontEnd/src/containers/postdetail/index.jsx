@@ -121,8 +121,7 @@ const DetailPost = () => {
 
   //수정
   const handleModifyClick = (id) => {
-    console.log(post);
-    navigate(`/modify/${id}`, { state: post });
+    navigate(`/modify/${id}`);
   };
 
   // 끌올
@@ -272,9 +271,7 @@ const DetailPost = () => {
           </div>
         </div>
         <hr style={{ margin: "1rem 0" }} />
-        <div id="post-content-container" style={{}}>
-          <div>{post.content}</div>
-        </div>
+        <div id="post-content-container">{post.content}</div>
       </div>
 
       <div id="post-bottom">
@@ -321,10 +318,6 @@ const DetailPost = () => {
           </div>
         )}
         <NeedLogin handleModalClose={handleModalClose} modalOpen={modalOpen} />
-
-        {/* <Dialog onClose={handleModalClose} open={modalOpen} maxWidth={false}>
-          <DialogContent>로그인필요</DialogContent>
-        </Dialog> */}
       </div>
     </Container>
   );

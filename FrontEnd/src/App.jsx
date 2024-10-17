@@ -14,7 +14,7 @@ import Guide from "@/pages/guide/page.jsx";
 import Modify from "@/pages/postmodify/[postId]/page.jsx";
 
 import DetailPost from "@/pages/postdetail/[postId]/page";
-import MainPost from "@/containers/postList/MainPost";
+import MainPost from "@/containers/postList/index";
 import NavBar from "@/containers/navBar/index.jsx";
 import FloatingActionButtons from "@/components/FloatingActionButtons.jsx";
 
