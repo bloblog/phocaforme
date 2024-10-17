@@ -6,9 +6,9 @@ import { useNavigate } from "react-router-dom";
 import { Container, Button, CircularProgress } from "@mui/material";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 
-import BarterWrite from "./BarterWrite.jsx";
-import SellWrite from "./SellWrite.jsx";
-import TypeDropdown from "@/components/Dropdown/TypeDropdown.jsx";
+import BarterWrite from "./barteWrite.jsx";
+import SellWrite from "./sellWrite.jsx";
+import TypeDropdown from "@/components/Dropdown/type.jsx";
 import { addPostApi, getPost } from "@/api/post.jsx";
 
 const PostWrite = () => {

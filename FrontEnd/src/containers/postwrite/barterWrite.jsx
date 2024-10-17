@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import GroupDropdown from "@/components/Dropdown/GroupDropdown2.jsx";
+import GroupDropdown from "@/components/Dropdown/group2.jsx";
 import MemberDropdown from "@/components/Dropdown/MemberDropdown2.jsx";
 
 import Chip from "@mui/material/Chip";

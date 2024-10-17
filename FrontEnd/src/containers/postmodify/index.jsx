@@ -8,7 +8,7 @@ import {
 import { Container, Button } from "@mui/material";
 import BarterModify from "./barterpost.jsx";
 import AddIcon from "@mui/icons-material/Add";
-import TypeDropdown from "@/components/Dropdown/TypeDropdown.jsx";
+import TypeDropdown from "@/components/Dropdown/type.jsx";
 import { getPost, modifyPost } from "../../api/post.jsx";
 import PairButton from "../../components/Button/pair.jsx";
 
@@ -62,12 +62,11 @@ const PostModify = () => {
     setLoading(false);
   }, []);
 
-  const fileInputRef = useRef(images); // useRef를 사용하여 fileInputRef 정의
+  const fileInputRef = useRef(images);
 
   useEffect(() => {
     if (fileInputRef.current && !fileInputRef.current.value) {
-      // 파일을 선택하지 않았을 때, file input의 value를 postImages로 설정
-      fileInputRef.current.value = ""; // 빈 문자열로 설정
+      fileInputRef.current.value = "";
     }
   }, [fileInputRef, images]);
 
@@ -86,16 +85,6 @@ const PostModify = () => {
   const handleTypeChange = (cardType) => {
     setCardType(cardType);
   };
-
-  // const handleTypeChange = (cardType) => {
-  //   if (cardType == null) {
-  //     cardType = {
-  //       value: "",
-  //       label: "",
-  //     };
-  //   }
-  //   setCardType(cardType);
-  // };
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value);

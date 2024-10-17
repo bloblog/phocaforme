@@ -7,7 +7,7 @@ import { Container, Button, CircularProgress } from "@mui/material";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 
 import BarterWrite from "./BarterWrite.jsx";
-import TypeDropdown from "@/components/Dropdown/TypeDropdown.jsx";
+import TypeDropdown from "@/components/Dropdown/type.jsx";
 import { addPostApi } from "@/api/post.jsx";
 
 const PostWrite = () => {

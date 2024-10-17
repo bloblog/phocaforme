@@ -10,7 +10,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { useTheme } from "@mui/material/styles";
 import { Button } from "@mui/material";
 import BarterWrite2 from "../postwrite/barterWrite2.jsx";
-import TypeDropdown2 from "@/components/Dropdown/TypeDropdown2.jsx";
+import TypeDropdown2 from "@/components/Dropdown/type2.jsx";
 
 const Search = () => {
   const [userInput, setUserInput] = useState("");

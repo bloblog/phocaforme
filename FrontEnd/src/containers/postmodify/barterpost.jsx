@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import Chip from "@mui/material/Chip";
 
-import GroupDropdown from "@/components/Dropdown/GroupDropdown2.jsx";
+import GroupDropdown from "@/components/Dropdown/group2.jsx";
 import MemberDropdown from "@/components/Dropdown/MemberDropdown2.jsx";
 
 const BarterModify = ({
@@ -15,13 +15,12 @@ const BarterModify = ({
 }) => {
   const [selectedGroup, setSelectedGroup] = useState(groupId);
 
-  const handleGroupChange = (group) => {
-    setSelectedGroup(group || { value: "", label: "", avatarSrc: "" });
-  };
+  // const handleGroupChange = (group) => {
+  //   setSelectedGroup(group || { value: "", label: "", avatarSrc: "" });
+  // };
 
   const [ownMembers, setOwnMembers] = useState([]);
   const [targetMembers, setTargetMembers] = useState([]);
-
   const [ownMembersInput, setOwnMembersInput] = useState("");
   const [targetMembersInput, setTargetMembersInput] = useState("");
 

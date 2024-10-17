@@ -8,7 +8,7 @@ import {
 import { Container, Button } from "@mui/material";
 import BarterModify from "./barterpost.jsx";
 import AddIcon from "@mui/icons-material/Add";
-import TypeDropdown from "@/components/Dropdown/TypeDropdown.jsx";
+import TypeDropdown from "@/components/Dropdown/type.jsx";
 import { getPost, modifyPost } from "../../api/post.jsx";
 
 const PostModify = () => {

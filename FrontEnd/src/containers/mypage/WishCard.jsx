@@ -5,7 +5,7 @@ import { useTheme } from "@mui/material/styles";
 import { Button, TextField, Chip } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
 
-import GroupDropdown from "@/components/Dropdown/GroupDropdown2";
+import GroupDropdown from "@/components/Dropdown/group2";
 import MemberDropdown from "@/components/Dropdown/MemberDropdown2";
 import { deleteWishcard, getWishcard, makeWishcard } from "../../api/user";
 
