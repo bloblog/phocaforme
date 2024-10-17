@@ -74,7 +74,6 @@ textarea:focus {
 #button-container {
   display: flex;
   justify-content: center;
-  gap: 10px;
   margin: 1rem 0;
 }
 
@@ -142,42 +141,4 @@ textarea:focus {
   color: var(--secondary-color);
   font-family: "Pretendard";
   font-size: 12px;
-}
-
-.content-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.warn-msg {
-  color: red;
-  animation: shake 0.5s ease-in-out;
-}
-
-@keyframes shake {
-  0% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(-2px);
-  }
-  50% {
-    transform: translateX(1px);
-  }
-  75% {
-    transform: translateX(-2px);
-  }
-  100% {
-    transform: translateX(0);
-  }
-}
-
-#warn-modal {
-  padding: 50px 50px;
-  font-size: large;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  row-gap: 10px;
 }

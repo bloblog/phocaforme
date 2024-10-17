@@ -1,26 +1,33 @@
 import "./index.css";
 import React, { useState, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Dialog, DialogContent } from "@mui/material";
 
 import { Container, Button, CircularProgress } from "@mui/material";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 
 import BarterWrite from "./BarterWrite.jsx";
+import SellWrite from "./SellWrite.jsx";
 import TypeDropdown from "@/components/Dropdown/TypeDropdown.jsx";
-import { addPostApi } from "@/api/post.jsx";
+import { addPostApi, getPost } from "@/api/post.jsx";
 
 const PostWrite = () => {
   const [loading, setLoading] = useState(false);
+
   const [images, setImages] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [title, setTitle] = useState("");
   const [selectedGroup, setSelectedGroup] = useState(0);
   const [ownIdolMembers, setownIdolMembers] = useState([]);
   const [findIdolMembers, setfindIdolMembers] = useState([]);
-  const [cardType, setCardType] = useState("");
+  const [cardType, setCardType] = useState(null);
   const [content, setContent] = useState("");
-  const [open, setOpen] = useState(false);
+
+  // 교환인지 판매인지
+  const [isExchange, setIsExchange] = useState(true);
+  function onExchangeChange(value) {
+    setIsExchange(value === "교환");
+  }
 
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
@@ -73,6 +80,7 @@ const PostWrite = () => {
 
   // 그룹
   const handleSelectedGroupChange = (group) => {
+    console.log(group.idolGroupId);
     setSelectedGroup(group.idolGroupId);
   };
 
@@ -87,7 +95,7 @@ const PostWrite = () => {
 
   // 카드 종류
   const handleTypeChange = (cardType) => {
-    setCardType(cardType.value);
+    setCardType(cardType);
   };
 
   // 내용
@@ -95,43 +103,12 @@ const PostWrite = () => {
     setContent(event.target.value);
   };
 
-  // 모든 항목 다 차있나 검사
-  // 이미지 안 들어있으면?
-  const isComplete = (post) => {
-    const notCompleted = [];
-    if (post.get("title") == null) {
-      notCompleted.push("title");
-    }
-    if (post.get("groupId") == 0) {
-      notCompleted.push("groupId");
-    }
-    if (
-      post.get("ownIdolMembers") == null ||
-      post.get("ownIdolMembers").length == 0
-    ) {
-      notCompleted.push("ownIdolMembers");
-    }
-    if (
-      post.get("findIdolMembers") == null ||
-      post.get("findIdolMembers").length == 0
-    ) {
-      notCompleted.push("findIdolMembers");
-    }
-    if (post.get("cardType") == "") {
-      notCompleted.push("cardType");
-    }
-    if (post.get("content").trim() == "") {
-      notCompleted.push("content");
-    }
-    return notCompleted;
-  };
-
   // 게시글 작성
   const handlePostClick = () => {
     setLoading(true);
     // 새로운 게시물 객체 생성
+    // 안 채워진 항목 쳐내기
     const newPost = new FormData();
-
     images.forEach((image) => {
       newPost.append(`photos`, image);
     });
@@ -146,60 +123,33 @@ const PostWrite = () => {
       newPost.append("findIdolMembers", member.idolMemberId);
     });
 
-    newPost.append("cardType", cardType);
+    newPost.append("cardType", cardType.value);
 
     const encodedContent = encodeURIComponent(content);
     newPost.append("content", encodedContent);
 
-    // 안 채워진 항목 쳐내기
-    const state = isComplete(newPost);
-    if (state.length == 0) {
-      addPostApi(
-        newPost,
-        (data) => {
-          if (data.data) {
-            setLoading(false);
-            navigate(`/post/${data.data.id}`);
-          }
-        },
-        (error) => {
+    addPostApi(
+      newPost,
+      (data) => {
+        if (data.data) {
           setLoading(false);
-          console.error("Error fetching post:", error);
+          navigate("/post");
         }
-      );
-    } else {
-      handleClickOpen();
-      setLoading(false);
-    }
+      },
+      (error) => {
+        setLoading(false);
+        console.error("Error fetching post:", error);
+      }
+    );
   };
 
   const handleCancelButton = () => {
+    console.log("게시물 생성 취소");
     navigate("/post");
-  };
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
   };
 
   return (
     <Container>
-      <Dialog
-        id="warn-modal-container"
-        onClose={handleClose}
-        open={open}
-        maxWidth={false}
-      >
-        <DialogContent id="warn-modal">
-          <div>모든 항목은 필수 입력 사항입니다!</div>
-          <Button onClick={handleClose} color="warning" variant="contained">
-            확인
-          </Button>
-        </DialogContent>
-      </Dialog>
       <h2 className="write-title">게시글 작성하기</h2>
       <div className="write-container-wrapper">
         <div
@@ -242,18 +192,25 @@ const PostWrite = () => {
           </div>
 
           <div id="group-member-input">
-            <BarterWrite
-              onChange={(ownIdolMembers, findIdolMembers, selectedGroup) => {
-                handleOwnMemberSelection(ownIdolMembers);
-                handleTargetMemberSelection(findIdolMembers);
-                handleSelectedGroupChange(selectedGroup);
-              }}
-            />
+            {isExchange ? (
+              <BarterWrite
+                onChange={(ownIdolMembers, findIdolMembers, selectedGroup) => {
+                  handleOwnMemberSelection(ownIdolMembers);
+                  handleTargetMemberSelection(findIdolMembers);
+                  handleSelectedGroupChange(selectedGroup);
+                }}
+              />
+            ) : (
+              <SellWrite
+                onChange={(ownIdolMembers) => {
+                  handleOwnMemberSelection(ownIdolMembers);
+                }}
+              />
+            )}
           </div>
           <div id="card-input">
             <h3>포토카드 종류</h3>
             <TypeDropdown
-              style={{ border: "2px solid hotpink" }}
               onChange={(type) => {
                 handleTypeChange(type);
               }}
@@ -275,6 +232,7 @@ const PostWrite = () => {
               variant="contained"
               color="primary"
               onClick={handlePostClick}
+              style={{ marginRight: "10px" }}
             >
               게시글 등록
             </Button>

@@ -26,7 +26,9 @@ const MemberDropdown2 = ({
     if (selectedGroup) {
       getIdolMember(
         selectedGroup.idolGroupId,
-        (data) => setMemberItems(data.data),
+        (data) => {
+          setMemberItems(data.data);
+        },
         (error) => console.error("멤버 세팅 오류:", error)
       );
     }
@@ -39,7 +41,9 @@ const MemberDropdown2 = ({
       size="small"
       id="member-dropdown"
       options={memberItems}
-      // isOptionEqualToValue={(option, value) => option.idolMemberId === value.idolMemberId}
+      isOptionEqualToValue={(option, value) =>
+        option.idolMemberId === value.idolMemberId
+      }
       getOptionLabel={(option) => option.idolName}
       sx={{
         width: isProfile ? "50vw" : "100%",
@@ -47,15 +51,20 @@ const MemberDropdown2 = ({
       noOptionsText={
         selectedGroup ? "해당 멤버가 없습니다" : "그룹을 선택해주세요"
       }
-      renderOption={(props, option) => (
-        <Box
-          component="li"
-          sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
-          {...props}
-        >
-          {option.idolName}
-        </Box>
-      )}
+      renderOption={(props, option) => {
+        const { key, ...restProps } = props;
+        const { idolName } = option;
+        return (
+          <Box
+            component="li"
+            key={idolName}
+            sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
+            {...restProps}
+          >
+            {idolName}
+          </Box>
+        );
+      }}
       renderInput={(params) => (
         <TextField
           {...params}

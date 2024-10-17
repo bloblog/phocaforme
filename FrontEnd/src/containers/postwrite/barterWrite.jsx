@@ -1,16 +1,11 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
 import GroupDropdown from "@/components/Dropdown/GroupDropdown2.jsx";
 import MemberDropdown from "@/components/Dropdown/MemberDropdown2.jsx";
 
 import Chip from "@mui/material/Chip";
 
-const BarterWrite = ({ defaultGroup, onChange }) => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
+const BarterWrite = ({ defaultGroup, isFilled, onChange }) => {
   const [selectedGroup, setSelectedGroup] = useState(defaultGroup);
 
   const handleGroupChange = (group) => {

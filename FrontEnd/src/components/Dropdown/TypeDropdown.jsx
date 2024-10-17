@@ -20,35 +20,40 @@ const TypeDropdown = ({ defaultCardType, onChange }) => {
   };
 
   return (
-      <Autocomplete
-        value={value}
-        onChange={handleChange}
-        size="small"
-        id="card-type-dropdown"
-        options={TypeItems}
-        isOptionEqualToValue={(option, value) => option.value === value.value}
-        sx={{ width: "100%"}}
-        noOptionsText="해당 분류가 없습니다"
-        renderOption={(props, option) => (
+    <Autocomplete
+      value={value}
+      onChange={handleChange}
+      size="small"
+      id="card-type-dropdown"
+      options={TypeItems}
+      isOptionEqualToValue={(option, value) => option.value === value.value}
+      sx={{ width: "100%" }}
+      noOptionsText="해당 분류가 없습니다"
+      renderOption={(props, option) => {
+        const { key, ...restProps } = props;
+        const { label } = option;
+        return (
           <Box
             component="li"
+            key={label}
             sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
-            {...props}
+            {...restProps}
           >
-            {option.label}
+            {label}
           </Box>
-        )}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="outlined"
-            fullWidth
-            InputProps={{
-              ...params.InputProps,
-            }}
-          />
-        )}
-      />
+        );
+      }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          variant="outlined"
+          fullWidth
+          InputProps={{
+            ...params.InputProps,
+          }}
+        />
+      )}
+    />
   );
 };
 
