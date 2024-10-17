@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Box, TextField, Autocomplete } from "@mui/material";
 import { getIdolGroup } from "@/api/idolinfo";
 
-const GroupDropdown2 = ({ groupId, isProfile, onChange }) => {
+const GroupDropdown2 = ({ isModify, groupId, isProfile, onChange }) => {
   const [groupItems, setGroupItems] = useState([]);
   const [value, setValue] = useState(null);
 
@@ -28,6 +28,7 @@ const GroupDropdown2 = ({ groupId, isProfile, onChange }) => {
 
   return (
     <Autocomplete
+      disabled={isModify}
       value={value}
       onChange={handleChange}
       size="small"

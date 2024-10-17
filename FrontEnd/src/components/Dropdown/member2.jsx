@@ -10,7 +10,12 @@ const MemberDropdown2 = ({
   defaultMember,
   onChange,
 }) => {
-  const [value, setValue] = useState(defaultMember);
+  const [value, setValue] = useState([]);
+
+  useEffect(() => {
+    console.log(defaultMember);
+    setValue(defaultMember);
+  }, [defaultMember]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -25,7 +30,7 @@ const MemberDropdown2 = ({
 
     if (selectedGroup) {
       getIdolMember(
-        selectedGroup.idolGroupId,
+        selectedGroup,
         (data) => {
           setMemberItems(data.data);
         },

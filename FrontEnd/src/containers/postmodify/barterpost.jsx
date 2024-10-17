@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -13,11 +13,15 @@ const BarterModify = ({
   defaultTargetMember,
   onChange,
 }) => {
-  const [selectedGroup, setSelectedGroup] = useState(groupId);
+  const [selectedGroup, setSelectedGroup] = useState(0);
+  const [selectedOwnMember, setSelectedOwnMember] = useState([]);
+  const [selectedFindMember, setSelectedFindMember] = useState([]);
 
-  // const handleGroupChange = (group) => {
-  //   setSelectedGroup(group || { value: "", label: "", avatarSrc: "" });
-  // };
+  useEffect(() => {
+    setSelectedGroup(groupId);
+    setSelectedOwnMember(defaultOwnMember);
+    setSelectedFindMember(defaultTargetMember);
+  }, [groupId, defaultOwnMember, defaultTargetMember]);
 
   const [ownMembers, setOwnMembers] = useState([]);
   const [targetMembers, setTargetMembers] = useState([]);
@@ -60,63 +64,57 @@ const BarterModify = ({
     <div>
       <div id="group-input" className="search-box-group">
         <h3>그룹명</h3>
-        <GroupDropdown
-          groupId={groupId}
-          onChange={(group) => {
-            handleGroupChange(group);
-          }}
-        />
+        <GroupDropdown isModify={true} groupId={selectedGroup} />
       </div>
       <div id="member-input">
         <div id="own-member-dropdown">
           <h3>보유한 멤버</h3>
           <MemberDropdown
-            selectedGroup={groupId}
+            defaultMember={selectedOwnMember}
+            selectedGroup={selectedGroup}
             onChange={(member) => {
               handleOwnMemberChange(member);
             }}
           />
           <div>
-            {ownMembers &&
-              ownMembers.map((tag, index) => (
-                <Chip
-                  key={index}
-                  label={tag?.idolName}
-                  variant="outlined"
-                  onClick={() => handleOwnMemberDelete(tag)}
-                  onDelete={() => handleOwnMemberDelete(tag)}
-                  style={{
-                    margin: "4px",
-                    border: 0,
-                  }}
-                />
-              ))}
+            {selectedOwnMember.map((tag, index) => (
+              <Chip
+                key={index}
+                label={tag?.name}
+                variant="outlined"
+                onClick={() => handleOwnMemberDelete(tag)}
+                onDelete={() => handleOwnMemberDelete(tag)}
+                style={{
+                  margin: "4px",
+                  border: 0,
+                }}
+              />
+            ))}
           </div>
         </div>
         <div>
           <h3>찾는 멤버</h3>
           <MemberDropdown
-            selectedGroup={groupId}
-            defaultMember={defaultTargetMember.map((member) => member.idolName)}
+            selectedGroup={selectedGroup}
+            defaultMember={selectedFindMember}
             onChange={(member) => {
               handleTargetMemberChange(member);
             }}
           />
           <div>
-            {targetMembers &&
-              targetMembers.map((tag) => (
-                <Chip
-                  key={tag.id}
-                  label={tag?.idolName}
-                  variant="outlined"
-                  onClick={() => handleTargetMemberDelete(tag)}
-                  onDelete={() => handleTargetMemberDelete(tag)}
-                  style={{
-                    margin: "4px",
-                    border: 0,
-                  }}
-                />
-              ))}
+            {selectedFindMember.map((tag) => (
+              <Chip
+                key={tag.id}
+                label={tag?.name}
+                variant="outlined"
+                onClick={() => handleTargetMemberDelete(tag)}
+                onDelete={() => handleTargetMemberDelete(tag)}
+                style={{
+                  margin: "4px",
+                  border: 0,
+                }}
+              />
+            ))}
           </div>
         </div>
       </div>
