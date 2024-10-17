@@ -55,6 +55,7 @@ const App = () => {
           <NavBar />
           <Routes>
             <Route path="/" element={<Main />} />
+            <Route path="/" element={<Alarm />} />
             <Route path="/main" element={<Main />} />
             <Route path="/alarm" element={<Alarm />} />
             <Route path="/chat" element={<Chat />} />
