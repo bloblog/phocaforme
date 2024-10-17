@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import GroupDropdown from "@/components/Dropdown/group2.jsx";
-import MemberDropdown from "@/components/Dropdown/MemberDropdown2.jsx";
+import MemberDropdown from "@/components/Dropdown/member2.jsx";
 
 import Chip from "@mui/material/Chip";
 

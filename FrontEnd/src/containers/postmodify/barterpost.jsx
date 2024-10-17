@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Chip from "@mui/material/Chip";
 
 import GroupDropdown from "@/components/Dropdown/group2.jsx";
-import MemberDropdown from "@/components/Dropdown/MemberDropdown2.jsx";
+import MemberDropdown from "@/components/Dropdown/member2.jsx";
 
 const BarterModify = ({
   groupId,
@@ -61,18 +61,17 @@ const BarterModify = ({
       <div id="group-input" className="search-box-group">
         <h3>그룹명</h3>
         <GroupDropdown
-          groupId={selectedGroup}
+          groupId={groupId}
           onChange={(group) => {
             handleGroupChange(group);
           }}
-          stlye={{ width: "24rem !important" }}
         />
       </div>
       <div id="member-input">
         <div id="own-member-dropdown">
           <h3>보유한 멤버</h3>
           <MemberDropdown
-            selectedGroup={selectedGroup}
+            selectedGroup={groupId}
             onChange={(member) => {
               handleOwnMemberChange(member);
             }}
@@ -97,7 +96,7 @@ const BarterModify = ({
         <div>
           <h3>찾는 멤버</h3>
           <MemberDropdown
-            selectedGroup={selectedGroup}
+            selectedGroup={groupId}
             defaultMember={defaultTargetMember.map((member) => member.idolName)}
             onChange={(member) => {
               handleTargetMemberChange(member);

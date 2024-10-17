@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Chip from "@mui/material/Chip";
 
 import GroupDropdown from "@/components/Dropdown/group.jsx";
-import MemberDropdown from "@/components/Dropdown/MemberDropdown.jsx";
+import MemberDropdown from "@/components/Dropdown/member.jsx";
 
 const SellWrite = ({ onChange }) => {
   const dispatch = useDispatch();

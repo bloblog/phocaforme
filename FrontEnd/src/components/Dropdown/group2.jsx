@@ -9,14 +9,17 @@ const GroupDropdown2 = ({ groupId, isProfile, onChange }) => {
   const [value, setValue] = useState(null);
 
   useEffect(() => {
-    getIdolGroup(
-      (data) => {
-        setGroupItems(data.data);
-        // setValue(data.data[groupId - 1]);
-      },
-      (error) => console.error("그룹 세팅 오류:", error)
-    );
-  }, []);
+    if (groupId != 0) {
+      getIdolGroup(
+        (data) => {
+          setGroupItems(data.data);
+          setValue(data.data[groupId - 1]);
+          console.log(data.data[groupId - 1]);
+        },
+        (error) => console.error("그룹 세팅 오류:", error)
+      );
+    }
+  }, [groupId]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
