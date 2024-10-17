@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
-import PayModal from "@/components/Modal/PayRequestModal";
+import PayModal from "@/components/Modal/PayRequest";
 import { updateChatState } from "../../api/chat";
 
 const ChatMenu = ({ otherNickname, updateMessages, postId }) => {

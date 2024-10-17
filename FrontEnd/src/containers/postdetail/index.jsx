@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import { openChatRoom } from "../../api/chat";
 import { deletePost, getPost, pullupPost } from "../../api/post";
+import NeedLogin from "../../components/Modal/NeedLogin";
 
 const DetailPost = () => {
   const navigate = useNavigate();
@@ -23,6 +24,8 @@ const DetailPost = () => {
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const user = useSelector((state) => state.user.user);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -30,6 +33,14 @@ const DetailPost = () => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleModalOpen = () => {
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
   };
 
   // 디테일 페이지에 진입했을 때 로컬스토리지에 저장
@@ -88,19 +99,24 @@ const DetailPost = () => {
     post && currentUser && currentUser.userId === post.userId;
 
   const handleChatClick = () => {
-    // 채팅방 생성
-    openChatRoom(
-      id,
-      (data) => {
-        navigate(`/chatroom/${data.data.chatRoomId}`, {
-          state: data.data,
-        });
-      },
-      (error) => {
-        // 요청 실패 시 에러 처리
-        console.error("Error Open ChatRoom:", error);
-      }
-    );
+    // 로그인 안했으면 쳐내
+    if (user.userId == null) {
+      setModalOpen(true);
+    } else {
+      // 채팅방 생성
+      openChatRoom(
+        id,
+        (data) => {
+          navigate(`/chatroom/${data.data.chatRoomId}`, {
+            state: data.data,
+          });
+        },
+        (error) => {
+          // 요청 실패 시 에러 처리
+          console.error("Error Open ChatRoom:", error);
+        }
+      );
+    }
   };
 
   //수정
@@ -298,6 +314,11 @@ const DetailPost = () => {
             </Button>
           </div>
         )}
+        <NeedLogin handleModalClose={handleModalClose} modalOpen={modalOpen} />
+
+        {/* <Dialog onClose={handleModalClose} open={modalOpen} maxWidth={false}>
+          <DialogContent>로그인필요</DialogContent>
+        </Dialog> */}
       </div>
     </Container>
   );

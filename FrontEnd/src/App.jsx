@@ -22,7 +22,7 @@ import theme from "@/styles/theme.jsx";
 import { ThemeProvider } from "@mui/material/styles";
 
 import store from "@/store/index.jsx";
-import NotificationModal from "@/components/Modal/NotificationModal.jsx";
+import NotificationModal from "@/components/Modal/Notification.jsx";
 // import '@/firebase-messaging.js';
 
 const ScrollToTop = () => {
