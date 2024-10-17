@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Dialog, DialogContent } from "@mui/material";
 import PostCaution from "@/components/PostCaution";
-
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import {
   Container,
   ImageList,
@@ -101,7 +101,7 @@ const DetailPost = () => {
   const handleChatClick = () => {
     // 로그인 안했으면 쳐내
     if (user.userId == null) {
-      setModalOpen(true);
+      handleModalOpen();
     } else {
       // 채팅방 생성
       openChatRoom(
@@ -184,6 +184,12 @@ const DetailPost = () => {
         </div>
       )} */}
       <div>
+        <Chip
+          onClick={() => navigate("/mainpost")}
+          id="move-button"
+          label="← 목록으로"
+          size="medium"
+        ></Chip>
         <div id="post-title-container">
           <h2>{post.title}</h2>
         </div>
