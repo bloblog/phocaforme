@@ -3,4 +3,3 @@ const Redirect_URI = "https://localhost:3000/main";
 
 export const KAKAO_AUTH_URL =
   import.meta.env.VITE_APP_LOGIN_API_URL + `oauth2/authorization/kakao`;
-// export const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${Client_id}&redirect_uri=${Redirect_URI}&response_type=code`

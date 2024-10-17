@@ -1,13 +1,15 @@
 import "./index.css";
-import { Button, Dialog, DialogContent } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { Dialog, DialogContent } from "@mui/material";
 import kakaoLogin from "@/assets/images/kakao_login.png";
 
 import { KAKAO_AUTH_URL } from "@/containers/login/OAuth";
 
 const NeedLogin = ({ handleModalClose, modalOpen }) => {
-  const navigate = useNavigate();
+  const location = useLocation();
   const handleLogin = () => {
+    // 로그인 후 돌아올 현재 위치 저장
+    sessionStorage.setItem("redirectPath", location.pathname);
     handleModalClose();
     window.location.href = KAKAO_AUTH_URL;
   };
