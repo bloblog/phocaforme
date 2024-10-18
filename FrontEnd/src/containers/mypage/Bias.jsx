@@ -16,15 +16,16 @@ const Bias = () => {
 
   const user = useSelector((state) => state.user.user);
 
-  const [selectedGroup, setSelectedGroup] = useState(user.defalutGroup);
-  const [selectedMember, setSelectedMember] = useState(user.defalutMember);
+  const [selectedGroup, setSelectedGroup] = useState(0);
+  const [selectedMember, setSelectedMember] = useState(0);
   const [imageUrl, setImageUrl] = useState(null);
 
-  // useEffect 해서 렌더링할 때 최애 정보 들고와라
   useEffect(() => {
     if (getCookie("profile")) {
       getBias(
         (data) => {
+          setSelectedGroup(data.data.idolGroupId);
+          setSelectedMember(data.data.idolMemberId);
           setImageUrl(data.data.idolImage);
         },
         (error) => {
@@ -78,6 +79,7 @@ const Bias = () => {
           <div className="bias-title">그룹명</div>
           <div>
             <GroupDropdown
+              groupId={selectedGroup}
               isProfile={true}
               onChange={(group) => {
                 handleGroupChange(group);
@@ -90,7 +92,8 @@ const Bias = () => {
           <div>
             <MemberDropdown
               isProfile={true}
-              selectedGroup={selectedGroup}
+              defaultGroup={selectedGroup}
+              defaultMember={selectedMember}
               onChange={(member) => {
                 handleMemberChange(member);
               }}

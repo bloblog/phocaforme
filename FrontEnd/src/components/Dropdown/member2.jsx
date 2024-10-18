@@ -1,91 +1,53 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-
-import { Box, TextField, Autocomplete } from "@mui/material";
-import { getIdolMember } from "../../api/idolinfo";
+import { getIdolMember } from "@/api/idolinfo";
+import Dropdown from "./index";
 
 const MemberDropdown2 = ({
   isProfile,
-  selectedGroup,
+  defaultGroup,
   defaultMember,
   onChange,
 }) => {
-  const [value, setValue] = useState([]);
+  const [value, setValue] = useState(null);
+  const [selectedGroup, setSelectedGroup] = useState(0);
+  const [selectedMember, setSelectedMember] = useState(0);
+  const [memberItems, setMemberItems] = useState([]);
 
   useEffect(() => {
-    console.log(defaultMember);
-    setValue(defaultMember);
-  }, [defaultMember]);
+    setSelectedGroup(defaultGroup);
+    setSelectedMember(defaultMember);
+
+    if (defaultGroup) {
+      getIdolMember(
+        defaultGroup,
+        (data) => {
+          setMemberItems(data.data);
+          const member = data.data.find(
+            (item) => item.idolMemberId === defaultMember
+          );
+          setValue(member || null);
+        },
+        (error) => console.error("멤버 세팅 오류:", error)
+      );
+    }
+  }, [defaultMember, defaultGroup]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
     onChange(newValue);
   };
 
-  const [memberItems, setMemberItems] = useState([]);
-
-  useEffect(() => {
-    setValue(null);
-    onChange(null);
-
-    if (selectedGroup) {
-      getIdolMember(
-        selectedGroup,
-        (data) => {
-          setMemberItems(data.data);
-        },
-        (error) => console.error("멤버 세팅 오류:", error)
-      );
-    }
-  }, [selectedGroup]);
-
   return (
-    <Autocomplete
+    <Dropdown
+      type={"member"}
+      id={"member-dropdown"}
       value={value}
+      option={memberItems}
       onChange={handleChange}
-      size="small"
-      id="member-dropdown"
-      options={memberItems}
-      isOptionEqualToValue={(option, value) =>
-        option.idolMemberId === value.idolMemberId
-      }
-      getOptionLabel={(option) => option.idolName}
       sx={{
         width: isProfile ? "50vw" : "100%",
       }}
-      noOptionsText={
-        selectedGroup ? "해당 멤버가 없습니다" : "그룹을 선택해주세요"
-      }
-      renderOption={(props, option) => {
-        const { key, ...restProps } = props;
-        const { idolName } = option;
-        return (
-          <Box
-            component="li"
-            key={idolName}
-            sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
-            {...restProps}
-          >
-            {idolName}
-          </Box>
-        );
-      }}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          variant="outlined"
-          fullWidth
-          placeholder="선택하세요"
-          InputProps={{
-            ...params.InputProps,
-            startAdornment: (
-              <React.Fragment>
-                {params.InputProps.startAdornment}
-              </React.Fragment>
-            ),
-          }}
-        />
-      )}
     />
   );
 };

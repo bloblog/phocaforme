@@ -1,18 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import GroupDropdown from "@/components/Dropdown/group2.jsx";
+import GroupDropdown from "@/components/Dropdown/group.jsx";
 import MemberDropdown from "@/components/Dropdown/member2.jsx";
 
 import Chip from "@mui/material/Chip";
 
 const BarterWrite = ({ defaultGroup, isFilled, onChange }) => {
-  const [selectedGroup, setSelectedGroup] = useState(defaultGroup);
+  const [selectedGroup, setSelectedGroup] = useState(0);
+
+  useEffect(() => {
+    setSelectedGroup(defaultGroup);
+  }, [defaultGroup]);
 
   const handleGroupChange = (group) => {
     if (group) {
-      setSelectedGroup(group);
+      setSelectedGroup(group.idolGroupId);
     } else {
-      setSelectedGroup(null);
+      setSelectedGroup(0);
     }
     // 그룹이 변경되었을 때 멤버와 입력값 초기화
     setOwnMembers([]);
@@ -64,6 +68,7 @@ const BarterWrite = ({ defaultGroup, isFilled, onChange }) => {
       <div id="group-input" className="search-box-group">
         <h3>그룹명</h3>
         <GroupDropdown
+          groupId={selectedGroup}
           onChange={(group) => {
             handleGroupChange(group);
           }}
@@ -73,7 +78,7 @@ const BarterWrite = ({ defaultGroup, isFilled, onChange }) => {
         <div id="own-member-dropdown">
           <h3>보유한 멤버</h3>
           <MemberDropdown
-            selectedGroup={selectedGroup}
+            defaultGroup={selectedGroup}
             onChange={(member) => {
               handleOwnMemberChange(member);
             }}
@@ -98,7 +103,7 @@ const BarterWrite = ({ defaultGroup, isFilled, onChange }) => {
         <div id="target-member-dropdown">
           <h3>찾는 멤버</h3>
           <MemberDropdown
-            selectedGroup={selectedGroup}
+            defaultGroup={selectedGroup}
             onChange={(member) => {
               handleTargetMemberChange(member);
             }}

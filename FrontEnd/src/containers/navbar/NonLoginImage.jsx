@@ -15,6 +15,7 @@ import {
 
 import NonLoginImg from "@/assets/images/nonlogin.PNG";
 import kakao from "@/assets/images/kakao_login.png";
+import { KAKAO_AUTH_URL } from "@/containers/login/OAuth";
 
 const NonLoginIcon = () => {
   const theme = useTheme();
@@ -39,9 +40,14 @@ const NonLoginIcon = () => {
   const user = useSelector((state) => state.user.user);
 
   const GotoLogin = () => {
-    console.log(user);
     setAnchorElUser(null); // 메뉴 닫기
     navigate("/login");
+  };
+
+  // 따로 로그인 페이지 가지 말고 그냥 카카오 로그인으로 보내버림
+  const loginHandler = () => {
+    setAnchorElUser(null); // 메뉴 닫기
+    window.location.href = KAKAO_AUTH_URL;
   };
 
   return (
@@ -76,7 +82,7 @@ const NonLoginIcon = () => {
             <img
               id="kakao-button"
               src={kakao}
-              onClick={GotoLogin}
+              onClick={loginHandler}
               style={{
                 display: "block",
                 width: "8rem",

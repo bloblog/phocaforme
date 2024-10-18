@@ -12,14 +12,13 @@ const MemberDropdown = ({
   onChange,
 }) => {
   const [value, setValue] = useState(defaultMember);
+  const [memberItems, setMemberItems] = useState([]);
 
   const handleChange = (event, newValue) => {
     const selectedMember = newValue ? newValue : null;
     setValue(newValue);
     onChange(selectedMember);
   };
-
-  const [memberItems, setMemberItems] = useState([]);
 
   useEffect(() => {
     setValue(null);

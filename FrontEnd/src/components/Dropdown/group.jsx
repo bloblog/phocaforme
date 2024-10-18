@@ -1,15 +1,17 @@
 // 게시물 생성용
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { Box, TextField, Autocomplete } from "@mui/material";
 import { getIdolGroup } from "@/api/idolinfo";
+import Dropdown from "./index";
 
 const GroupDropdown = ({ isProfile, defaultGroup, onChange }) => {
   const [groupItems, setGroupItems] = useState([]);
 
   useEffect(() => {
     getIdolGroup(
-      (data) => setGroupItems(data.data),
+      (data) => {
+        setGroupItems(data.data);
+      },
       (error) => console.error("그룹 세팅 오류:", error)
     );
   }, []);
@@ -23,47 +25,12 @@ const GroupDropdown = ({ isProfile, defaultGroup, onChange }) => {
 
   return (
     <div>
-      <Autocomplete
+      <Dropdown
+        type={"group"}
+        id={"group-dropdown"}
         value={value}
+        option={groupItems}
         onChange={handleChange}
-        size="small"
-        id="group-dropdown"
-        options={groupItems}
-        getOptionLabel={(option) =>
-          `${option.idolGroupNameKr} (${option.idolGroupNameEng})`
-        }
-        // isOptionEqualToValue={(option) => option.idolGroupNameKr}
-
-        // 검색이랑 모양 똑같이 할거면 스타일 밑에걸로
-        sx={{
-          width: isProfile ? "12rem" : "80vw",
-        }}
-        noOptionsText="해당 그룹이 없습니다"
-        renderOption={(props, option) => (
-          <Box
-            component="li"
-            sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
-            {...props}
-          >
-            {`${option.idolGroupNameKr} (${option.idolGroupNameEng})`}
-          </Box>
-        )}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="outlined"
-            fullWidth
-            placeholder="선택하세요"
-            InputProps={{
-              ...params.InputProps,
-              startAdornment: (
-                <React.Fragment>
-                  {params.InputProps.startAdornment}
-                </React.Fragment>
-              ),
-            }}
-          />
-        )}
       />
     </div>
   );

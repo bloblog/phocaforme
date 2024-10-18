@@ -9,9 +9,14 @@ import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import BarterWrite from "./BarterWrite.jsx";
 import TypeDropdown from "@/components/Dropdown/type.jsx";
 import { addPostApi } from "@/api/post.jsx";
+import Input from "@/components/Input/index.jsx";
+import SoloButton from "@/components/Button/solo.jsx";
+import BasicModal from "../../components/Modal/index.jsx";
 
 const PostWrite = () => {
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+
   const [images, setImages] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [title, setTitle] = useState("");
@@ -20,7 +25,6 @@ const PostWrite = () => {
   const [findIdolMembers, setfindIdolMembers] = useState([]);
   const [cardType, setCardType] = useState("");
   const [content, setContent] = useState("");
-  const [open, setOpen] = useState(false);
 
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
@@ -73,7 +77,8 @@ const PostWrite = () => {
 
   // 그룹
   const handleSelectedGroupChange = (group) => {
-    setSelectedGroup(group.idolGroupId);
+    console.log(group);
+    setSelectedGroup(group);
   };
 
   // 멤버
@@ -87,7 +92,7 @@ const PostWrite = () => {
 
   // 카드 종류
   const handleTypeChange = (cardType) => {
-    setCardType(cardType.value);
+    setCardType(cardType);
   };
 
   // 내용
@@ -187,19 +192,11 @@ const PostWrite = () => {
 
   return (
     <Container>
-      <Dialog
-        id="warn-modal-container"
-        onClose={handleClose}
+      <BasicModal
+        handleClose={handleClose}
         open={open}
-        maxWidth={false}
-      >
-        <DialogContent id="warn-modal">
-          <div>모든 항목은 필수 입력 사항입니다!</div>
-          <Button onClick={handleClose} color="warning" variant="contained">
-            확인
-          </Button>
-        </DialogContent>
-      </Dialog>
+        content={"모든 항목은 필수 입력 사항입니다!"}
+      />
       <h2 className="write-title">게시글 작성하기</h2>
       <div className="write-container-wrapper">
         <div
@@ -232,13 +229,14 @@ const PostWrite = () => {
           </div>
           <div id="title-container">
             <h3 style={{ margin: "0" }}>제목</h3>
-            <input
-              id="title-input"
-              value={title}
-              onChange={handleTitleChange}
-              variant="outlined"
-              placeholder="키워드를 입력하세요 (앨범명, 버전명 등)"
-            />
+            <div>
+              <Input
+                id={"title-input"}
+                value={title}
+                onChange={handleTitleChange}
+                placeholder={"키워드를 입력하세요 (앨범명, 버전명 등)"}
+              />
+            </div>
           </div>
 
           <div id="group-member-input">
@@ -253,7 +251,6 @@ const PostWrite = () => {
           <div id="card-input">
             <h3>포토카드 종류</h3>
             <TypeDropdown
-              style={{ border: "2px solid hotpink" }}
               onChange={(type) => {
                 handleTypeChange(type);
               }}

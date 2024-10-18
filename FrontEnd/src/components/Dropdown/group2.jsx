@@ -3,22 +3,22 @@ import { useState, useEffect } from "react";
 
 import { Box, TextField, Autocomplete } from "@mui/material";
 import { getIdolGroup } from "@/api/idolinfo";
+import { useDispatch } from "react-redux";
 
 const GroupDropdown2 = ({ isModify, groupId, isProfile, onChange }) => {
   const [groupItems, setGroupItems] = useState([]);
   const [value, setValue] = useState(null);
 
   useEffect(() => {
-    if (groupId != 0) {
-      getIdolGroup(
-        (data) => {
-          setGroupItems(data.data);
+    getIdolGroup(
+      (data) => {
+        setGroupItems(data.data);
+        if (groupId != 0) {
           setValue(data.data[groupId - 1]);
-          console.log(data.data[groupId - 1]);
-        },
-        (error) => console.error("그룹 세팅 오류:", error)
-      );
-    }
+        }
+      },
+      (error) => console.error("그룹 세팅 오류:", error)
+    );
   }, [groupId]);
 
   const handleChange = (event, newValue) => {

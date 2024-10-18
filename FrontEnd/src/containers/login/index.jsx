@@ -8,8 +8,6 @@ import icon from "@/assets/images/icon.PNG";
 import kakao from "@/assets/images/kakao_login.png";
 
 const LoginPage = () => {
-  const navigate = useNavigate();
-
   const loginHandler = () => {
     window.location.href = KAKAO_AUTH_URL;
   };
