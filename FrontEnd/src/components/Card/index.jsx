@@ -28,6 +28,7 @@ const CustomCard = (props) => {
   const navigate = useNavigate();
 
   const [expanded, setExpanded] = React.useState(false);
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
