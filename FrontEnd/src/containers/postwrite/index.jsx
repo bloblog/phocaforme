@@ -2,7 +2,7 @@ import "./index.css";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Container, Button, CircularProgress } from "@mui/material";
+import { Container, CircularProgress } from "@mui/material";
 
 import BarterWrite from "./BarterWrite.jsx";
 import { addPostApi } from "@/api/post.jsx";

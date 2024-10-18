@@ -1,6 +1,6 @@
 import { Autocomplete, Box, TextField } from "@mui/material";
 
-const Dropdown = ({ type, id, value, option, onChange, sx }) => {
+const Dropdown = ({ disable, type, id, value, option, onChange, sx }) => {
   const isOptionEqualToValue = () => {
     if (type == "type") {
       return (option, value) => {
@@ -11,7 +11,7 @@ const Dropdown = ({ type, id, value, option, onChange, sx }) => {
     if (type == "group") {
       return (option, value) => {
         if (value == 0) return false;
-        return option.idolGroupId == value;
+        return option.idolGroupId == value.idolGroupId;
       };
     }
     if (type == "member") {
@@ -48,6 +48,7 @@ const Dropdown = ({ type, id, value, option, onChange, sx }) => {
 
   return (
     <Autocomplete
+      disabled={disable}
       style={sx}
       id={id}
       value={value ?? null}

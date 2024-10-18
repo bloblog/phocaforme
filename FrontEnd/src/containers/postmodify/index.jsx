@@ -1,10 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  useParams,
-  useNavigate,
-  useLocation,
-  useFetcher,
-} from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Container, Button } from "@mui/material";
 import BarterModify from "./barterpost.jsx";
 import AddIcon from "@mui/icons-material/Add";

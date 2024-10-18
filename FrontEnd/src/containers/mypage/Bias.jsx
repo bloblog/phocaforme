@@ -7,7 +7,7 @@ import { setBias } from "@/store/loginUser";
 
 import { Avatar, Button } from "@mui/material";
 
-import GroupDropdown from "@/components/Dropdown/group2";
+import GroupDropdown from "@/components/Dropdown/group";
 import MemberDropdown from "@/components/Dropdown/member2";
 import { addBias, getBias } from "../../api/user";
 

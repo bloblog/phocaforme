@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
 import Chip from "@mui/material/Chip";
 
-import GroupDropdown from "@/components/Dropdown/group2.jsx";
+import GroupDropdown from "@/components/Dropdown/group.jsx";
 import MemberDropdown from "@/components/Dropdown/member2.jsx";
 
 const BarterModify = ({
@@ -64,7 +62,7 @@ const BarterModify = ({
     <div>
       <div id="group-input" className="search-box-group">
         <h3>그룹명</h3>
-        <GroupDropdown isModify={true} groupId={selectedGroup} />
+        <GroupDropdown isModify={true} defaultGroup={selectedGroup} />
       </div>
       <div id="member-input">
         <div id="own-member-dropdown">
