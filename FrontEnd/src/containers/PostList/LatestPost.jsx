@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Typography, Box, ImageList } from "@mui/material";
 
-import Card from "@/components/Card";
+import Card from "@/components/Card/index";
 import { CustomTabs, CustomTabPanel } from "@/components/Tab/index";
 
 const LatestPost = () => {

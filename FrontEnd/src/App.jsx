@@ -16,7 +16,7 @@ import Modify from "@/pages/postmodify/[postId]/page.jsx";
 import DetailPost from "@/pages/postdetail/[postId]/page";
 import MainPost from "@/containers/postList/index";
 import NavBar from "@/containers/navBar/index.jsx";
-import FloatingActionButtons from "@/components/FloatingActionButtons.jsx";
+import FloatingActionButtons from "@/components/Button/floating.jsx";
 
 import theme from "@/styles/theme.jsx";
 import { ThemeProvider } from "@mui/material/styles";

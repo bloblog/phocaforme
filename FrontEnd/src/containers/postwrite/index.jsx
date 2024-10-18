@@ -1,17 +1,19 @@
 import "./index.css";
-import React, { useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Dialog, DialogContent } from "@mui/material";
 
 import { Container, Button, CircularProgress } from "@mui/material";
-import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 
 import BarterWrite from "./BarterWrite.jsx";
-import TypeDropdown from "@/components/Dropdown/type.jsx";
 import { addPostApi } from "@/api/post.jsx";
+
+import TypeDropdown from "@/components/Dropdown/type.jsx";
 import Input from "@/components/Input/index.jsx";
-import SoloButton from "@/components/Button/solo.jsx";
-import BasicModal from "../../components/Modal/index.jsx";
+import BasicModal from "@/components/Modal/index.jsx";
+import ImageInput from "@/components/Input/image.jsx";
+import isComplete from "../../utils/isComplete.jsx";
+import makeFormData from "../../utils/makeFormData.jsx";
+import PairButton from "../../components/Button/pair.jsx";
 
 const PostWrite = () => {
   const [loading, setLoading] = useState(false);
@@ -27,7 +29,7 @@ const PostWrite = () => {
   const [content, setContent] = useState("");
 
   const navigate = useNavigate();
-  const fileInputRef = useRef(null);
+  const imageContainerRef = useRef(null); // image-container 참조
 
   // 제목
   const handleTitleChange = (event) => {
@@ -35,10 +37,6 @@ const PostWrite = () => {
   };
 
   // 이미지
-  const handleImageAdd = () => {
-    fileInputRef.current.click();
-  };
-
   const handleImageDelete = (index) => {
     setImages((prevImages) => {
       const newImages = [...prevImages];
@@ -52,6 +50,13 @@ const PostWrite = () => {
       return newImagePreviews;
     });
   };
+
+  useEffect(() => {
+    if (imageContainerRef.current) {
+      imageContainerRef.current.scrollLeft =
+        imageContainerRef.current.scrollWidth;
+    }
+  }, [imagePreviews]);
 
   const handleImageChange = (event) => {
     const files = event.target.files;
@@ -100,61 +105,20 @@ const PostWrite = () => {
     setContent(event.target.value);
   };
 
-  // 모든 항목 다 차있나 검사
-  // 이미지 안 들어있으면?
-  const isComplete = (post) => {
-    const notCompleted = [];
-    if (post.get("title") == null) {
-      notCompleted.push("title");
-    }
-    if (post.get("groupId") == 0) {
-      notCompleted.push("groupId");
-    }
-    if (
-      post.get("ownIdolMembers") == null ||
-      post.get("ownIdolMembers").length == 0
-    ) {
-      notCompleted.push("ownIdolMembers");
-    }
-    if (
-      post.get("findIdolMembers") == null ||
-      post.get("findIdolMembers").length == 0
-    ) {
-      notCompleted.push("findIdolMembers");
-    }
-    if (post.get("cardType") == "") {
-      notCompleted.push("cardType");
-    }
-    if (post.get("content").trim() == "") {
-      notCompleted.push("content");
-    }
-    return notCompleted;
-  };
-
   // 게시글 작성
   const handlePostClick = () => {
     setLoading(true);
+
     // 새로운 게시물 객체 생성
-    const newPost = new FormData();
-
-    images.forEach((image) => {
-      newPost.append(`photos`, image);
-    });
-    newPost.append("title", title);
-    newPost.append("groupId", selectedGroup);
-
-    ownIdolMembers.forEach((member) => {
-      newPost.append("ownIdolMembers", member.idolMemberId);
-    });
-
-    findIdolMembers.forEach((member) => {
-      newPost.append("findIdolMembers", member.idolMemberId);
-    });
-
-    newPost.append("cardType", cardType);
-
-    const encodedContent = encodeURIComponent(content);
-    newPost.append("content", encodedContent);
+    const newPost = makeFormData(
+      images,
+      title,
+      selectedGroup,
+      ownIdolMembers,
+      findIdolMembers,
+      cardType,
+      content
+    );
 
     // 안 채워진 항목 쳐내기
     const state = isComplete(newPost);
@@ -202,31 +166,19 @@ const PostWrite = () => {
         <div
           className={loading ? "write-container loading" : "write-container"}
         >
-          <div id="image-input">
-            <div id="image-list">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                style={{ display: "none" }}
-                ref={fileInputRef}
-                multiple
-              />
-              <div id="image-add-button" onClick={handleImageAdd}>
-                <PhotoCameraIcon id="image-add-icon" />
-              </div>
-              {imagePreviews &&
-                imagePreviews.map((preview, index) => (
-                  <div
-                    className="img-preview"
-                    key={index}
-                    style={{ backgroundImage: `url(${preview})` }}
-                    onClick={() => handleImageDelete(index)}
-                  ></div>
-                ))}
-            </div>
-            <p className="info-msg">* 사진 클릭 시 삭제됩니다.</p>
+          <div id="image-container" ref={imageContainerRef}>
+            {imagePreviews &&
+              imagePreviews.map((preview, index) => (
+                <div
+                  className="img-preview"
+                  key={index}
+                  style={{ backgroundImage: `url(${preview})` }}
+                  onClick={() => handleImageDelete(index)}
+                ></div>
+              ))}
+            <ImageInput onChange={handleImageChange} />
           </div>
+          <p className="info-msg">* 사진 클릭 시 삭제됩니다.</p>
           <div id="title-container">
             <h3 style={{ margin: "0" }}>제목</h3>
             <div>
@@ -267,22 +219,12 @@ const PostWrite = () => {
               style={{ whiteSpace: "pre-line" }}
             />
           </div>
-          <div id="button-container">
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handlePostClick}
-            >
-              게시글 등록
-            </Button>
-            <Button
-              variant="contained"
-              color="warning"
-              onClick={handleCancelButton}
-            >
-              취소
-            </Button>
-          </div>
+          <PairButton
+            type1={"게시글 등록"}
+            type2={"취소"}
+            handler1={handlePostClick}
+            handler2={handleCancelButton}
+          />
         </div>
         {loading && (
           <div className="loading-spinner">

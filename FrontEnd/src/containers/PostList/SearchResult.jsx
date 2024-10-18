@@ -12,10 +12,10 @@ import {
   Tabs,
   Tab,
 } from "@mui/material";
-import Card from "@/components/Card.jsx";
+import Card from "@/components/Card/index";
 import usePostSearch from "@/utils/infiScroll";
 import { searchPosts } from "@/store/post";
-import PostCaution from "@/components/PostCaution.jsx";
+import PostCaution from "@/components/Caution/post";
 import { getPostGPS } from "../../api/post.jsx";
 
 const CustomTabPanel = (props) => {

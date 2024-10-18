@@ -3,9 +3,9 @@ import React, { useState, useRef, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Search from "../search/index.jsx";
 import { Container, CircularProgress } from "@mui/material";
-import Card from "@/components/Card";
+import Card from "@/components/Card/index";
 import usePostSearch from "@/utils/infiScroll.jsx";
-import PostCaution from "@/components/PostCaution.jsx";
+import PostCaution from "@/components/Caution/post";
 import { CustomTabs, CustomTabPanel } from "@/components/Tab/index";
 
 const BasicTabs = () => {

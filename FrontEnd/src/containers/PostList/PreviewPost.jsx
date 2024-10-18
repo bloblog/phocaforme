@@ -3,8 +3,8 @@ import "./index.css";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Container, Button, TextareaAutosize } from "@mui/material";
-import Card from "@/components/Card";
+import { Container, Button } from "@mui/material";
+import Card from "@/components/Card/index";
 import { getAllPost } from "../../api/post";
 
 const PreviewPost = () => {

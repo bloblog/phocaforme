@@ -3,8 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Dialog, DialogContent } from "@mui/material";
-import PostCaution from "@/components/PostCaution";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import PostCaution from "@/components/Caution/post";
 import {
   Container,
   ImageList,

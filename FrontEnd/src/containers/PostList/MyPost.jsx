@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 import { CustomTabs, CustomTabPanel } from "@/components/Tab/index";
 import { ImageList, Box } from "@mui/material";
-import Card from "@/components/Card";
+import Card from "@/components/Card/index";
 import { getAllPost } from "../../api/post";
 
 const MyPost = () => {

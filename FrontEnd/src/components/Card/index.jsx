@@ -2,7 +2,7 @@ import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import TruncatedTitle from "../styles/TruncatedTitle";
+import TruncatedTitle from "../../styles/TruncatedTitle";
 
 import {
   Card,
