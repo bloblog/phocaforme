@@ -4,6 +4,7 @@ import Chip from "@mui/material/Chip";
 
 import GroupDropdown from "@/components/Dropdown/group.jsx";
 import MemberDropdown from "@/components/Dropdown/member2.jsx";
+import { Grid } from "@mui/material";
 
 const BarterModify = ({
   groupId,
@@ -14,17 +15,16 @@ const BarterModify = ({
   const [selectedGroup, setSelectedGroup] = useState(0);
   const [selectedOwnMember, setSelectedOwnMember] = useState([]);
   const [selectedFindMember, setSelectedFindMember] = useState([]);
+  const [ownMembers, setOwnMembers] = useState([]);
+  const [targetMembers, setTargetMembers] = useState([]);
+  const [ownMembersInput, setOwnMembersInput] = useState("");
+  const [targetMembersInput, setTargetMembersInput] = useState("");
 
   useEffect(() => {
     setSelectedGroup(groupId);
     setSelectedOwnMember(defaultOwnMember);
     setSelectedFindMember(defaultTargetMember);
   }, [groupId, defaultOwnMember, defaultTargetMember]);
-
-  const [ownMembers, setOwnMembers] = useState([]);
-  const [targetMembers, setTargetMembers] = useState([]);
-  const [ownMembersInput, setOwnMembersInput] = useState("");
-  const [targetMembersInput, setTargetMembersInput] = useState("");
 
   /// 수정해야함
   const handleOwnMemberChange = (member) => {
@@ -64,8 +64,8 @@ const BarterModify = ({
         <h3>그룹명</h3>
         <GroupDropdown isModify={true} defaultGroup={selectedGroup} />
       </div>
-      <div id="member-input">
-        <div id="own-member-dropdown">
+      <Grid container direction="row" spacing={1} id="member-input">
+        <Grid item xs={6} id="own-member-dropdown">
           <h3>보유한 멤버</h3>
           <MemberDropdown
             defaultMember={selectedOwnMember}
@@ -89,8 +89,8 @@ const BarterModify = ({
               />
             ))}
           </div>
-        </div>
-        <div>
+        </Grid>
+        <Grid item xs={6}>
           <h3>찾는 멤버</h3>
           <MemberDropdown
             selectedGroup={selectedGroup}
@@ -114,8 +114,8 @@ const BarterModify = ({
               />
             ))}
           </div>
-        </div>
-      </div>
+        </Grid>
+      </Grid>
     </div>
   );
 };

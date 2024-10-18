@@ -24,11 +24,9 @@ const DetailPost = () => {
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  const [imageSrc, setImageSrc] = useState("");
   const user = useSelector((state) => state.user.user);
 
-  const handleClickOpen = (src) => {
-    setImageSrc(src);
+  const handleClickOpen = () => {
     setOpen(true);
   };
 
@@ -178,6 +176,11 @@ const DetailPost = () => {
           <p>교환완료</p>
         </div>
       )}
+      {/* {post.isSold && (
+        <div className="overlay">
+          <p>판매완료</p>
+        </div>
+      )} */}
       <div>
         <Chip
           onClick={() => navigate("/mainpost")}
@@ -203,7 +206,7 @@ const DetailPost = () => {
             {post.photos.map((photo, index) => (
               <ImageListItem key={index}>
                 <img
-                  onClick={() => handleClickOpen(photo)}
+                  onClick={handleClickOpen}
                   src={`https://photocardforme.s3.ap-northeast-2.amazonaws.com/${photo}`}
                   loading="lazy"
                   style={{
@@ -216,7 +219,7 @@ const DetailPost = () => {
                 <Dialog onClose={handleClose} open={open} maxWidth={false}>
                   <DialogContent>
                     <img
-                      src={`https://photocardforme.s3.ap-northeast-2.amazonaws.com/${imageSrc}`}
+                      src={`https://photocardforme.s3.ap-northeast-2.amazonaws.com/${photo}`}
                       alt={photo}
                       style={{ maxWidth: "100%", maxHeight: "100vh" }}
                     />
@@ -238,6 +241,7 @@ const DetailPost = () => {
 
         <div id="post-info-container">
           <div>
+            {/* {post.type == "교환" ? ( */}
             <div>
               <div>
                 <div id="post-member-container">
@@ -254,6 +258,15 @@ const DetailPost = () => {
                 <div></div>
               </div>
             </div>
+            {/* ) : ( */}
+            {/* <div>
+                <div>
+                  {`멤버: ${post.ownMembers
+                    .map((member) => member.value)
+                    .join(", ")}`}
+                </div>
+              </div>
+            )} */}
           </div>
         </div>
         <hr style={{ margin: "1rem 0" }} />

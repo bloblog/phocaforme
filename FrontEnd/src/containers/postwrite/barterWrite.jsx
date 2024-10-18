@@ -4,6 +4,7 @@ import GroupDropdown from "@/components/Dropdown/group.jsx";
 import MemberDropdown from "@/components/Dropdown/member2.jsx";
 
 import Chip from "@mui/material/Chip";
+import { Grid } from "@mui/material";
 
 const BarterWrite = ({ defaultGroup, isFilled, onChange }) => {
   const [selectedGroup, setSelectedGroup] = useState(0);
@@ -74,8 +75,8 @@ const BarterWrite = ({ defaultGroup, isFilled, onChange }) => {
           }}
         />
       </div>
-      <div id="member-input">
-        <div id="own-member-dropdown">
+      <Grid container id="member-input" direction={"row"} spacing={1}>
+        <Grid item xs={6} id="own-member-dropdown">
           <h3>보유한 멤버</h3>
           <MemberDropdown
             defaultGroup={selectedGroup}
@@ -99,8 +100,8 @@ const BarterWrite = ({ defaultGroup, isFilled, onChange }) => {
                 />
               ))}
           </div>
-        </div>
-        <div id="target-member-dropdown">
+        </Grid>
+        <Grid item xs={6} id="target-member-dropdown">
           <h3>찾는 멤버</h3>
           <MemberDropdown
             defaultGroup={selectedGroup}
@@ -124,8 +125,8 @@ const BarterWrite = ({ defaultGroup, isFilled, onChange }) => {
                 />
               ))}
           </div>
-        </div>
-      </div>
+        </Grid>
+      </Grid>
     </div>
   );
 };

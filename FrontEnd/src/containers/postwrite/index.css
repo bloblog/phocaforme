@@ -73,15 +73,10 @@ textarea:focus {
 
 #member-input {
   display: flex;
-}
-
-#own-member-dropdown,
-#target-member-dropdown {
   width: 100%;
 }
 
-#own-member-dropdown {
-  margin: 0 1rem 0 0;
+#own-member-dropdown #target-member-dropdown {
 }
 
 #sell-dropdown {
@@ -92,7 +87,6 @@ textarea:focus {
 
 #image-add-button {
   flex-shrink: 0;
-
   border: var(--primary-color) 2px solid;
   border-radius: 10px;
   background-color: var(--secondary-color);

@@ -4,8 +4,12 @@ import { Container, Button } from "@mui/material";
 import BarterModify from "./barterpost.jsx";
 import AddIcon from "@mui/icons-material/Add";
 import TypeDropdown from "@/components/Dropdown/type.jsx";
-import { getPost, modifyPost } from "../../api/post.jsx";
-import PairButton from "../../components/Button/pair.jsx";
+import BasicModal from "@/components/Modal/index.jsx";
+import ImageInput from "@/components/Input/image.jsx";
+
+import { getPost, modifyPost } from "@/api/post.jsx";
+import PairButton from "@/components/Button/pair.jsx";
+import makeFormData from "../../utils/makeFormData.jsx";
 
 const PostModify = () => {
   const navigate = useNavigate();
@@ -25,6 +29,9 @@ const PostModify = () => {
   // const [targetMembers, setTargetMembers] = useState(null);
   const [loading, setLoading] = useState(true);
   const [imagesChanged, setImagesChanged] = useState(false); // 이미지 변경 여부 추적
+  const [open, setOpen] = useState(false);
+
+  const imageContainerRef = useRef(null); // image-container 참조
 
   useEffect(() => {
     if (images.length > 0) {
@@ -57,13 +64,33 @@ const PostModify = () => {
     setLoading(false);
   }, []);
 
-  const fileInputRef = useRef(images);
-
   useEffect(() => {
-    if (fileInputRef.current && !fileInputRef.current.value) {
-      fileInputRef.current.value = "";
+    if (imageContainerRef.current) {
+      imageContainerRef.current.scrollLeft =
+        imageContainerRef.current.scrollWidth;
     }
-  }, [fileInputRef, images]);
+  }, [imagePreviews]);
+
+  const handleImageFormat = (images) => {
+    setImages([...Array.from(images)]);
+
+    const newImages = Array.from(files);
+    const newImagePreviews = [];
+
+    newImages.forEach((file) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        newImagePreviews.push(reader.result);
+        if (newImagePreviews.length === newImages.length) {
+          setImagePreviews((prevImagePreviews) => [
+            ...prevImagePreviews,
+            ...newImagePreviews,
+          ]);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  };
 
   const handleOwnMemberSelection = (members) => {
     setOwnIdolMembers(members);
@@ -105,10 +132,6 @@ const PostModify = () => {
     setImagesChanged(true);
   };
 
-  const handleImageAdd = () => {
-    fileInputRef.current.click();
-  };
-
   const handleImageChange = (event) => {
     const files = event.target.files;
     const newImages = Array.from(files);
@@ -141,23 +164,15 @@ const PostModify = () => {
   };
 
   const handleModifyClick = () => {
-    const formData = new FormData();
-    formData.append("title", title);
-    // const encodedContent = encodeURIComponent(content);
-    formData.append("content", content);
-    formData.append("cardType", cardType ? cardType.label : "");
-    formData.append("groupId", groupId);
-    ownIdolMembers.forEach((member) => {
-      formData.append("ownIdolMembers", member.idolMemberId);
-    });
-
-    findIdolMembers.forEach((member) => {
-      formData.append("findIdolMembers", member.idolMemberId);
-    });
-
-    images.forEach((image) => {
-      formData.append("photos", image);
-    });
+    const formData = makeFormData(
+      images,
+      title,
+      groupId,
+      ownIdolMembers,
+      findIdolMembers,
+      cardType,
+      content
+    );
 
     modifyPost(
       formData,
@@ -179,29 +194,25 @@ const PostModify = () => {
     return <div>Loading...</div>;
   }
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <Container>
+      <BasicModal
+        handleClose={handleClose}
+        open={open}
+        content={"모든 항목은 필수 입력 사항입니다!"}
+      />
+      <h2 className="write-title">게시글 수정하기</h2>
       <div id="write-container">
         <div id="image-input">
-          <div>
-            <h3>사진 (클릭시 삭제됩니다.)</h3>
-            <p className="info-msg">
-              * 사진 사이즈는 포토카드 사이즈가 좋아요!
-            </p>
-          </div>
-          <div id="image-list">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              style={{ display: "none" }}
-              ref={fileInputRef}
-              multiple
-            />
-            <div id="image-add-button" onClick={handleImageAdd}>
-              <AddIcon id="image-add-icon" />
-            </div>
-
+          <div id="image-list" ref={imageContainerRef}>
             {imagePreviews &&
               imagePreviews.map((preview, index) => (
                 <div
@@ -211,7 +222,9 @@ const PostModify = () => {
                   onClick={() => handleImageDelete(index)}
                 ></div>
               ))}
+            <ImageInput onChange={handleImageChange} />
           </div>
+          <p className="info-msg">* 사진 클릭 시 삭제됩니다.</p>
         </div>
         <div id="title-container">
           <h3>제목</h3>

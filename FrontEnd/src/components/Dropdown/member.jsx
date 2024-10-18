@@ -41,7 +41,9 @@ const MemberDropdown = ({
         size="small"
         id="group-dropdown"
         options={memberItems}
-        // isOptionEqualToValue={(option, value) => option.idolMemberId === value.idolMemberId}
+        isOptionEqualToValue={(option, value) =>
+          option.idolMemberId === value.idolMemberId
+        }
         getOptionLabel={(option) => option.idolName}
         // sx={{ width: "12rem" }}
         // 검색이랑 스타일 맞추려면 이거

@@ -81,8 +81,7 @@ textarea:focus {
   display: flex;
 }
 
-#own-member-dropdown,
-#target-member-dropdown {
+#own-member-dropdown #target-member-dropdown {
   width: 100%;
 }
 
