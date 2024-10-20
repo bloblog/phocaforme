@@ -14,6 +14,7 @@ import ImageInput from "@/components/Input/image.jsx";
 import isComplete from "../../utils/isComplete.jsx";
 import makeFormData from "../../utils/makeFormData.jsx";
 import PairButton from "../../components/Button/pair.jsx";
+import { useDispatch, useSelector } from "react-redux";
 
 const PostWrite = () => {
   const [loading, setLoading] = useState(false);
@@ -29,7 +30,14 @@ const PostWrite = () => {
   const [content, setContent] = useState("");
 
   const navigate = useNavigate();
-  const imageContainerRef = useRef(null); // image-container 참조
+  const imageContainerRef = useRef(null);
+  const user = useSelector((state) => state.user.user);
+
+  useEffect(() => {
+    if (user.userId == null) {
+      window.location.href = "/login"; // 로그인 페이지로 리다이렉트
+    }
+  }, []);
 
   // 제목
   const handleTitleChange = (event) => {
@@ -82,7 +90,6 @@ const PostWrite = () => {
 
   // 그룹
   const handleSelectedGroupChange = (group) => {
-    console.log(group);
     setSelectedGroup(group);
   };
 

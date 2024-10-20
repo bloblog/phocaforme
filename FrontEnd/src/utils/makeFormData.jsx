@@ -8,7 +8,6 @@ const makeFormData = (
   content
 ) => {
   const newPost = new FormData();
-  console.log(ownIdolMembers);
 
   images.forEach((image) => {
     newPost.append(`photos`, image);

@@ -49,6 +49,7 @@ const PostModify = () => {
       (data) => {
         setTitle(data.data.title);
         setImages(data.data.photos);
+        console.log(data.data.photos);
         setGroupId(data.data.groupId);
         setOwnIdolMembers(data.data.ownIdolMembers);
         setFindIdolMembers(data.data.findIdolMembers);
@@ -71,26 +72,7 @@ const PostModify = () => {
     }
   }, [imagePreviews]);
 
-  const handleImageFormat = (images) => {
-    setImages([...Array.from(images)]);
-
-    const newImages = Array.from(files);
-    const newImagePreviews = [];
-
-    newImages.forEach((file) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        newImagePreviews.push(reader.result);
-        if (newImagePreviews.length === newImages.length) {
-          setImagePreviews((prevImagePreviews) => [
-            ...prevImagePreviews,
-            ...newImagePreviews,
-          ]);
-        }
-      };
-      reader.readAsDataURL(file);
-    });
-  };
+  const handleImageFormat = (images) => {};
 
   const handleOwnMemberSelection = (members) => {
     setOwnIdolMembers(members);
@@ -158,7 +140,7 @@ const PostModify = () => {
         return [...prevImages, ...newImages];
       } else {
         // handleImageChange 함수가 실행되지 않았을 때
-        return [...images];
+        return [...prevImages];
       }
     });
   };

@@ -1,6 +1,4 @@
-// 로그인 페이지 컴포넌트
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import "./index.css";
 
 import { KAKAO_AUTH_URL } from "./OAuth";
 
@@ -38,11 +36,9 @@ const LoginPage = () => {
     <div>
       <div id="login-container">
         <img id="icon-container" src={icon} />
-        <h2 id="login-title">안녕하세요 포카포미입니다 👋</h2>
         <div id="text-container">
-          계정과 비밀번호 입력없이
-          <br />
-          카카오톡으로 로그인 해보세요.
+          <div id="login-title">카카오 간편 로그인으로</div>
+          <div id="login-title">포카포미의 모든 기능을 누리세요!</div>
         </div>
         <img id="kakao-button" src={kakao} onClick={() => loginHandler()} />
         {/* <input

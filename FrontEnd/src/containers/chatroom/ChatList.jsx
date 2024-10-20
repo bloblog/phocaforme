@@ -4,7 +4,13 @@ import { useNavigate } from "react-router-dom";
 
 import { timeFormat } from "@/utils/timeFormat";
 
-import { Container, List, ListItem, Typography } from "@mui/material";
+import {
+  CircularProgress,
+  Container,
+  List,
+  ListItem,
+  Typography,
+} from "@mui/material";
 import { getNickname } from "../../api/nickname";
 import { getChatRoom, getChatRoomInfo } from "../../api/chat";
 import { getImage } from "../../api/post";
@@ -35,10 +41,11 @@ const ChatList = () => {
           loginUser,
           (data) => {
             setChatInfoList(data);
-            setLoading(false); // 데이터 로딩 완료 시 로딩 상태 해제
+            setLoading(false);
           },
           (error) => {
             console.error("Error Get Chatroom Info: ", error);
+            setLoading(false);
           }
         );
       },
@@ -48,66 +55,68 @@ const ChatList = () => {
     );
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>; // 로딩 중일 때 표시할 컴포넌트
-  }
-
   return (
     <Container>
       <h2 className="chat-title">채팅목록</h2>
-      {chatLists.length === 0 ? (
-        <div className="chat-title">현재 진행중인 채팅이 없습니다!</div>
+      {loading ? (
+        <CircularProgress />
       ) : (
-        <List id="chat-list-container">
-          {chatLists.map((chatroom, index) => (
-            <ListItem
-              className={
-                (chatroom.visiterId === loginUser.userId &&
-                  chatroom.latestChat &&
-                  chatroom.latestChat.id != chatroom.visitorLatestChatId) ||
-                (chatroom.ownerId === loginUser.userId &&
-                  chatroom.latestChat &&
-                  chatroom.latestChat.id != chatroom.ownerLatestChatId)
-                  ? "unread-chatlist-item"
-                  : "chatlist-item"
-              }
-              key={index}
-              onClick={() => moveChatRoom(chatroom.chatRoomId, chatroom)}
-            >
-              <div className="chatlist-info">
-                <div className="chatlist-thumb-content">
-                  {chatInfoList[index].image == null ? (
-                    <MainIcon />
-                  ) : (
-                    <img
-                      className="chatlist-thumbnail"
-                      src={`https://photocardforme.s3.ap-northeast-2.amazonaws.com/${chatInfoList[index].image}`}
-                      alt="Thumbnail"
-                    />
-                  )}
-                  <div className="chatlist-content">
-                    <div className="chatlist-nickname">
-                      {chatInfoList[index].nickname}
+        <>
+          {chatLists.length === 0 ? (
+            <div className="chat-title">현재 진행중인 채팅이 없습니다!</div>
+          ) : (
+            <List id="chat-list-container">
+              {chatLists.map((chatroom, index) => (
+                <ListItem
+                  className={
+                    (chatroom.visiterId === loginUser.userId &&
+                      chatroom.latestChat &&
+                      chatroom.latestChat.id != chatroom.visitorLatestChatId) ||
+                    (chatroom.ownerId === loginUser.userId &&
+                      chatroom.latestChat &&
+                      chatroom.latestChat.id != chatroom.ownerLatestChatId)
+                      ? "unread-chatlist-item"
+                      : "chatlist-item"
+                  }
+                  key={index}
+                  onClick={() => moveChatRoom(chatroom.chatRoomId, chatroom)}
+                >
+                  <div className="chatlist-info">
+                    <div className="chatlist-thumb-content">
+                      {chatInfoList[index].image == null ? (
+                        <MainIcon />
+                      ) : (
+                        <img
+                          className="chatlist-thumbnail"
+                          src={`https://photocardforme.s3.ap-northeast-2.amazonaws.com/${chatInfoList[index].image}`}
+                          alt="Thumbnail"
+                        />
+                      )}
+                      <div className="chatlist-content">
+                        <div className="chatlist-nickname">
+                          {chatInfoList[index].nickname}
+                        </div>
+                        <Typography color="text.primary">
+                          {chatroom.latestChat
+                            ? chatroom.latestChat.message
+                            : "(사진)"}
+                        </Typography>
+                      </div>
                     </div>
-                    <Typography color="text.primary">
-                      {chatroom.latestChat
-                        ? chatroom.latestChat.message
-                        : "(사진)"}
-                    </Typography>
-                  </div>
-                </div>
 
-                <div>
-                  <Typography>
-                    {chatroom.latestChat
-                      ? `${timeFormat(chatroom.latestChat.createdAt)}`
-                      : null}
-                  </Typography>
-                </div>
-              </div>
-            </ListItem>
-          ))}
-        </List>
+                    <div>
+                      <Typography>
+                        {chatroom.latestChat
+                          ? `${timeFormat(chatroom.latestChat.createdAt)}`
+                          : null}
+                      </Typography>
+                    </div>
+                  </div>
+                </ListItem>
+              ))}
+            </List>
+          )}
+        </>
       )}
     </Container>
   );
