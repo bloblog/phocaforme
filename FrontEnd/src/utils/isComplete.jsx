@@ -2,7 +2,7 @@
 
 const isComplete = (post) => {
   const notCompleted = [];
-  if (post.get("title") == null) {
+  if (post.get("title").trim() == "") {
     notCompleted.push("title");
   }
   if (post.get("groupId") == 0) {

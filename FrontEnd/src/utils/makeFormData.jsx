@@ -25,8 +25,7 @@ const makeFormData = (
 
   newPost.append("cardType", cardType);
 
-  const encodedContent = encodeURIComponent(content);
-  newPost.append("content", encodedContent);
+  newPost.append("content", content);
 
   return newPost;
 };

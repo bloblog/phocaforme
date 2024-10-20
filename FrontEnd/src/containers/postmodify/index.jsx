@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Container, Button } from "@mui/material";
+import { Container, Button, CircularProgress } from "@mui/material";
 import BarterModify from "./option.jsx";
 import TypeDropdown from "@/components/Dropdown/type.jsx";
 import BasicModal from "@/components/Modal/index.jsx";
@@ -10,6 +10,7 @@ import { getPost, modifyPost } from "@/api/post.jsx";
 import PairButton from "@/components/Button/pair.jsx";
 import makeFormData from "../../utils/makeFormData.jsx";
 import AmazonSrc from "../../constants/amazonS3.jsx";
+import isComplete from "../../utils/isComplete.jsx";
 
 const PostModify = () => {
   const navigate = useNavigate();
@@ -27,7 +28,8 @@ const PostModify = () => {
 
   // const [ownMembers, setOwnMembers] = useState(null);
   // const [targetMembers, setTargetMembers] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [dataFetching, setDataFetching] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [imagesChanged, setImagesChanged] = useState(false); // 이미지 변경 여부 추적
   const [open, setOpen] = useState(false);
 
@@ -51,14 +53,12 @@ const PostModify = () => {
         setFindIdolMembers(data.data.findIdolMembers);
         setCardType(data.data.cardType);
         setContent(data.data.content);
-
-        setLoading(false);
       },
       (err) => {
         console.error("Error Get Post: " + err);
       }
     );
-    setLoading(false);
+    setDataFetching(false);
   }, []);
 
   useEffect(() => {
@@ -98,10 +98,6 @@ const PostModify = () => {
   const handleTargetMemberSelection = (members) => {
     setFindIdolMembers(members);
   };
-
-  // const handleGroupSelection = (group) => {
-  //   setGroupId(group);
-  // };
 
   const handleTypeChange = (cardType) => {
     setCardType(cardType);
@@ -176,16 +172,26 @@ const PostModify = () => {
         content
       );
 
-      modifyPost(
-        formData,
-        id,
-        (data) => {
-          navigate(`/post/${id}`);
-        },
-        (error) => {
-          console.error("Error modifying post:", error);
-        }
-      );
+      // 안 채워진 항목 쳐내기
+      const state = isComplete(formData);
+      console.log(state);
+      if (state.length == 0) {
+        modifyPost(
+          formData,
+          id,
+          (data) => {
+            setLoading(false);
+            navigate(`/post/${id}`);
+          },
+          (error) => {
+            setLoading(false);
+            console.error("Error modifying post:", error);
+          }
+        );
+      } else {
+        handleClickOpen();
+        setLoading(false);
+      }
     });
   };
 
@@ -193,8 +199,8 @@ const PostModify = () => {
     navigate("/post");
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
+  if (dataFetching) {
+    return <CircularProgress />;
   }
 
   const handleClickOpen = () => {
