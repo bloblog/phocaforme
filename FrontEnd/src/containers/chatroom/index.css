@@ -26,7 +26,6 @@
 }
 
 /* 채팅페이지 */
-
 .chat-image {
   width: 40vw;
 }
@@ -38,6 +37,7 @@
 #chatroom-title {
   font-weight: 700;
 }
+
 .chatlist-content {
   display: flex;
   justify-content: center;
@@ -218,6 +218,7 @@
 
 #chat-content-container {
   overflow-x: hidden;
+  min-height: 100vh;
 }
 
 #pay-button {

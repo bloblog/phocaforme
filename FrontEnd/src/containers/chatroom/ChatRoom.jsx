@@ -1,6 +1,7 @@
+import "./index.css";
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 
 import { sendChat, initChat } from "@/store/chat";
 
@@ -17,12 +18,14 @@ import { getChatList } from "../../api/chat";
 import { getNickname } from "../../api/nickname";
 
 const ChatRoom = () => {
-  const theme = useTheme();
-
   const { roomId } = useParams();
-  const location = useLocation();
 
+  // 채팅 상대방 이름
+  const [otherNickname, setOtherNickname] = useState("");
+
+  const location = useLocation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const loginUser = useSelector((state) =>
     state.user ? state.user.user : null
@@ -30,6 +33,13 @@ const ChatRoom = () => {
 
   const chatList = useSelector((state) =>
     state.chat.chat ? state.chat.chat : []
+  );
+
+  // 항상 맨 아래로 스크롤
+  const sendMessageBoxRef = useRef(null);
+
+  const price = useSelector((state) =>
+    state.pay ? state.pay.status.price : 0
   );
 
   const updateMessages = (receive) => {
@@ -49,41 +59,12 @@ const ChatRoom = () => {
   };
 
   useEffect(() => {
-    getChatList(
-      roomId,
-      (data) => {
-        dispatch(initChat(data.data));
-      },
-      (error) => {
-        console.error("Error get chatting:", error);
-      }
-    );
-  }, [dispatch, roomId]);
-
-  // 항상 맨 아래로 스크롤
-  const sendMessageBoxRef = useRef(null);
-
-  useEffect(() => {
-    if (sendMessageBoxRef.current) {
-      sendMessageBoxRef.current.scrollTop =
-        sendMessageBoxRef.current.scrollHeight;
+    // 잘못된 접근인 경우 리다이렉트
+    if (location.state == null) {
+      navigate("/chat");
+      return () => {};
     }
-  }, [chatList]);
 
-  const price = useSelector((state) =>
-    state.pay ? state.pay.status.price : 0
-  );
-
-  const handlePay = () => {
-    // 결제 기능
-    console.log(price);
-    console.log("카카오페이 연결");
-  };
-
-  // 채팅 상대방 이름 가져와
-  const [otherNickname, setOtherNickname] = useState("");
-
-  useEffect(() => {
     const you =
       loginUser.userId == location.state.visiterId
         ? location.state.ownerId
@@ -99,6 +80,31 @@ const ChatRoom = () => {
       }
     );
   }, []);
+
+  useEffect(() => {
+    getChatList(
+      roomId,
+      (data) => {
+        dispatch(initChat(data.data));
+      },
+      (error) => {
+        console.error("Error get chatting:", error);
+      }
+    );
+  }, [dispatch, roomId]);
+
+  useEffect(() => {
+    if (sendMessageBoxRef.current) {
+      sendMessageBoxRef.current.scrollTop =
+        sendMessageBoxRef.current.scrollHeight;
+    }
+  }, [chatList]);
+
+  const handlePay = () => {
+    // 결제 기능
+    console.log(price);
+    console.log("카카오페이 연결");
+  };
 
   return (
     <Container>

@@ -11,9 +11,7 @@ import {
   ListItem,
   Typography,
 } from "@mui/material";
-import { getNickname } from "../../api/nickname";
 import { getChatRoom, getChatRoomInfo } from "../../api/chat";
-import { getImage } from "../../api/post";
 
 import MainIcon from "@/assets/icons/main";
 import AmazonSrc from "../../constants/amazonS3";

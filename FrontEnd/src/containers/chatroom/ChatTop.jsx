@@ -86,7 +86,7 @@ const ChatMenu = ({ otherNickname, updateMessages, postId }) => {
       <div id="chat-top">
         <div id="chat-top-left">
           <Typography variant="h6" component="div" id="chatroom-title">
-            {chatroomInfo.boardTitle}
+            {chatroomInfo?.boardTitle}
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
             {otherNickname}
