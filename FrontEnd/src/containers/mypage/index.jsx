@@ -12,7 +12,7 @@ const MyPage = () => {
     <Container id="profile-page">
       <Nickname />
       <Bias />
-      {/* <WishCard /> */}
+      <WishCard />
       <LatestPost />
       <MyPost isPreview={true} />
       <QnaButton />
