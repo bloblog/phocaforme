@@ -9,6 +9,7 @@ import ImageInput from "@/components/Input/image.jsx";
 import { getPost, modifyPost } from "@/api/post.jsx";
 import PairButton from "@/components/Button/pair.jsx";
 import makeFormData from "../../utils/makeFormData.jsx";
+import AmazonSrc from "../../constants/amazonS3.jsx";
 
 const PostModify = () => {
   const navigate = useNavigate();
@@ -34,9 +35,7 @@ const PostModify = () => {
 
   useEffect(() => {
     if (images.length > 0) {
-      const defaultImagePreviews = images.map(
-        (photo) => `https://photocardforme2.s3.us-east-2.amazonaws.com/${photo}`
-      );
+      const defaultImagePreviews = images.map((photo) => AmazonSrc + photo);
       setImagePreviews(defaultImagePreviews);
     }
   }, [images]);
@@ -76,9 +75,7 @@ const PostModify = () => {
       if (typeof filePath == "object") {
         return filePath;
       } else {
-        const response = await fetch(
-          `https://photocardforme2.s3.us-east-2.amazonaws.com/${filePath}`
-        );
+        const response = await fetch(AmazonSrc + filePath);
         const blob = await response.blob();
         const type = filePath.split(".").pop();
         const file = new File([blob], filePath.split("/")[1].substring(36), {
@@ -90,8 +87,6 @@ const PostModify = () => {
 
     const results = await Promise.all(promises);
     formattedImage.push(...results);
-
-    console.log(formattedImage);
 
     return formattedImage;
   };
@@ -180,8 +175,6 @@ const PostModify = () => {
         cardType,
         content
       );
-
-      console.log(formattedIamge);
 
       modifyPost(
         formData,

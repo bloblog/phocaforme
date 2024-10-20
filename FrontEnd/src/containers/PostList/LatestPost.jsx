@@ -5,6 +5,7 @@ import { Typography, Box, ImageList } from "@mui/material";
 
 import Card from "@/components/Card/index";
 import { CustomTabs, CustomTabPanel } from "@/components/Tab/index";
+import AmazonSrc from "../../constants/amazonS3";
 
 const LatestPost = () => {
   const navigate = useNavigate();
@@ -62,10 +63,7 @@ const LatestPost = () => {
                       }}
                       id={post.id}
                       title={post.title}
-                      images={
-                        "https://photocardforme2.s3.us-east-2.amazonaws.com/" +
-                        post.images[0]
-                      }
+                      images={AmazonSrc + post.images[0]}
                       ownMembers={post.ownMembers.map((member) => ({
                         member_name: member.name,
                       }))}

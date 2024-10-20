@@ -7,6 +7,7 @@ import { CustomTabs, CustomTabPanel } from "@/components/Tab/index";
 import { ImageList, Box } from "@mui/material";
 import Card from "@/components/Card/index";
 import { getAllPost } from "../../api/post";
+import AmazonSrc from "../../constants/amazonS3";
 
 const MyPost = () => {
   const navigate = useNavigate();
@@ -72,10 +73,7 @@ const MyPost = () => {
                     }}
                     id={post.id}
                     title={post.title}
-                    images={
-                      "https://photocardforme2.s3.us-east-2.amazonaws.com/" +
-                        post.imageUrl || ""
-                    }
+                    images={AmazonSrc + post.imageUrl || ""}
                     ownMembers={post.ownMember || []}
                     targetMembers={post.targetMember || []}
                     content={post.content || ""}

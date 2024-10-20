@@ -7,6 +7,7 @@ import Card from "@/components/Card/index";
 import usePostSearch from "@/utils/infiScroll.jsx";
 import PostCaution from "@/components/Caution/post";
 import { CustomTabs, CustomTabPanel } from "@/components/Tab/index";
+import AmazonSrc from "../../constants/amazonS3.jsx";
 
 const BasicTabs = () => {
   const location = useLocation();
@@ -72,10 +73,7 @@ const BasicTabs = () => {
                     className={post.bartered ? "done-post" : ""}
                     id={post.id}
                     title={post.title}
-                    images={
-                      "https://photocardforme2.s3.us-east-2.amazonaws.com/" +
-                      post.imageUrl
-                    }
+                    images={AmazonSrc + post.imageUrl}
                     ownMembers={post.ownMember}
                     targetMembers={post.targetMember}
                     isBartered={post.bartered}

@@ -16,6 +16,7 @@ import { getChatRoom, getChatRoomInfo } from "../../api/chat";
 import { getImage } from "../../api/post";
 
 import MainIcon from "@/assets/icons/main";
+import AmazonSrc from "../../constants/amazonS3";
 
 const ChatList = () => {
   const navigate = useNavigate();
@@ -88,7 +89,7 @@ const ChatList = () => {
                       ) : (
                         <img
                           className="chatlist-thumbnail"
-                          src={`https://photocardforme2.s3.us-east-2.amazonaws.com/${chatInfoList[index].image}`}
+                          src={AmazonSrc + chatInfoList[index].image}
                           alt="Thumbnail"
                         />
                       )}

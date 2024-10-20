@@ -17,6 +17,7 @@ import usePostSearch from "@/utils/infiScroll";
 import { searchPosts } from "@/store/post";
 import PostCaution from "@/components/Caution/post";
 import { getPostGPS } from "../../api/post.jsx";
+import AmazonSrc from "../../constants/amazonS3.jsx";
 
 const CustomTabPanel = (props) => {
   const { children, value, index, ...other } = props;
@@ -168,10 +169,7 @@ const BasicTabs = ({ isPreview }) => {
                 <Card
                   id={post.id}
                   title={post.title}
-                  images={
-                    "https://photocardforme.s3.ap-northeast-2.amazonaws.com/" +
-                    post.imageUrl
-                  }
+                  images={AmazonSrc + post.imageUrl}
                   ownMembers={post.ownMember}
                   targetMembers={post.targetMember}
                   isBartered={post.Bartered}

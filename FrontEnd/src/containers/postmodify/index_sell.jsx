@@ -10,6 +10,7 @@ import BarterModify from "./barterpost.jsx";
 import AddIcon from "@mui/icons-material/Add";
 import TypeDropdown from "@/components/Dropdown/type.jsx";
 import { getPost, modifyPost } from "../../api/post.jsx";
+import AmazonSrc from "../../constants/amazonS3.jsx";
 
 const PostModify = () => {
   const navigate = useNavigate();
@@ -32,10 +33,7 @@ const PostModify = () => {
 
   useEffect(() => {
     if (images.length > 0) {
-      const defaultImagePreviews = images.map(
-        (photo) =>
-          `https://photocardforme.s3.ap-northeast-2.amazonaws.com/${photo}`
-      );
+      const defaultImagePreviews = images.map((photo) => AmazonSrc + photo);
       setImagePreviews(defaultImagePreviews);
     }
   }, [images]);

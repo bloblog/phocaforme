@@ -15,6 +15,7 @@ import {
 import { openChatRoom } from "../../api/chat";
 import { deletePost, getPost, pullupPost } from "../../api/post";
 import NeedLogin from "../../components/Modal/NeedLogin";
+import AmazonSrc from "../../constants/amazonS3";
 
 const DetailPost = () => {
   const navigate = useNavigate();
@@ -207,7 +208,7 @@ const DetailPost = () => {
               <ImageListItem key={index}>
                 <img
                   onClick={handleClickOpen}
-                  src={`https://photocardforme2.s3.us-east-2.amazonaws.com/${photo}`}
+                  src={AmazonSrc + photo}
                   loading="lazy"
                   style={{
                     width: "15vh",
@@ -219,7 +220,7 @@ const DetailPost = () => {
                 <Dialog onClose={handleClose} open={open} maxWidth={false}>
                   <DialogContent>
                     <img
-                      src={`https://photocardforme2.s3.us-east-2.amazonaws.com/${photo}`}
+                      src={AmazonSrc + photo}
                       alt={photo}
                       style={{ maxWidth: "100%", maxHeight: "100vh" }}
                     />
