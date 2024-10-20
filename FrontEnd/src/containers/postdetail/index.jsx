@@ -123,7 +123,7 @@ const DetailPost = () => {
 
   //수정
   const handleModifyClick = (id) => {
-    navigate(`/modify/${id}`);
+    navigate(`/modify/${id}`, { state: post.userId });
   };
 
   // 끌올

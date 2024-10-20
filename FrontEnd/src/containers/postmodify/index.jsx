@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Container, Button, CircularProgress } from "@mui/material";
 import BarterModify from "./option.jsx";
 import TypeDropdown from "@/components/Dropdown/type.jsx";
@@ -11,10 +11,9 @@ import PairButton from "@/components/Button/pair.jsx";
 import makeFormData from "../../utils/makeFormData.jsx";
 import AmazonSrc from "../../constants/amazonS3.jsx";
 import isComplete from "../../utils/isComplete.jsx";
+import { useSelector } from "react-redux";
 
 const PostModify = () => {
-  const navigate = useNavigate();
-
   const { id } = useParams();
 
   const [images, setImages] = useState([]);
@@ -26,14 +25,16 @@ const PostModify = () => {
   const [cardType, setCardType] = useState("");
   const [content, setContent] = useState("");
 
-  // const [ownMembers, setOwnMembers] = useState(null);
-  // const [targetMembers, setTargetMembers] = useState(null);
   const [dataFetching, setDataFetching] = useState(true);
   const [loading, setLoading] = useState(false);
   const [imagesChanged, setImagesChanged] = useState(false); // 이미지 변경 여부 추적
   const [open, setOpen] = useState(false);
 
-  const imageContainerRef = useRef(null); // image-container 참조
+  const imageContainerRef = useRef(null);
+
+  const user = useSelector((state) => state.user.user);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (images.length > 0) {
@@ -43,6 +44,10 @@ const PostModify = () => {
   }, [images]);
 
   useEffect(() => {
+    // 내가 작성한 글이 아닌 경우
+    if (user != location.state) {
+      navigate("/post");
+    }
     getPost(
       id,
       (data) => {
@@ -174,8 +179,8 @@ const PostModify = () => {
 
       // 안 채워진 항목 쳐내기
       const state = isComplete(formData);
-      console.log(state);
       if (state.length == 0) {
+        setLoading(true);
         modifyPost(
           formData,
           id,
@@ -219,7 +224,7 @@ const PostModify = () => {
         content={"모든 항목은 필수 입력 사항입니다!"}
       />
       <h2 className="write-title">게시글 수정하기</h2>
-      <div id="write-container">
+      <div className={loading ? "write-container loading" : "write-container"}>
         <div id="image-input">
           <div id="image-list" ref={imageContainerRef}>
             {imagePreviews &&
@@ -283,6 +288,11 @@ const PostModify = () => {
           handler2={handleCancelButton}
         ></PairButton>
       </div>
+      {loading && (
+        <div className="loading-spinner">
+          <CircularProgress />
+        </div>
+      )}
     </Container>
   );
 };
