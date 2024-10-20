@@ -1,9 +1,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 
-import { Box, TextField, Autocomplete } from "@mui/material";
 import { getIdolGroup } from "@/api/idolinfo";
-import { useDispatch } from "react-redux";
 import Dropdown from ".";
 
 const GroupDropdown2 = ({ isModify, isProfile, defaultGroup, onChange }) => {

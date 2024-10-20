@@ -15,8 +15,6 @@ const BarterModify = ({
   const [selectedGroup, setSelectedGroup] = useState(0);
   const [selectedOwnMember, setSelectedOwnMember] = useState([]);
   const [selectedFindMember, setSelectedFindMember] = useState([]);
-  const [ownMembers, setOwnMembers] = useState([]);
-  const [targetMembers, setTargetMembers] = useState([]);
   const [ownMembersInput, setOwnMembersInput] = useState("");
   const [targetMembersInput, setTargetMembersInput] = useState("");
 
@@ -24,24 +22,47 @@ const BarterModify = ({
     setSelectedGroup(groupId);
     setSelectedOwnMember(defaultOwnMember);
     setSelectedFindMember(defaultTargetMember);
-  }, [groupId, defaultOwnMember, defaultTargetMember]);
+  }, [groupId]);
 
-  /// 수정해야함
   const handleOwnMemberChange = (member) => {
+    const newMember = { id: member.idolMemberId, name: member.idolName };
+
     if (member) {
-      setOwnMembers((prevOwnMembers) => [...prevOwnMembers, member]);
-      onChange([...ownMembers, member], targetMembers);
-      setOwnMembersInput(member.value);
+      setSelectedOwnMember((prevOwnMembers) => {
+        // 이미 배열에 있는지 확인
+        const isDuplicate = prevOwnMembers.some((m) => m.id === newMember.id);
+
+        // 중복이 아니면 배열에 추가
+        if (!isDuplicate) {
+          const updatedMembers = [...prevOwnMembers, newMember];
+          onChange(updatedMembers, selectedFindMember);
+          return updatedMembers;
+        }
+        return prevOwnMembers;
+      });
+      setOwnMembersInput(newMember);
     } else {
       setOwnMembersInput(ownMembersInput);
     }
   };
 
   const handleTargetMemberChange = (member) => {
+    const newMember = { id: member.idolMemberId, name: member.idolName };
+
     if (member) {
-      setTargetMembers((prevTargetMembers) => [...prevTargetMembers, member]);
-      onChange(ownMembers, [...targetMembers, member]);
-      setTargetMembersInput(member.value);
+      setSelectedFindMember((prevFindMembers) => {
+        // 이미 배열에 있는지 확인
+        const isDuplicate = prevFindMembers.some((m) => m.id === newMember.id);
+
+        // 중복이 아니면 배열에 추가
+        if (!isDuplicate) {
+          const updatedMembers = [...prevFindMembers, newMember];
+          onChange(selectedOwnMember, updatedMembers);
+          return updatedMembers;
+        }
+        return prevFindMembers;
+      });
+      setTargetMembersInput(newMember);
     } else {
       setTargetMembersInput(targetMembersInput);
     }
@@ -49,12 +70,14 @@ const BarterModify = ({
 
   // 멤버 삭제 관련
   const handleOwnMemberDelete = (deletedMember) => {
-    setOwnMembers(ownMembers.filter((member) => member !== deletedMember));
+    setSelectedOwnMember(
+      selectedOwnMember.filter((member) => member !== deletedMember)
+    );
   };
 
   const handleTargetMemberDelete = (deletedMember) => {
-    setTargetMembers(
-      targetMembers.filter((member) => member !== deletedMember)
+    setSelectedFindMember(
+      selectedFindMember.filter((member) => member !== deletedMember)
     );
   };
 
@@ -69,7 +92,7 @@ const BarterModify = ({
           <h3>보유한 멤버</h3>
           <MemberDropdown
             defaultMember={selectedOwnMember}
-            selectedGroup={selectedGroup}
+            defaultGroup={selectedGroup}
             onChange={(member) => {
               handleOwnMemberChange(member);
             }}
@@ -93,16 +116,16 @@ const BarterModify = ({
         <Grid item xs={6}>
           <h3>찾는 멤버</h3>
           <MemberDropdown
-            selectedGroup={selectedGroup}
+            defaultGroup={selectedGroup}
             defaultMember={selectedFindMember}
             onChange={(member) => {
               handleTargetMemberChange(member);
             }}
           />
           <div>
-            {selectedFindMember.map((tag) => (
+            {selectedFindMember.map((tag, index) => (
               <Chip
-                key={tag.id}
+                key={index}
                 label={tag?.name}
                 variant="outlined"
                 onClick={() => handleTargetMemberDelete(tag)}

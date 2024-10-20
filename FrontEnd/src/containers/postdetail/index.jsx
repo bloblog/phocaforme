@@ -16,6 +16,7 @@ import { openChatRoom } from "../../api/chat";
 import { deletePost, getPost, pullupPost } from "../../api/post";
 import NeedLogin from "../../components/Modal/NeedLogin";
 import AmazonSrc from "../../constants/amazonS3";
+import PairButton from "../../components/Button/pair";
 
 const DetailPost = () => {
   const navigate = useNavigate();
@@ -157,6 +158,7 @@ const DetailPost = () => {
       }
     );
   };
+
   if (loading) {
     return (
       <Container id="circular">
@@ -264,7 +266,7 @@ const DetailPost = () => {
       <div id="post-bottom">
         {isCurrentUserWriter ? (
           <div id="post-button-container">
-            <div id="modify-delete">
+            {/* <div id="modify-delete">
               <Button
                 id="modify-button"
                 variant="contained"
@@ -282,7 +284,14 @@ const DetailPost = () => {
               >
                 삭제
               </Button>
-            </div>
+            </div> */}
+            <PairButton
+              type1={"수정"}
+              type2={"삭제"}
+              handler1={() => handleModifyClick(post.id)}
+              handler2={handleDeleteClick}
+            />
+
             <Button
               id="pullup-button"
               variant="text"

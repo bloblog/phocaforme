@@ -18,15 +18,19 @@ const MemberDropdown2 = ({
     setSelectedGroup(defaultGroup);
     setSelectedMember(defaultMember);
 
-    if (defaultGroup) {
+    if (defaultGroup && defaultGroup != 0) {
       getIdolMember(
         defaultGroup,
         (data) => {
           setMemberItems(data.data);
-          const member = data.data.find(
-            (item) => item.idolMemberId === defaultMember
-          );
-          setValue(member || null);
+          if (defaultMember.length >= 1) {
+            const member = data.data.find(
+              (item) => item.idolMemberId === defaultMember[0].id
+            );
+            setValue(member);
+          } else {
+            setValue(null);
+          }
         },
         (error) => console.error("멤버 세팅 오류:", error)
       );

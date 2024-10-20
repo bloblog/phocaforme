@@ -45,9 +45,10 @@ const PostModify = () => {
 
   useEffect(() => {
     // 내가 작성한 글이 아닌 경우
-    if (user != location.state) {
+    if (user.userId != location.state) {
       navigate("/post");
     }
+
     getPost(
       id,
       (data) => {
