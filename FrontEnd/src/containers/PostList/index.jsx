@@ -10,9 +10,7 @@ import { CustomTabs, CustomTabPanel } from "@/components/Tab/index";
 import AmazonSrc from "../../constants/amazonS3.jsx";
 
 const BasicTabs = () => {
-  const location = useLocation();
   const observer = useRef();
-  const navigate = useNavigate();
 
   const [value, setValue] = useState(0);
   const [pageNumber, setPageNumber] = useState(2);
@@ -50,6 +48,8 @@ const BasicTabs = () => {
       );
     }
   };
+
+  console.log(boards);
 
   return (
     <Container id="mainpost-container">

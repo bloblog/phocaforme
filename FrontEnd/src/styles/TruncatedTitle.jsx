@@ -1,7 +1,7 @@
-// 제목 생략 스타일
+// 한 줄 넘어가면 ... 처리
 import { styled } from "@mui/system";
 
-const TruncatedTitle = styled("div")(({ theme, truncateWidth }) => ({
+const Truncate = styled("div")(({ theme, truncateWidth }) => ({
   width: truncateWidth || "80%",
   whiteSpace: "nowrap",
   textAlign: "start",
@@ -9,4 +9,4 @@ const TruncatedTitle = styled("div")(({ theme, truncateWidth }) => ({
   overflow: "hidden",
 }));
 
-export default TruncatedTitle;
+export default Truncate;

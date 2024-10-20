@@ -176,11 +176,6 @@ const DetailPost = () => {
 
   return (
     <Container className={`card-style${post.bartered ? " done-post" : ""}`}>
-      {post.bartered && (
-        <div className="overlay">
-          <p>교환완료</p>
-        </div>
-      )}
       <div>
         <Chip
           onClick={() => navigate("/mainpost")}
@@ -188,6 +183,7 @@ const DetailPost = () => {
           label="← 목록으로"
           size="medium"
         ></Chip>
+
         <div id="post-title-container">
           <h2>{post.title}</h2>
         </div>
@@ -311,6 +307,11 @@ const DetailPost = () => {
             >
               1:1 채팅하기
             </Button>
+          </div>
+        )}
+        {post.bartered && (
+          <div className="overlay">
+            <p>교환완료</p>
           </div>
         )}
         <NeedLogin handleModalClose={handleModalClose} modalOpen={modalOpen} />

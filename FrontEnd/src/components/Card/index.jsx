@@ -2,7 +2,6 @@ import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import TruncatedTitle from "../../styles/TruncatedTitle";
 
 import {
   Card,
@@ -12,6 +11,7 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
+import Truncate from "@/styles/TruncatedTitle";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -49,6 +49,8 @@ const CustomCard = (props) => {
     // isSold,
   } = props;
 
+  console.log(props);
+
   return (
     <Card
       // className={`card-style${isBartered || isSold ? " done-post" : ""}`}
@@ -56,7 +58,7 @@ const CustomCard = (props) => {
       onClick={() => goToDetail(id)}
     >
       {isBartered && (
-        <div className="overlay">
+        <div className="card-overlay">
           <p>교환완료</p>
         </div>
       )}
@@ -69,9 +71,7 @@ const CustomCard = (props) => {
         <CardMedia component="img" image={images} />
         <div>
           <CardHeader
-            title={
-              <TruncatedTitle truncateWidth="8rem">{title}</TruncatedTitle>
-            }
+            title={<Truncate truncateWidth="8rem">{title}</Truncate>}
           />
         </div>
       </Box>
@@ -79,16 +79,16 @@ const CustomCard = (props) => {
         <div>
           <div>
             <Typography variant="body2" color="text.secondary">
-              {`있어요: ${ownMembers
+              <Truncate truncateWidth="7rem">{`있어요: ${ownMembers
                 .map((member) => member.member_name)
-                .join(", ")}`}
+                .join(", ")}`}</Truncate>
             </Typography>
           </div>
           <div>
             <Typography variant="body2" color="text.secondary">
-              {`구해요: ${targetMembers
+              <Truncate truncateWidth="7rem">{`구해요: ${targetMembers
                 .map((member) => member.member_name)
-                .join(", ")}`}
+                .join(", ")}`}</Truncate>
             </Typography>
           </div>
         </div>
