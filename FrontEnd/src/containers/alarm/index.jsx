@@ -92,7 +92,7 @@ const AlarmList = () => {
 
   return (
     <Container>
-      <div>
+      <div className="alarm-title-container">
         <h2 className="alarm-title">알림리스트</h2>
         <FormControlLabel
           id="alarm-check-all"

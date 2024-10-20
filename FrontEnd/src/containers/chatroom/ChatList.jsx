@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { timeFormat } from "@/utils/timeFormat";
+import Truncate from "@/styles/TruncatedTitle";
 
 import {
   CircularProgress,
@@ -34,6 +35,7 @@ const ChatList = () => {
     getChatRoom(
       (data) => {
         setChatLists(data.data);
+        console.log(data.data);
         // 닉네임 및 썸네일 설정
         getChatRoomInfo(
           data.data,
@@ -96,9 +98,11 @@ const ChatList = () => {
                           {chatInfoList[index].nickname}
                         </div>
                         <Typography color="text.primary">
-                          {chatroom.latestChat
-                            ? chatroom.latestChat.message
-                            : "(사진)"}
+                          <Truncate truncateWidth="50vw">
+                            {chatroom.latestChat
+                              ? chatroom.latestChat.message
+                              : "채팅을 시작해보세요 ✉️"}
+                          </Truncate>
                         </Typography>
                       </div>
                     </div>

@@ -1,8 +1,12 @@
 /* 채팅리스트 */
+.chat-title {
+  margin-bottom: 0;
+}
+
 #chat-list-container {
   width: 100%;
   max-width: 500;
-  margin: 2rem 0;
+  margin: 1rem 0;
 }
 
 .chatlist-nickname {

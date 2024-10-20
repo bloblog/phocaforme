@@ -1,4 +1,9 @@
 /* 알림페이지 */
+.alarm-title-container {
+  display: flex;
+  justify-content: space-between;
+}
+
 #no-alarm-title {
   font-family: "PyeongchangPeace";
   font-size: 20px;
