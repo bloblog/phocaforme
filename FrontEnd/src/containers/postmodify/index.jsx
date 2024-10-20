@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Container, Button } from "@mui/material";
-import BarterModify from "./barterpost.jsx";
-import AddIcon from "@mui/icons-material/Add";
+import BarterModify from "./option.jsx";
 import TypeDropdown from "@/components/Dropdown/type.jsx";
 import BasicModal from "@/components/Modal/index.jsx";
 import ImageInput from "@/components/Input/image.jsx";
@@ -36,8 +35,7 @@ const PostModify = () => {
   useEffect(() => {
     if (images.length > 0) {
       const defaultImagePreviews = images.map(
-        (photo) =>
-          `https://photocardforme.s3.ap-northeast-2.amazonaws.com/${photo}`
+        (photo) => `https://photocardforme2.s3.us-east-2.amazonaws.com/${photo}`
       );
       setImagePreviews(defaultImagePreviews);
     }
@@ -49,7 +47,6 @@ const PostModify = () => {
       (data) => {
         setTitle(data.data.title);
         setImages(data.data.photos);
-        console.log(data.data.photos);
         setGroupId(data.data.groupId);
         setOwnIdolMembers(data.data.ownIdolMembers);
         setFindIdolMembers(data.data.findIdolMembers);
@@ -72,7 +69,32 @@ const PostModify = () => {
     }
   }, [imagePreviews]);
 
-  const handleImageFormat = (images) => {};
+  const handleImageFormat = async (images) => {
+    const formattedImage = [];
+
+    const promises = images.map(async (filePath) => {
+      if (typeof filePath == "object") {
+        return filePath;
+      } else {
+        const response = await fetch(
+          `https://photocardforme2.s3.us-east-2.amazonaws.com/${filePath}`
+        );
+        const blob = await response.blob();
+        const type = filePath.split(".").pop();
+        const file = new File([blob], filePath.split("/")[1].substring(36), {
+          type: `image/${type}`,
+        });
+        return file;
+      }
+    });
+
+    const results = await Promise.all(promises);
+    formattedImage.push(...results);
+
+    console.log(formattedImage);
+
+    return formattedImage;
+  };
 
   const handleOwnMemberSelection = (members) => {
     setOwnIdolMembers(members);
@@ -82,9 +104,9 @@ const PostModify = () => {
     setFindIdolMembers(members);
   };
 
-  const handleGroupSelection = (group) => {
-    setGroupId(group);
-  };
+  // const handleGroupSelection = (group) => {
+  //   setGroupId(group);
+  // };
 
   const handleTypeChange = (cardType) => {
     setCardType(cardType);
@@ -114,58 +136,64 @@ const PostModify = () => {
     setImagesChanged(true);
   };
 
-  const handleImageChange = (event) => {
+  const handleImageChange = async (event) => {
     const files = event.target.files;
     const newImages = Array.from(files);
-    const newImagePreviews = [];
 
-    newImages.forEach((file) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        newImagePreviews.push(reader.result);
-        if (newImagePreviews.length === newImages.length) {
-          setImagePreviews((prevImagePreviews) => [
-            ...prevImagePreviews,
-            ...newImagePreviews,
-          ]);
-        }
-      };
-      reader.readAsDataURL(file);
-    });
+    const newImagePreviews = await Promise.all(
+      newImages.map((file) => {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            resolve(reader.result);
+          };
+          reader.readAsDataURL(file);
+        });
+      })
+    );
 
-    // 이미지를 추가할 때 이전 상태를 기반으로 새로운 배열을 생성합니다.
+    // 빈 프리뷰 필터링
+    const filteredNewImagePreviews = newImagePreviews.filter(
+      (preview) => preview
+    );
+
+    // 이미지 미리보기 업데이트
+    setImagePreviews((prevImagePreviews) => [
+      ...prevImagePreviews,
+      ...filteredNewImagePreviews,
+    ]);
+
+    // 이미지 상태 업데이트
     setImages((prevImages) => {
-      if (prevImages) {
-        // handleImageChange 함수가 실행되었을 때
-        return [...prevImages, ...newImages];
-      } else {
-        // handleImageChange 함수가 실행되지 않았을 때
-        return [...prevImages];
-      }
+      return [...prevImages, ...newImages];
     });
   };
 
   const handleModifyClick = () => {
-    const formData = makeFormData(
-      images,
-      title,
-      groupId,
-      ownIdolMembers,
-      findIdolMembers,
-      cardType,
-      content
-    );
+    handleImageFormat(images).then((formattedIamge) => {
+      const formData = makeFormData(
+        formattedIamge,
+        title,
+        groupId,
+        ownIdolMembers,
+        findIdolMembers,
+        cardType,
+        content
+      );
 
-    modifyPost(
-      formData,
-      id,
-      (data) => {
-        navigate(`post/${id}`);
-      },
-      (error) => {
-        console.error("Error modifying post:", error);
-      }
-    );
+      console.log(formattedIamge);
+
+      modifyPost(
+        formData,
+        id,
+        (data) => {
+          navigate(`/post/${id}`);
+        },
+        (error) => {
+          console.error("Error modifying post:", error);
+        }
+      );
+    });
   };
 
   const handleCancelButton = () => {

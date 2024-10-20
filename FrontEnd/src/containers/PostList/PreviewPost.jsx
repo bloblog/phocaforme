@@ -53,7 +53,7 @@ const PreviewPost = () => {
                 id={post.id}
                 title={post.title}
                 images={
-                  "https://photocardforme.s3.ap-northeast-2.amazonaws.com/" +
+                  "https://photocardforme2.s3.us-east-2.amazonaws.com/" +
                   post.imageUrl
                 }
                 ownMembers={post.ownMember}

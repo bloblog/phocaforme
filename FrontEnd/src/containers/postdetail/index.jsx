@@ -149,7 +149,7 @@ const DetailPost = () => {
           (card) => card.id !== postId
         );
         localStorage.setItem("recentCard", JSON.stringify(updatedRecentCard));
-        navigate(-1);
+        navigate("/post");
       },
       (error) => {
         console.error("Error Delete Post:", error);
@@ -204,7 +204,7 @@ const DetailPost = () => {
               <ImageListItem key={index}>
                 <img
                   onClick={() => handleClickOpen(photo)}
-                  src={`https://photocardforme.s3.ap-northeast-2.amazonaws.com/${photo}`}
+                  src={`https://photocardforme2.s3.us-east-2.amazonaws.com/${photo}`}
                   loading="lazy"
                   style={{
                     width: "15vh",
@@ -216,7 +216,7 @@ const DetailPost = () => {
                 <Dialog onClose={handleClose} open={open} maxWidth={false}>
                   <DialogContent>
                     <img
-                      src={`https://photocardforme.s3.ap-northeast-2.amazonaws.com/${imageSrc}`}
+                      src={`https://photocardforme2.s3.us-east-2.amazonaws.com/${imageSrc}`}
                       alt={photo}
                       style={{ maxWidth: "100%", maxHeight: "100vh" }}
                     />

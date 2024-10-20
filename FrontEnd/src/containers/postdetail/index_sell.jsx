@@ -207,7 +207,7 @@ const DetailPost = () => {
               <ImageListItem key={index}>
                 <img
                   onClick={handleClickOpen}
-                  src={`https://photocardforme.s3.ap-northeast-2.amazonaws.com/${photo}`}
+                  src={`https://photocardforme2.s3.us-east-2.amazonaws.com/${photo}`}
                   loading="lazy"
                   style={{
                     width: "15vh",
@@ -219,7 +219,7 @@ const DetailPost = () => {
                 <Dialog onClose={handleClose} open={open} maxWidth={false}>
                   <DialogContent>
                     <img
-                      src={`https://photocardforme.s3.ap-northeast-2.amazonaws.com/${photo}`}
+                      src={`https://photocardforme2.s3.us-east-2.amazonaws.com/${photo}`}
                       alt={photo}
                       style={{ maxWidth: "100%", maxHeight: "100vh" }}
                     />

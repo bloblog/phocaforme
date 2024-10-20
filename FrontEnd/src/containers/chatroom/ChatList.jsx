@@ -88,7 +88,7 @@ const ChatList = () => {
                       ) : (
                         <img
                           className="chatlist-thumbnail"
-                          src={`https://photocardforme.s3.ap-northeast-2.amazonaws.com/${chatInfoList[index].image}`}
+                          src={`https://photocardforme2.s3.us-east-2.amazonaws.com/${chatInfoList[index].image}`}
                           alt="Thumbnail"
                         />
                       )}
