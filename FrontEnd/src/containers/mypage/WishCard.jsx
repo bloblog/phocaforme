@@ -1,3 +1,4 @@
+import "./index.css";
 import React, { useEffect, useState } from "react";
 
 import { useTheme } from "@mui/material/styles";
@@ -13,7 +14,7 @@ const WishCard = () => {
   const theme = useTheme();
 
   const [selectedGroup, setSelectedGroup] = useState(0);
-  const [selectedMember, setSelectedMember] = useState(null);
+  const [selectedMember, setSelectedMember] = useState(0);
 
   // 키워드 관련
   const [inputValue, setInputValue] = useState("");
@@ -22,7 +23,7 @@ const WishCard = () => {
 
   const handleGroupChange = (group) => {
     if (group) {
-      setSelectedGroup(group);
+      setSelectedGroup(group.idolGroupId);
     } else {
       setSelectedGroup(null);
       setSelectedMember(null);
@@ -50,7 +51,6 @@ const WishCard = () => {
       keyword3: labels.length > 2 ? labels[2] : null,
     };
 
-    // db 에 반영하기
     makeWishcard(
       data,
       (res) => {
@@ -139,7 +139,7 @@ const WishCard = () => {
                 </div>
               </div>
             ) : (
-              "아직 갈망포카가 없어요"
+              <div id="no-wishcard">아직 갈망포카가 없어요!</div>
             )}
           </div>
           <div id="wishcard-description">*설정 시 매물 알림이 가요!</div>
@@ -162,7 +162,7 @@ const WishCard = () => {
           <div>
             <MemberDropdown
               isProfile={true}
-              selectedGroup={selectedGroup}
+              defaultGroup={selectedGroup}
               onChange={(member) => {
                 handleMemberChange(member);
               }}
@@ -188,18 +188,14 @@ const WishCard = () => {
           <div>
             {tags.map((tag, index) => (
               <Chip
+                id="wishcard-chip"
                 key={index}
                 label={tag.label}
                 variant="outlined"
                 onClick={() => handleChipDelete(tag)}
                 onDelete={() => handleChipDelete(tag)}
                 size="small"
-                style={{
-                  margin: "4px",
-                  border: 0,
-                  backgroundColor: tag.color,
-                  color: "white",
-                }}
+                style={{ backgroundColor: tag.color }}
               />
             ))}
           </div>

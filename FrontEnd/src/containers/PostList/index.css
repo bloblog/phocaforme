@@ -92,8 +92,11 @@
 }
 
 .no-content {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 3rem;
+  height: 30vh;
 }
 
 .post-tab {
@@ -145,4 +148,14 @@
   height: 20vh;
   display: flex;
   justify-content: center;
+}
+
+/* 최근 본 게시글 */
+#latestpost-container {
+  width: 80vw;
+}
+
+/* 나의 게시글 */
+#mypost-container {
+  width: 80vw;
 }
