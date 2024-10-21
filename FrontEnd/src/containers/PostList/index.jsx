@@ -49,8 +49,6 @@ const BasicTabs = () => {
     }
   };
 
-  console.log(boards);
-
   return (
     <Container id="mainpost-container">
       <Search />

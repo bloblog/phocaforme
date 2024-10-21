@@ -49,8 +49,6 @@ const CustomCard = (props) => {
     // isSold,
   } = props;
 
-  console.log(props);
-
   return (
     <Card
       // className={`card-style${isBartered || isSold ? " done-post" : ""}`}
@@ -78,14 +76,14 @@ const CustomCard = (props) => {
       <CardContent className="card-content">
         <div>
           <div>
-            <Typography variant="body2" color="text.secondary">
+            <Typography component="div" variant="body2" color="text.secondary">
               <Truncate truncateWidth="7rem">{`있어요: ${ownMembers
                 .map((member) => member.member_name)
                 .join(", ")}`}</Truncate>
             </Typography>
           </div>
           <div>
-            <Typography variant="body2" color="text.secondary">
+            <Typography component="div" variant="body2" color="text.secondary">
               <Truncate truncateWidth="7rem">{`구해요: ${targetMembers
                 .map((member) => member.member_name)
                 .join(", ")}`}</Truncate>

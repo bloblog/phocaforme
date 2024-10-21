@@ -97,7 +97,7 @@ const theme = createTheme({
         root: {
           objectFit: "cover",
           borderRadius: "10px",
-          height: "8rem",
+          height: "9rem",
           width: "7rem",
         },
       },
@@ -108,6 +108,7 @@ const theme = createTheme({
           padding: "0.2rem 0 0 0",
           cursor: "pointer",
           display: "flex",
+          width: "100%",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
