@@ -23,14 +23,21 @@ const MemberDropdown2 = ({
         defaultGroup,
         (data) => {
           setMemberItems(data.data);
-          if (defaultMember.length >= 1) {
-            const member = data.data.find(
-              (item) => item.idolMemberId === defaultMember[0].id
+          let member;
+          if (isProfile) {
+            member = data.data.find(
+              (item) => item.idolMemberId === defaultMember
             );
-            setValue(member);
           } else {
-            setValue(null);
+            if (defaultMember && defaultMember.length >= 1) {
+              member = data.data.find(
+                (item) => item.idolMemberId === defaultMember[0].id
+              );
+            } else {
+              setValue(null);
+            }
           }
+          setValue(member);
         },
         (error) => console.error("멤버 세팅 오류:", error)
       );
@@ -50,7 +57,7 @@ const MemberDropdown2 = ({
       option={memberItems}
       onChange={handleChange}
       sx={{
-        width: isProfile ? "50vw" : "100%",
+        width: "100%",
       }}
     />
   );

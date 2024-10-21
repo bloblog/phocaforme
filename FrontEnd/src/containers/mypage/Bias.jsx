@@ -1,3 +1,4 @@
+import "./index.css";
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -37,28 +38,21 @@ const Bias = () => {
 
   const handleGroupChange = (group) => {
     if (group) {
-      setSelectedGroup(group);
+      setSelectedGroup(group.idolGroupId);
+      setSelectedMember(0);
     } else {
-      setSelectedGroup(null);
+      setSelectedGroup(0);
     }
   };
 
   const handleMemberChange = (member) => {
-    setSelectedMember(member);
-  };
-
-  const generateImageUrl = (group, member) => {
-    if (group && member) {
-      return member.idolImage;
-    }
-    return null;
+    setSelectedMember(member.idolMemberId);
   };
 
   const handleApplyClick = () => {
-    // db 에 반영하기
     addBias(
       {
-        idolMemberId: selectedMember.idolMemberId,
+        idolMemberId: selectedMember,
       },
       (data) => {
         setImageUrl(data.data);
@@ -79,7 +73,7 @@ const Bias = () => {
           <div className="bias-title">그룹명</div>
           <div>
             <GroupDropdown
-              groupId={selectedGroup}
+              defaultGroup={selectedGroup}
               isProfile={true}
               onChange={(group) => {
                 handleGroupChange(group);
