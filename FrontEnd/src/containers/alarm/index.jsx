@@ -98,12 +98,13 @@ const AlarmList = () => {
           id="alarm-check-all"
           control={
             <Checkbox
+              size="small"
               checked={notifications.every((item) => item.readStatus)}
               onChange={markAllAsRead}
               disabled={notifications.every((item) => item.readStatus)}
             />
           }
-          label="모두 읽음"
+          label="모두읽음"
         />
       </div>
 

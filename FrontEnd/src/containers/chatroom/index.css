@@ -42,22 +42,18 @@
   font-weight: 700;
 }
 
-.chatlist-content {
-  display: flex;
-  justify-content: center;
-}
 .chatlist-thumbnail {
-  height: 6vh;
-  width: 6vh;
+  height: 7vh;
+  width: 7vh;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 5px;
   margin: 0 1rem 0 0;
 }
 
 .chatlist-item,
 .unread-chatlist-item {
   margin: 0.5rem;
-  height: 8vh;
+  height: 10vh;
   border-radius: 10px;
 }
 

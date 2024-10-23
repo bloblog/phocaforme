@@ -5,6 +5,7 @@ import { setNickname } from "@/store/loginUser";
 
 import { Box, TextField, Button, Modal } from "@mui/material";
 import { isVaild, updateNickname } from "@/api/nickname";
+import PairButton from "../../components/Button/pair";
 
 const NicknameModal = ({
   open,
@@ -58,7 +59,7 @@ const NicknameModal = ({
           if (data.data.isDuplicated) {
             setErrorMsg("중복된 닉네임입니다.");
           } else {
-            setErrorMsg("사용 가능한 닉네임입니다.");
+            setErrorMsg("사용가능한 닉네임입니다.");
           }
         },
         (error) => {
@@ -111,24 +112,12 @@ const NicknameModal = ({
             중복확인
           </div>
         </div>
-        <div id="nickname-setting-button">
-          <Button
-            disabled={!validFlag}
-            onClick={() => handleChangeNickname(loginUser.userId)}
-            color="secondary"
-            variant="contained"
-          >
-            적용
-          </Button>
-          <Button
-            sx={{ ml: 0.5 }}
-            onClick={handleClose}
-            color="warning"
-            variant="contained"
-          >
-            취소
-          </Button>
-        </div>
+        <PairButton
+          type1={"적용"}
+          type2={"취소"}
+          handler1={() => handleChangeNickname(loginUser.userId)}
+          handler2={handleClose}
+        />
       </Box>
     </Modal>
   );

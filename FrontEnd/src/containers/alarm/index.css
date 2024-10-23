@@ -24,6 +24,7 @@
 #alarm-check-all {
   display: flex;
   justify-content: flex-end;
+  font-size: small;
 }
 #alarm-title {
   font-weight: 500;

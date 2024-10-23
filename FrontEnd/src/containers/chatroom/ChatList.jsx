@@ -35,7 +35,6 @@ const ChatList = () => {
     getChatRoom(
       (data) => {
         setChatLists(data.data);
-        console.log(data.data);
         // 닉네임 및 썸네일 설정
         getChatRoomInfo(
           data.data,
@@ -97,7 +96,11 @@ const ChatList = () => {
                         <div className="chatlist-nickname">
                           {chatInfoList[index].nickname}
                         </div>
-                        <Typography color="text.primary">
+                        <Typography
+                          component="div"
+                          fontSize="small"
+                          color="text.primary"
+                        >
                           <Truncate truncateWidth="50vw">
                             {chatroom.latestChat
                               ? chatroom.latestChat.message

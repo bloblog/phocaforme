@@ -56,6 +56,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           padding: "0.5rem 1rem",
+          fontSize: "small",
         },
       },
     },
@@ -63,6 +64,7 @@ const theme = createTheme({
       styleOverrides: {
         label: {
           fontFamily: "Pretendard",
+          fontSize: "small",
         },
       },
     },
@@ -129,6 +131,9 @@ const theme = createTheme({
           "& input": {
             fontFamily: "Pretendard",
             fontSize: "15px",
+          },
+          "& .MuiFormHelperText-root": {
+            fontFamily: "Pretendard",
           },
         },
       },

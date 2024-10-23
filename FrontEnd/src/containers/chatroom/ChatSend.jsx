@@ -1,48 +1,49 @@
 import React, { useRef, useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import { Stomp } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
+import { Client } from "@stomp/stompjs";
 
 import { TextField, InputAdornment, Popover, Button } from "@mui/material";
 import { Add, Image } from "@mui/icons-material";
+import WebSocket from "../../utils/websocket";
 
 const ChatSend = ({ roomId, loginUser, updateMessages }) => {
   // 메시지 전송
   const [value, setValue] = useState("");
   const [image, setImage] = useState("");
 
-  const [ws, setWs] = useState(null);
+  const [wsClient, setWsClient] = useState(new Client());
   const [receive, setReceive] = useState("");
 
+  const user = useSelector((state) => state.user.user);
   useEffect(() => {
-    // WebSocket 연결 설정
-    const sock = new SockJS(import.meta.env.VITE_APP_API_URL + "ws-stomp");
-    const ws = Stomp.over(sock);
-
-    ws.connect(
-      {
-        Authorization: document.cookie.match(
-          "(^|;) ?" + "token" + "=([^;]*)(;|$)"
-        )[2],
+    const newClient = new Client({
+      brokerURL: "ws://localhost:8080/ws-stomp",
+      connectHeaders: {
+        Authorization: user.token,
       },
-      (frame) => {
-        setWs(ws);
-        ws.subscribe("/sub/chat/room" + roomId, (message) => {
-          const receive = JSON.parse(message.body);
-          // alert(receive.imgCode);
-
-          if (receive.imgCode !== null) {
-            receiveImg(receive);
-          } else {
-            receiveMessage(receive);
-          }
-        });
+      debug: function (str) {
+        console.log(str);
       },
-      (error) => {
-        alert("error" + error);
-      }
-    );
+      reconnectDelay: 5000,
+    });
+
+    newClient.onConnect = () => {
+      newClient.subscribe("/sub/chat/room" + roomId, (message) => {
+        const receive = JSON.parse(message.body);
+        console.log(message);
+        // alert(receive.imgCode);
+        if (receive.imgCode !== null) {
+          receiveImg(receive);
+        } else {
+          receiveMessage(receive);
+        }
+      });
+    };
+
+    newClient.activate();
+    setWsClient(newClient);
 
     // #baseFile이 변할 때마다 감지
     const handleFileChange = (e) => {
@@ -56,21 +57,22 @@ const ChatSend = ({ roomId, loginUser, updateMessages }) => {
 
     // 컴포넌트가 언마운트될 때 WebSocket 연결 해제
     return () => {
-      ws.disconnect();
+      if (wsClient) {
+        wsClient.deactivate(); // 연결 해제
+      }
     };
-  }, [receive]);
+  }, []);
 
   const sendMessage = () => {
-    if (ws && roomId && loginUser && value) {
-      ws.send(
-        "/pub/chats/" + roomId,
-        {},
-        JSON.stringify({
+    if (wsClient && roomId && loginUser && value) {
+      wsClient.publish({
+        destination: "/pub/chats/" + roomId,
+        body: JSON.stringify({
           chatRoomId: roomId,
           userEmail: loginUser.userId,
           message: value,
-        })
-      );
+        }),
+      });
     }
     setValue("");
   };
@@ -87,15 +89,16 @@ const ChatSend = ({ roomId, loginUser, updateMessages }) => {
     if (input.files && input.files[0]) {
       const FR = new FileReader();
       FR.onload = function (e) {
-        ws.send(
-          "/pub/chats/" + roomId,
-          {},
-          JSON.stringify({
-            chatRoomId: roomId,
-            userEmail: loginUser.userId,
-            imgCode: e.target.result,
-          })
-        );
+        if (wsClient) {
+          wsClient.publish({
+            destination: "/pub/chats/" + roomId,
+            body: JSON.stringify({
+              chatRoomId: roomId,
+              userEmail: loginUser.userId,
+              imgCode: e.target.result,
+            }),
+          });
+        }
       };
       FR.readAsDataURL(input.files[0]);
     }
@@ -153,6 +156,12 @@ const ChatSend = ({ roomId, loginUser, updateMessages }) => {
         maxWidth: "100%",
       }}
     >
+      {/* <WebSocket
+        roomId={roomId}
+        setWsClient={setWsClient}
+        receiveImg={receiveImg}
+        receiveMessage={receiveMessage}
+      /> */}
       <Popover
         open={open}
         anchorEl={anchorEl}
