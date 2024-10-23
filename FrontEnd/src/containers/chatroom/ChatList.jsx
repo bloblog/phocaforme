@@ -104,6 +104,8 @@ const ChatList = () => {
                           <Truncate truncateWidth="50vw">
                             {chatroom.latestChat
                               ? chatroom.latestChat.message
+                                ? chatroom.latestChat.message
+                                : "(사진)"
                               : "채팅을 시작해보세요 ✉️"}
                           </Truncate>
                         </Typography>
@@ -111,7 +113,7 @@ const ChatList = () => {
                     </div>
 
                     <div>
-                      <Typography>
+                      <Typography id="chat-list-time">
                         {chatroom.latestChat
                           ? `${timeFormat(chatroom.latestChat.createdAt)}`
                           : null}
