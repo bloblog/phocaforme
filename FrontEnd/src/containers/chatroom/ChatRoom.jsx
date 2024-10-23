@@ -19,10 +19,7 @@ import { getNickname } from "../../api/nickname";
 
 const ChatRoom = () => {
   const { roomId } = useParams();
-
-  // 채팅 상대방 이름
   const [otherNickname, setOtherNickname] = useState("");
-
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -35,16 +32,13 @@ const ChatRoom = () => {
     state.chat.chat ? state.chat.chat : []
   );
 
-  // 항상 맨 아래로 스크롤
   const sendMessageBoxRef = useRef(null);
-
   const price = useSelector((state) =>
     state.pay ? state.pay.status.price : 0
   );
 
   const updateMessages = (receive) => {
     if (receive && !receive.type) {
-      console.log(receive);
       const newMessage = {
         chatRoomId: receive.chatRoomId,
         createdAt: new Date().toISOString(),
@@ -59,7 +53,6 @@ const ChatRoom = () => {
   };
 
   useEffect(() => {
-    // 잘못된 접근인 경우 리다이렉트
     if (location.state == null) {
       navigate("/chat");
       return () => {};
@@ -101,7 +94,6 @@ const ChatRoom = () => {
   }, [chatList]);
 
   const handlePay = () => {
-    // 결제 기능
     console.log(price);
     console.log("카카오페이 연결");
   };
@@ -134,9 +126,16 @@ const ChatRoom = () => {
                       : "chat-visiter-name"
                   }
                 >
-                  {messageData.userEmail == loginUser.userId
-                    ? loginUser.nickname
-                    : otherNickname}
+                  {/* 연속적인 메시지에서 닉네임 생략 */}
+                  {(index === 0 ||
+                    chatList[index - 1].userEmail !==
+                      messageData.userEmail) && (
+                    <span>
+                      {messageData.userEmail == loginUser.userId
+                        ? loginUser.nickname
+                        : otherNickname}
+                    </span>
+                  )}
                 </div>
                 <div
                   className={
@@ -146,7 +145,9 @@ const ChatRoom = () => {
                   }
                 >
                   {messageData.userEmail == loginUser.userId ? (
-                    <p>{timeFormat(messageData.createdAt)}</p>
+                    <p id="chat-time-container">
+                      {timeFormat(messageData.createdAt)}
+                    </p>
                   ) : null}
                   <div className="chat-message">
                     {!messageData.imgCode ? (
@@ -155,7 +156,8 @@ const ChatRoom = () => {
                       <img
                         className="chat-image"
                         src={messageData.imgCode}
-                      ></img>
+                        alt="chat"
+                      />
                     )}
                     <div>
                       {messageData.isPay ? (
@@ -166,7 +168,7 @@ const ChatRoom = () => {
                     </div>
                   </div>
                   {messageData.userEmail != loginUser.userId ? (
-                    <div className="chat-time-container">
+                    <div id="chat-time-container">
                       {timeFormat(messageData.createdAt)}
                     </div>
                   ) : null}

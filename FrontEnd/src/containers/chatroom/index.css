@@ -213,7 +213,7 @@
 #chat-message-area {
   display: flex;
   flex-direction: column;
-  height: 65vh;
+  height: 50vh;
 }
 
 #chat-content-container {
@@ -236,8 +236,8 @@
   z-index: 100;
 }
 
-.chat-time-container {
-  font-size: 8px;
+#chat-time-container {
+  font-size: small;
 }
 
 /* 결제 전송 모달 */
