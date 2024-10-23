@@ -1,7 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-
-import SockJS from "sockjs-client";
+import React, { useState, useEffect } from "react";
 import { Client } from "@stomp/stompjs";
 
 import { TextField, InputAdornment, Popover, Button } from "@mui/material";
@@ -16,35 +13,7 @@ const ChatSend = ({ roomId, loginUser, updateMessages }) => {
   const [wsClient, setWsClient] = useState(new Client());
   const [receive, setReceive] = useState("");
 
-  const user = useSelector((state) => state.user.user);
   useEffect(() => {
-    const newClient = new Client({
-      brokerURL: "ws://localhost:8080/ws-stomp",
-      connectHeaders: {
-        Authorization: user.token,
-      },
-      debug: function (str) {
-        console.log(str);
-      },
-      reconnectDelay: 5000,
-    });
-
-    newClient.onConnect = () => {
-      newClient.subscribe("/sub/chat/room" + roomId, (message) => {
-        const receive = JSON.parse(message.body);
-        console.log(message);
-        // alert(receive.imgCode);
-        if (receive.imgCode !== null) {
-          receiveImg(receive);
-        } else {
-          receiveMessage(receive);
-        }
-      });
-    };
-
-    newClient.activate();
-    setWsClient(newClient);
-
     // #baseFile이 변할 때마다 감지
     const handleFileChange = (e) => {
       if (e.target) {
@@ -54,13 +23,6 @@ const ChatSend = ({ roomId, loginUser, updateMessages }) => {
 
     // 초기 렌더링 시에도 호출되도록 설정
     handleFileChange({ target: document.getElementById("fileInput") });
-
-    // 컴포넌트가 언마운트될 때 WebSocket 연결 해제
-    return () => {
-      if (wsClient) {
-        wsClient.deactivate(); // 연결 해제
-      }
-    };
   }, []);
 
   const sendMessage = () => {
@@ -156,12 +118,12 @@ const ChatSend = ({ roomId, loginUser, updateMessages }) => {
         maxWidth: "100%",
       }}
     >
-      {/* <WebSocket
+      <WebSocket
         roomId={roomId}
         setWsClient={setWsClient}
         receiveImg={receiveImg}
         receiveMessage={receiveMessage}
-      /> */}
+      />
       <Popover
         open={open}
         anchorEl={anchorEl}

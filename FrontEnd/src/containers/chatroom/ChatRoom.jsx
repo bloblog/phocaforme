@@ -116,15 +116,15 @@ const ChatRoom = () => {
             chatroomInfo={location.state}
           />
         </div>
+        <div id="notice-content">
+          <div style={{ fontSize: "12px" }}>
+            <PushPinRounded id="notice-icon" />
+            <b>필독</b> 거래가 처음이신가요? <a href="/help">인증가이드</a>를
+            반드시 읽으시고 믿을 수 있는 거래 하세요!
+          </div>
+        </div>
         <div id="chat-content-container" ref={sendMessageBoxRef}>
           <div id="chat-message-area">
-            <div id="notice-content">
-              <div style={{ fontSize: "12px" }}>
-                <PushPinRounded id="notice-icon" />
-                <b>필독</b> 거래가 처음이신가요? <a href="/help">인증가이드</a>
-                를 반드시 읽으시고 믿을 수 있는 거래 하세요!
-              </div>
-            </div>
             {chatList.map((messageData, index) => (
               <div key={index}>
                 <div
