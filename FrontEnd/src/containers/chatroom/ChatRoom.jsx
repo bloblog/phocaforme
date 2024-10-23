@@ -7,7 +7,7 @@ import { sendChat, initChat } from "@/store/chat";
 
 import { timeFormat } from "@/utils/timeFormat";
 
-import { Button, Container } from "@mui/material";
+import { Button, CircularProgress, Container } from "@mui/material";
 import { PushPinRounded } from "@mui/icons-material";
 
 import ChatMenu from "./ChatTop";
@@ -18,6 +18,7 @@ import { getNickname } from "../../api/nickname";
 const ChatRoom = () => {
   const { roomId } = useParams();
   const [otherNickname, setOtherNickname] = useState("");
+  const [loading, setLoading] = useState(false); // 사진 전송
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -49,6 +50,7 @@ const ChatRoom = () => {
         dispatch(sendChat(newMessage));
       }
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -175,11 +177,17 @@ const ChatRoom = () => {
             ))}
           </div>
         </div>
+        {loading && (
+          <div className="loading-overlay">
+            <CircularProgress />
+          </div>
+        )}
         <div id="send-message-container">
           <ChatSend
             roomId={roomId}
             loginUser={loginUser}
             updateMessages={updateMessages}
+            setLoading={setLoading}
           />
         </div>
       </div>

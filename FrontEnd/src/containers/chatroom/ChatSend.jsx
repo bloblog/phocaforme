@@ -5,7 +5,7 @@ import { TextField, InputAdornment, Popover, Button } from "@mui/material";
 import { Add, Image } from "@mui/icons-material";
 import WebSocket from "../../utils/websocket";
 
-const ChatSend = ({ roomId, loginUser, updateMessages }) => {
+const ChatSend = ({ roomId, loginUser, updateMessages, setLoading }) => {
   // 메시지 전송
   const [value, setValue] = useState("");
   const [image, setImage] = useState("");
@@ -13,8 +13,11 @@ const ChatSend = ({ roomId, loginUser, updateMessages }) => {
   const [wsClient, setWsClient] = useState(new Client());
   const [receive, setReceive] = useState("");
 
+  // 사진첨부 팝업
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [open, setOpen] = useState(false);
+
   useEffect(() => {
-    // #baseFile이 변할 때마다 감지
     const handleFileChange = (e) => {
       if (e.target) {
         readImage(e.target);
@@ -49,6 +52,7 @@ const ChatSend = ({ roomId, loginUser, updateMessages }) => {
 
   const readImage = (input) => {
     if (input.files && input.files[0]) {
+      setLoading(true);
       const FR = new FileReader();
       FR.onload = function (e) {
         if (wsClient) {
@@ -72,6 +76,7 @@ const ChatSend = ({ roomId, loginUser, updateMessages }) => {
 
   const handleSetImage = (receive) => {
     updateMessages(receive);
+
     handleClose();
   };
 
@@ -89,15 +94,14 @@ const ChatSend = ({ roomId, loginUser, updateMessages }) => {
     }
   };
 
-  // 사진첨부 팝업
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+    setOpen(true);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
+    setOpen(false);
   };
 
   const triggerFileInput = () => {
@@ -107,14 +111,12 @@ const ChatSend = ({ roomId, loginUser, updateMessages }) => {
   const handleFileSelection = (e) => {
     const selectedFile = document.getElementById("fileInput").files[0];
     readImage(e.target);
+    setOpen(false);
   };
-
-  const open = Boolean(anchorEl);
 
   return (
     <div
       sx={{
-        width: 500,
         maxWidth: "100%",
       }}
     >
@@ -124,33 +126,7 @@ const ChatSend = ({ roomId, loginUser, updateMessages }) => {
         receiveImg={receiveImg}
         receiveMessage={receiveMessage}
       />
-      <Popover
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-      >
-        <div id="add-popover-container">
-          <div id="image-icon-container">
-            <div id="image-icon-background">
-              <Image id="image-icon" onClick={triggerFileInput} />
-              <input
-                type="file"
-                id="fileInput"
-                onChange={handleFileSelection}
-              />
-            </div>
-            <p>사진</p>
-          </div>
-        </div>
-      </Popover>
+
       <TextField
         fullWidth
         id="fullWidth"
@@ -173,6 +149,28 @@ const ChatSend = ({ roomId, loginUser, updateMessages }) => {
           ),
         }}
       ></TextField>
+      <Popover
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        transformOrigin={{
+          vertical: "bottom",
+        }}
+      >
+        <div id="add-popover-container">
+          <div id="image-icon-container">
+            <div id="image-icon-background">
+              <Image id="image-icon" onClick={triggerFileInput} />
+              <input
+                type="file"
+                id="fileInput"
+                onChange={handleFileSelection}
+              />
+            </div>
+            <p>사진</p>
+          </div>
+        </div>
+      </Popover>
     </div>
   );
 };
