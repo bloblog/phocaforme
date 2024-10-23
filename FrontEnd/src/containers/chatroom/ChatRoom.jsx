@@ -7,8 +7,6 @@ import { sendChat, initChat } from "@/store/chat";
 
 import { timeFormat } from "@/utils/timeFormat";
 
-import { useTheme } from "@mui/material/styles";
-
 import { Button, Container } from "@mui/material";
 import { PushPinRounded } from "@mui/icons-material";
 
@@ -33,6 +31,7 @@ const ChatRoom = () => {
   );
 
   const sendMessageBoxRef = useRef(null);
+
   const price = useSelector((state) =>
     state.pay ? state.pay.status.price : 0
   );
@@ -88,8 +87,7 @@ const ChatRoom = () => {
 
   useEffect(() => {
     if (sendMessageBoxRef.current) {
-      sendMessageBoxRef.current.scrollTop =
-        sendMessageBoxRef.current.scrollHeight;
+      window.scrollTo({ top: sendMessageBoxRef.current.scrollHeight });
     }
   }, [chatList]);
 

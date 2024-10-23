@@ -48,7 +48,7 @@ const theme = createTheme({
         paper: {
           backgroundColor: "#FD9DD1",
           padding: "0.5rem",
-          width: "10rem",
+          width: "fit-content",
         },
       },
     },

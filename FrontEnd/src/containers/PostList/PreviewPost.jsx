@@ -56,7 +56,7 @@ const PreviewPost = () => {
                 images={AmazonSrc + post.imageUrl}
                 ownMembers={post.ownMember}
                 targetMembers={post.targetMember}
-                isBartered={post.Bartered}
+                isBartered={post.bartered}
                 onClick={() => {
                   // setSelectedPostId(post.id)  // <= 근데 이거 기능이 뭐임?
                   navigate(`/barter/${post.id}`); // 디테일 페이지로 이동
