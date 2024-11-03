@@ -9,6 +9,8 @@ const Post = () => {
     state.search.searchs ? state.search.searchs : null
   );
 
+  console.log(searchs);
+
   return <Container>{searchs ? <SearchResult /> : <MainPost />}</Container>;
 };
 

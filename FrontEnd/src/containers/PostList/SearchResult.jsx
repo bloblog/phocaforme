@@ -2,59 +2,20 @@ import "./index.css";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
 
-import {
-  CircularProgress,
-  Container,
-  Box,
-  Typography,
-  Tabs,
-  Tab,
-} from "@mui/material";
+import { CircularProgress, Container } from "@mui/material";
 import Card from "@/components/Card/index";
+import Search from "../search/index.jsx";
 import usePostSearch from "@/utils/infiScroll";
 import { searchPosts } from "@/store/post";
 import PostCaution from "@/components/Caution/post";
 import { getPostGPS } from "../../api/post.jsx";
 import AmazonSrc from "../../constants/amazonS3.jsx";
-
-const CustomTabPanel = (props) => {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div>
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`tabpanel-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box sx={{ p: 1 }}>
-            <Typography>{children}</Typography>
-          </Box>
-        )}
-      </div>
-    </div>
-  );
-};
-
-CustomTabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-const a11yProps = (index) => {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-};
+import { CustomTabs, CustomTabPanel } from "@/components/Tab/index";
 
 const BasicTabs = ({ isPreview }) => {
   const posts = useSelector((state) => (state.post ? state.post.posts : []));
+  console.log(posts);
   const user = useSelector((state) => (state.user ? state.user.user : null));
 
   const [value, setValue] = useState(0);
@@ -69,7 +30,6 @@ const BasicTabs = ({ isPreview }) => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          // 스크롤이 끝에 닿았고 추가 데이터가 있을 때만 페이지 번호를 증가시킴
           setPageNumber((prevPageNumber) => prevPageNumber + 1);
         }
       });
@@ -91,37 +51,26 @@ const BasicTabs = ({ isPreview }) => {
       if (searchs.group) {
         params.groupId = searchs.group.idolGroupId;
       }
-
       if (searchs.targetMembers.length > 0) {
-        if (searchs.targetMembers.length == 1) {
-          params.target = searchs.targetMembers[0].idolMemberId;
-        } else {
-          params.target = searchs.targetMembers.idolMemberId.join(",");
-        }
+        params.target = searchs.targetMembers
+          .map((member) => member.idolMemberId)
+          .join(",");
       }
-
       if (searchs.ownMembers.length > 0) {
-        if (searchs.ownMembers.length == 1) {
-          params.own = searchs.ownMembers[0].idolMemberId;
-        } else {
-          params.own = searchs.ownMembers.idolMemberId.join(",");
-        }
+        params.own = searchs.ownMembers
+          .map((member) => member.idolMemberId)
+          .join(",");
       }
-
       if (searchs.cardType && searchs.cardType.value !== "") {
         params.cardType = searchs.cardType.value;
       }
-
       if (searchs.query) {
         params.query = searchs.query;
       }
-
-      // gps 켜져있을 때 위도 경도 넣기
       if (user.location_longlat) {
         params.longitude = user.location_longlat[0];
         params.latitude = user.location_longlat[1];
       }
-
       getPostGPS(
         params,
         (data) => {
@@ -142,27 +91,17 @@ const BasicTabs = ({ isPreview }) => {
 
   return (
     <Container>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs value={value} onChange={handleChange}>
-          <Tab
-            label="교환"
-            {...a11yProps(0)}
-            sx={{ fontWeight: value === 0 ? 600 : 400 }}
-          />
-          <Tab
-            label="판매"
-            {...a11yProps(1)}
-            sx={{ fontWeight: value === 1 ? 600 : 400 }}
-          />
-        </Tabs>
-      </Box>
+      <Search />
+      <CustomTabs
+        value={value}
+        handleChange={handleChange}
+        labels={["교환", "판매"]}
+      />
       <CustomTabPanel value={value} index={0}>
         {posts.length === 0 ? (
           <PostCaution message={"일치하는 게시글이 없습니다."} />
         ) : (
-          <div
-            style={{ display: "flex", flexWrap: "wrap", flexDirection: "row" }}
-          >
+          <div id="search-post-container">
             {posts.map((post, index) => (
               <div key={index}>
                 {post.distance !== -1 ? `${post.distance}km ` : ""}
@@ -172,13 +111,12 @@ const BasicTabs = ({ isPreview }) => {
                   images={AmazonSrc + post.imageUrl}
                   ownMembers={post.ownMember}
                   targetMembers={post.targetMember}
-                  isBartered={post.Bartered}
+                  isBartered={post.bartered}
                   onClick={() => {
                     setSelectedPostId(post.id);
-                    navigate(`/barter/${post.id}`); // 디테일 페이지로 이동
-                  }} // 클릭 이벤트 추가
+                    navigate(`/barter/${post.id}`);
+                  }}
                 />
-                {/* 마지막 요소일 때만 ref를 전달합니다 */}
                 {index === posts.length - 1 ? (
                   <div ref={lastBookElementRef} />
                 ) : null}
@@ -188,11 +126,9 @@ const BasicTabs = ({ isPreview }) => {
         )}
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <div
-          style={{ display: "flex", flexWrap: "wrap", flexDirection: "row" }}
-        >
+        <div id="search-post-container">
           {posts.filter((post) => post.type === "판매").length === 0 ? (
-            <div className="no-content">게시글이 없습니다.</div>
+            <PostCaution message={"일치하는 게시글이 없습니다."} />
           ) : (
             posts
               .filter((post) => post.type === "판매")
@@ -206,7 +142,7 @@ const BasicTabs = ({ isPreview }) => {
                   ownMembers={post.ownMembers}
                   type={post.type}
                   isSold={post.isSold}
-                ></Card>
+                />
               ))
           )}
         </div>

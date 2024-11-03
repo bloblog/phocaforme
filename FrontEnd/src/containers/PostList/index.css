@@ -28,6 +28,12 @@
   align-items: center;
 }
 
+#search-post-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
 /* 판매, 교환완료 게시글 스타일 */
 .done-post .overlay {
   z-index: 200;
