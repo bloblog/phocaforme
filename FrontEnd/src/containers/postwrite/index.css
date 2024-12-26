@@ -74,9 +74,7 @@ textarea:focus {
 #member-input {
   display: flex;
   width: 100%;
-}
-
-#own-member-dropdown #target-member-dropdown {
+  justify-content: space-between;
 }
 
 #sell-dropdown {

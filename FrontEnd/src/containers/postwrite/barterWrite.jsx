@@ -32,7 +32,6 @@ const BarterWrite = ({ defaultGroup, isFilled, onChange }) => {
   const [ownMembersInput, setOwnMembersInput] = useState("");
   const [targetMembersInput, setTargetMembersInput] = useState("");
 
-  /// 수정해야함
   const handleOwnMemberChange = (member) => {
     if (member) {
       setOwnMembers((prevOwnMembers) => [...prevOwnMembers, member]);

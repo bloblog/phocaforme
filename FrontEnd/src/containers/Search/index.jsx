@@ -1,16 +1,19 @@
+import "./index.css";
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import { addSearchData, clearSearchData } from "@/store/search.jsx";
+import { searchPosts } from "@/store/post.jsx";
 
 import { FaSearch } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
 
-import { useTheme } from "@mui/material/styles";
 import { Button } from "@mui/material";
 import BarterWrite2 from "../postwrite/barterWrite2.jsx";
 import TypeDropdown from "@/components/Dropdown/type.jsx";
+import { getPostGPS } from "../../api/post.jsx";
 
 const Search = () => {
   const [userInput, setUserInput] = useState("");
@@ -23,28 +26,20 @@ const Search = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const theme = useTheme();
-
   // 최근 검색 기록 가져와
   useEffect(() => {
     const searchHistory = JSON.parse(localStorage.getItem("searchCondition"));
 
     if (searchHistory) {
-      setSelectedGroup(searchHistory.group);
+      setSelectedGroup(searchHistory.group || 0);
       setUserInput(searchHistory.query);
       setOwnMembers(searchHistory.ownMembers);
       setTargetMembers(searchHistory.targetMembers);
-      setCardType(searchHistory.cardType);
+      setCardType(searchHistory.cardType || "");
     }
   }, [isClicked]);
 
   const handleTypeChange = (cardType) => {
-    if (cardType == null) {
-      cardType = {
-        value: "",
-        label: "",
-      };
-    }
     setCardType(cardType);
   };
 
@@ -58,7 +53,6 @@ const Search = () => {
 
   const handleOwnMemberSelection = (members) => {
     setOwnMembers(members);
-    console.log(members);
   };
 
   const handleTargetMemberSelection = (members) => {
@@ -71,17 +65,47 @@ const Search = () => {
 
   function handleSearchClick() {
     const searchData = {
-      group: selectedGroup ? selectedGroup : null,
+      groupId: selectedGroup ? selectedGroup : 0,
       query: userInput ? userInput : null,
-      ownMembers: ownMembers ? ownMembers : [],
-      targetMembers: targetMembers ? targetMembers : [],
+      own: ownMembers ? ownMembers : [],
+      target: targetMembers ? targetMembers : [],
       cardType: cardType ? cardType : null,
     };
 
-    dispatch(addSearchData(searchData));
-
     // 최근 검색 기록 저장
     localStorage.setItem("searchCondition", JSON.stringify(searchData));
+    dispatch(addSearchData(searchData));
+
+    const filteredData = Object.entries(searchData).reduce(
+      (acc, [key, value]) => {
+        if (key == "groupId" && value !== 0) {
+          acc[key] = value;
+        }
+        if ((key == "query" || key == "cardType") && value) {
+          acc[key] = value;
+        }
+        if ((key == "own" || key == "target") && value.length > 0) {
+          acc[key] = value;
+        }
+        return acc;
+      },
+      {}
+    );
+
+    const queryParams = new URLSearchParams(filteredData).toString();
+
+    if (queryParams != "") {
+      getPostGPS(
+        "?" + queryParams,
+        (data) => {
+          console.log(data.data);
+          dispatch(searchPosts(data.data));
+        },
+        (error) => {
+          console.error("Error Get Post GPS :", error);
+        }
+      );
+    }
 
     // 초기화
     setUserInput(null);
@@ -104,7 +128,6 @@ const Search = () => {
   return (
     <div id="search-container">
       <h3>어떤 포카를 찾으시나요?</h3>
-
       <div id="search-option-container">
         {!isClicked ? (
           <div style={{ position: "relative" }}>
@@ -135,7 +158,7 @@ const Search = () => {
               <IoIosArrowDown className="search-icon-end" onClick={onClick} />
             </div>
 
-            <div>
+            <div className="search-condition-container">
               {/* {isExchange ? ( */}
               <BarterWrite2
                 defaultGroup={selectedGroup}
@@ -151,7 +174,7 @@ const Search = () => {
                 <SellWrite2 />
               )} */}
             </div>
-            <div>
+            <div className="search-condition-container">
               <div className="searchbar-title">포토카드 종류</div>
               <TypeDropdown
                 defaultCardType={cardType}

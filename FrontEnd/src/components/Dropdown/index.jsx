@@ -57,7 +57,6 @@ const Dropdown = ({ disable, type, id, value, option, onChange, sx }) => {
       options={option}
       isOptionEqualToValue={isOptionEqualToValue}
       getOptionLabel={(option) => getOptionLabelFormat(option)}
-      sx={{ width: "100%" }}
       noOptionsText={"해당하는 값이 없습니다"}
       renderOption={(props, option) => {
         const { key, ...restProps } = props;

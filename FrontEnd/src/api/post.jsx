@@ -33,8 +33,8 @@ function getAllPost(success, fail) {
 }
 
 // GPS 기반으로 게시글 가져오기
-function getPostGPS(param, success, fail) {
-  local.get(`${url}/search`, JSON.stringify(param)).then(success).catch(fail);
+function getPostGPS(params, success, fail) {
+  local.get(`${url}/search${params}`).then(success).catch(fail);
 }
 
 // 교환 게시글 가져오기

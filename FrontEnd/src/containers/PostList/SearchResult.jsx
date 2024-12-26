@@ -14,8 +14,10 @@ import AmazonSrc from "../../constants/amazonS3.jsx";
 import { CustomTabs, CustomTabPanel } from "@/components/Tab/index";
 
 const BasicTabs = ({ isPreview }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const posts = useSelector((state) => (state.post ? state.post.posts : []));
-  console.log(posts);
   const user = useSelector((state) => (state.user ? state.user.user : null));
 
   const [value, setValue] = useState(0);
@@ -38,50 +40,54 @@ const BasicTabs = ({ isPreview }) => {
     [loading, hasMore]
   );
 
-  const searchs = useSelector((state) =>
-    state.search.searchs ? state.search.searchs : null
-  );
+  // const searchs = useSelector((state) =>
+  //   state.search.searchs ? state.search.searchs : null
+  // );
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const [searchHistory, setSearchHistory] = useState(null);
 
   useEffect(() => {
-    if (!isPreview) {
-      const params = {};
-      if (searchs.group) {
-        params.groupId = searchs.group.idolGroupId;
-      }
-      if (searchs.targetMembers.length > 0) {
-        params.target = searchs.targetMembers
-          .map((member) => member.idolMemberId)
-          .join(",");
-      }
-      if (searchs.ownMembers.length > 0) {
-        params.own = searchs.ownMembers
-          .map((member) => member.idolMemberId)
-          .join(",");
-      }
-      if (searchs.cardType && searchs.cardType.value !== "") {
-        params.cardType = searchs.cardType.value;
-      }
-      if (searchs.query) {
-        params.query = searchs.query;
-      }
-      if (user.location_longlat) {
-        params.longitude = user.location_longlat[0];
-        params.latitude = user.location_longlat[1];
-      }
-      getPostGPS(
-        params,
-        (data) => {
-          dispatch(searchPosts(data.data));
-        },
-        (error) => {
-          console.error("Error Get Post GPS :", error);
-        }
-      );
-    }
-  }, [dispatch, searchs]);
+    setSearchHistory(JSON.parse(localStorage.getItem("searchCondition")));
+  }, []);
+
+  useEffect(() => {
+    // if (!isPreview && searchHistory) {
+    //   const params = {};
+    //   if (searchHistory.group) {
+    //     params.groupId = searchHistory.group.idolGroupId;
+    //   }
+    //   if (searchHistory.targetMembers.length > 0) {
+    //     params.target = searchHistory.targetMembers
+    //       .map((member) => member.idolMemberId)
+    //       .join(",");
+    //   }
+    //   if (searchHistory.ownMembers.length > 0) {
+    //     params.own = searchHistory.ownMembers
+    //       .map((member) => member.idolMemberId)
+    //       .join(",");
+    //   }
+    //   if (searchHistory.cardType && searchHistory.cardType.value !== "") {
+    //     params.cardType = searchHistory.cardType.value;
+    //   }
+    //   if (searchHistory.query) {
+    //     params.query = searchHistory.query;
+    //   }
+    //   if (user.location_longlat) {
+    //     params.longitude = user.location_longlat[0];
+    //     params.latitude = user.location_longlat[1];
+    //   }
+    //   getPostGPS(
+    //     params,
+    //     (data) => {
+    //       console.log(data.data);
+    //       dispatch(searchPosts(data.data));
+    //     },
+    //     (error) => {
+    //       console.error("Error Get Post GPS :", error);
+    //     }
+    //   );
+    // }
+  }, [dispatch, searchHistory]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
